@@ -1,0 +1,14 @@
+{
+  "name": "auralms-platform",
+  "version": "1.0.0",
+  "description": "Online Learning & Course Management Platform (AuraLMS)",
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "seed": "npm run seed --prefix backend",
+    "start": "node backend/dist/src/server.js"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
