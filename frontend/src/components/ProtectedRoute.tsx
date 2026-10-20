@@ -15,8 +15,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-slate-500 font-medium">Validating secure session...</p>
+          <div className="w-8 h-8 border-3 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-zinc-500 font-medium">Validating secure session...</p>
         </div>
       </div>
     );
@@ -32,13 +32,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
         <div className="w-12 h-12 mx-auto bg-rose-100 text-rose-600 rounded-full flex items-center justify-center font-bold text-xl mb-4">
           !
         </div>
-        <h2 className="text-lg font-bold text-slate-800">Access Restricted</h2>
-        <p className="text-sm text-slate-600 mt-2">
+        <h2 className="text-lg font-bold text-zinc-800">Access Restricted</h2>
+        <p className="text-sm text-zinc-600 mt-2">
           Your account role (<span className="font-semibold">{user.role}</span>) does not have permission to access this area.
         </p>
         <button
           onClick={() => window.history.back()}
-          className="mt-6 px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition"
+          className="mt-6 px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-lg hover:bg-zinc-700 transition"
         >
           Go Back
         </button>

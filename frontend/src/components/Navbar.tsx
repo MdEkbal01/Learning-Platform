@@ -7,12 +7,10 @@ import {
   LogOut,
   Sun,
   Moon,
-  Languages,
   HelpCircle,
   Settings,
   Menu,
   X,
-  FileCheck,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -28,39 +26,42 @@ export const Navbar: React.FC = () => {
   };
 
   const getRoleBadge = (role: string) => {
-    switch (role) {
-      case 'SUPER_ADMIN':
-        return <span className="bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleSuperAdmin')}</span>;
-      case 'MENTOR':
-        return <span className="bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleMentor')}</span>;
-      case 'CONTENT_MANAGER':
-        return <span className="bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleContentManager')}</span>;
-      case 'FINANCE_SUPPORT':
-        return <span className="bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleFinance')}</span>;
-      case 'MODERATOR':
-        return <span className="bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleModerator')}</span>;
-      default:
-        return <span className="bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">{t('roleStudent')}</span>;
-    }
+    return (
+      <span className="border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+        {t(
+          role === 'SUPER_ADMIN' ? 'roleSuperAdmin' :
+          role === 'MENTOR' ? 'roleMentor' :
+          role === 'CONTENT_MANAGER' ? 'roleContentManager' :
+          role === 'FINANCE_SUPPORT' ? 'roleFinance' :
+          role === 'MODERATOR' ? 'roleModerator' : 'roleStudent'
+        )}
+      </span>
+    );
   };
 
   const isActive = (path: string) => location.pathname === path;
 
+  const navLinkClass = (path: string) => `px-3 py-2 rounded-md text-sm font-medium transition ${
+    isActive(path)
+      ? 'text-black dark:text-white bg-zinc-100 dark:bg-zinc-900 font-semibold border border-zinc-200 dark:border-zinc-800'
+      : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900'
+  }`;
+
   return (
-    <nav className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-xs transition-colors duration-200">
+    <nav className="bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-40 shadow-xs transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Left: Brand & Main Navigation */}
           <div className="flex items-center space-x-6">
             <Link to="/" className="flex items-center space-x-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs">
                 <GraduationCap className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="text-xl font-bold tracking-tight text-black dark:text-white">
                   AuraLMS
                 </span>
-                <span className="hidden sm:inline-block text-[11px] font-medium text-slate-500 dark:text-slate-400 ml-1.5 border-l border-slate-300 dark:border-slate-700 pl-1.5">
+                <span className="hidden sm:inline-block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 ml-1.5 border-l border-zinc-300 dark:border-zinc-700 pl-1.5">
                   {t('tagline')}
                 </span>
               </div>
@@ -68,78 +69,29 @@ export const Navbar: React.FC = () => {
 
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center space-x-1">
-              <Link
-                to="/courses"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                  isActive('/courses')
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
+              <Link to="/courses" className={navLinkClass('/courses')}>
                 {t('browseCatalogue')}
               </Link>
-              <Link
-                to="/verify-certificate"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                  isActive('/verify-certificate')
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
+              <Link to="/verify-certificate" className={navLinkClass('/verify-certificate')}>
                 {t('verifyCertificate')}
               </Link>
-              <Link
-                to="/help"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                  isActive('/help')
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
+              <Link to="/help" className={navLinkClass('/help')}>
                 {t('helpAndSupport')}
               </Link>
 
               {/* Student Nav */}
               {isAuthenticated && user?.role === 'STUDENT' && (
                 <>
-                  <Link
-                    to="/student/dashboard"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/student/dashboard')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/student/dashboard" className={navLinkClass('/student/dashboard')}>
                     {t('myLearning')}
                   </Link>
-                  <Link
-                    to="/student/doubts"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/student/doubts')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/student/doubts" className={navLinkClass('/student/doubts')}>
                     {t('doubts')}
                   </Link>
-                  <Link
-                    to="/student/live-classes"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/student/live-classes')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/student/live-classes" className={navLinkClass('/student/live-classes')}>
                     {t('liveClasses')}
                   </Link>
-                  <Link
-                    to="/student/orders"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/student/orders')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/student/orders" className={navLinkClass('/student/orders')}>
                     {t('ordersAndInvoices')}
                   </Link>
                 </>
@@ -148,24 +100,10 @@ export const Navbar: React.FC = () => {
               {/* Mentor Nav */}
               {isAuthenticated && user?.role === 'MENTOR' && (
                 <>
-                  <Link
-                    to="/mentor/dashboard"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/mentor/dashboard')
-                        ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/mentor/dashboard" className={navLinkClass('/mentor/dashboard')}>
                     Mentor Hub
                   </Link>
-                  <Link
-                    to="/mentor/doubts"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/mentor/doubts')
-                        ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/mentor/doubts" className={navLinkClass('/mentor/doubts')}>
                     Doubt Queue
                   </Link>
                 </>
@@ -173,42 +111,21 @@ export const Navbar: React.FC = () => {
 
               {/* Content Manager Nav */}
               {isAuthenticated && user?.role === 'CONTENT_MANAGER' && (
-                <Link
-                  to="/content/courses"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                    isActive('/content/courses')
-                      ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-amber-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
+                <Link to="/content/courses" className={navLinkClass('/content/courses')}>
                   Curriculum Studio
                 </Link>
               )}
 
               {/* Finance Nav */}
               {isAuthenticated && user?.role === 'FINANCE_SUPPORT' && (
-                <Link
-                  to="/finance/dashboard"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                    isActive('/finance/dashboard')
-                      ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
+                <Link to="/finance/dashboard" className={navLinkClass('/finance/dashboard')}>
                   Finance & Refunds
                 </Link>
               )}
 
               {/* Moderator Nav */}
               {isAuthenticated && user?.role === 'MODERATOR' && (
-                <Link
-                  to="/moderator/queue"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                    isActive('/moderator/queue')
-                      ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-rose-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
+                <Link to="/moderator/queue" className={navLinkClass('/moderator/queue')}>
                   Moderation Queue
                 </Link>
               )}
@@ -216,34 +133,13 @@ export const Navbar: React.FC = () => {
               {/* Super Admin Nav */}
               {isAuthenticated && user?.role === 'SUPER_ADMIN' && (
                 <>
-                  <Link
-                    to="/admin/dashboard"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/admin/dashboard')
-                        ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-purple-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/admin/dashboard" className={navLinkClass('/admin/dashboard')}>
                     Console
                   </Link>
-                  <Link
-                    to="/admin/users"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/admin/users')
-                        ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-purple-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/admin/users" className={navLinkClass('/admin/users')}>
                     Users
                   </Link>
-                  <Link
-                    to="/admin/audit-logs"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition ${
-                      isActive('/admin/audit-logs')
-                        ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-purple-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
+                  <Link to="/admin/audit-logs" className={navLinkClass('/admin/audit-logs')}>
                     Audit
                   </Link>
                 </>
@@ -253,15 +149,15 @@ export const Navbar: React.FC = () => {
 
           {/* Right: Theme Toggle, Language Selector & Auth */}
           <div className="hidden sm:flex items-center space-x-2 sm:space-x-3">
-            {/* Strict 2-Language Selector (LANG-01 to LANG-06) */}
-            <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg p-0.5 bg-slate-50 dark:bg-slate-800/80">
+            {/* Strict 2-Language Selector */}
+            <div className="flex items-center border border-zinc-300 dark:border-zinc-700 rounded-lg p-0.5 bg-zinc-50 dark:bg-zinc-900">
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
                 className={`px-2.5 py-1 text-xs font-semibold rounded-md transition ${
                   language === 'en'
-                    ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
                 }`}
                 title="Switch to English"
               >
@@ -272,8 +168,8 @@ export const Navbar: React.FC = () => {
                 onClick={() => setLanguage('hi')}
                 className={`px-2.5 py-1 text-xs font-semibold rounded-md transition ${
                   language === 'hi'
-                    ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
                 }`}
                 title="हिन्दी में बदलें"
               >
@@ -281,28 +177,28 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Strict 2-Theme Toggle (PREF-01 to PREF-04) */}
+            {/* Strict 2-Theme Toggle */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              className="p-2 rounded-lg border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition cursor-pointer"
               title={theme === 'light' ? t('darkTheme') : t('lightTheme')}
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? (
-                <Moon className="w-4 h-4 text-slate-700" />
+                <Moon className="w-4 h-4 text-zinc-900" />
               ) : (
-                <Sun className="w-4 h-4 text-amber-400" />
+                <Sun className="w-4 h-4 text-zinc-100" />
               )}
             </button>
 
             {/* Settings Quick Link */}
             <Link
               to="/settings"
-              className={`p-2 rounded-lg border border-slate-200 dark:border-slate-700 transition ${
+              className={`p-2 rounded-lg border border-zinc-300 dark:border-zinc-700 transition ${
                 isActive('/settings')
-                  ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-300 dark:border-blue-700'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
               title={t('settings')}
             >
@@ -312,10 +208,10 @@ export const Navbar: React.FC = () => {
             {/* Help Quick Link */}
             <Link
               to="/help"
-              className={`p-2 rounded-lg border border-slate-200 dark:border-slate-700 transition ${
+              className={`p-2 rounded-lg border border-zinc-300 dark:border-zinc-700 transition ${
                 isActive('/help')
-                  ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-300 dark:border-blue-700'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900'
               }`}
               title={t('helpAndSupport')}
             >
@@ -324,16 +220,16 @@ export const Navbar: React.FC = () => {
 
             {/* Auth Profile or Buttons */}
             {isAuthenticated && user ? (
-              <div className="flex items-center space-x-2 pl-1 border-l border-slate-200 dark:border-slate-800">
+              <div className="flex items-center space-x-2 pl-1 border-l border-zinc-300 dark:border-zinc-800">
                 <Link
                   to="/student/profile"
-                  className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                  className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
                 >
-                  <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center font-bold text-xs border border-zinc-300 dark:border-zinc-700">
                     {user.name.charAt(0)}
                   </div>
                   <div className="text-left hidden md:block">
-                    <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                    <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
                       {user.name.split(' ')[0]}
                     </div>
                     {getRoleBadge(user.role)}
@@ -342,23 +238,23 @@ export const Navbar: React.FC = () => {
 
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition"
+                  className="p-2 text-zinc-500 hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition cursor-pointer"
                   title={t('signOut')}
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2 pl-1 border-l border-slate-200 dark:border-slate-800">
+              <div className="flex items-center space-x-2 pl-1 border-l border-zinc-300 dark:border-zinc-800">
                 <Link
                   to="/login"
-                  className="px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="px-3 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
                 >
                   {t('signIn')}
                 </Link>
                 <Link
                   to="/register"
-                  className="px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs transition"
+                  className="px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white bg-black hover:bg-zinc-800 dark:text-black dark:bg-white dark:hover:bg-zinc-200 rounded-lg shadow-xs transition"
                 >
                   {t('getStarted')}
                 </Link>
@@ -371,14 +267,14 @@ export const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-1.5 rounded-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+              className="p-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
               aria-label="Toggle Theme"
             >
-              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 text-amber-400" />}
+              {theme === 'light' ? <Moon className="w-4 h-4 text-zinc-900" /> : <Sun className="w-4 h-4 text-zinc-100" />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="p-2 rounded-md text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -388,15 +284,15 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-5 space-y-2">
+        <div className="sm:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black px-4 pt-3 pb-5 space-y-2">
           {/* Mobile Language Switcher */}
-          <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('language')}:</span>
+          <div className="flex items-center justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
+            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">{t('language')}:</span>
             <div className="flex space-x-1">
               <button
                 onClick={() => setLanguage('en')}
                 className={`px-3 py-1 text-xs rounded font-semibold ${
-                  language === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  language === 'en' ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300'
                 }`}
               >
                 English
@@ -404,7 +300,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => setLanguage('hi')}
                 className={`px-3 py-1 text-xs rounded font-semibold ${
-                  language === 'hi' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  language === 'hi' ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300'
                 }`}
               >
                 हिन्दी
@@ -415,43 +311,43 @@ export const Navbar: React.FC = () => {
           <Link
             to="/courses"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
           >
             {t('browseCatalogue')}
           </Link>
           <Link
             to="/verify-certificate"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
           >
             {t('verifyCertificate')}
           </Link>
           <Link
             to="/help"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
           >
             {t('helpAndSupport')}
           </Link>
           <Link
             to="/settings"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
           >
             {t('settings')}
           </Link>
 
           {isAuthenticated ? (
             <>
-              <div className="pt-2 pb-1 border-t border-slate-200 dark:border-slate-800">
-                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3">
+              <div className="pt-2 pb-1 border-t border-zinc-200 dark:border-zinc-800">
+                <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider px-3">
                   Account ({user?.role})
                 </div>
               </div>
               <Link
                 to="/student/profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="block px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
               >
                 {t('profile')}
               </Link>
@@ -460,24 +356,24 @@ export const Navbar: React.FC = () => {
                   setMobileMenuOpen(false);
                   handleLogout();
                 }}
-                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
               >
                 {t('signOut')}
               </button>
             </>
           ) : (
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col space-y-2">
+            <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800 flex flex-col space-y-2">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-center px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200"
+                className="text-center px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200"
               >
                 {t('signIn')}
               </Link>
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-center px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium"
+                className="text-center px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-md text-sm font-medium"
               >
                 {t('getStarted')}
               </Link>

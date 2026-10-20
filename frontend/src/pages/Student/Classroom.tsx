@@ -233,7 +233,7 @@ export const Classroom: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -242,7 +242,7 @@ export const Classroom: React.FC = () => {
     return (
       <div className="max-w-md mx-auto my-16 text-center">
         <h2 className="text-xl font-bold">Classroom Access Unavailable</h2>
-        <Link to="/courses" className="mt-4 text-blue-600 underline block">
+        <Link to="/courses" className="mt-4 text-zinc-900 dark:text-zinc-100 underline block">
           Return to Catalogue
         </Link>
       </div>
@@ -257,26 +257,26 @@ export const Classroom: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Top Classroom Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-zinc-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-semibold text-blue-600">
+          <div className="flex items-center space-x-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
             <Link to="/student/dashboard" className="hover:underline">Dashboard</Link>
             <span>/</span>
             <span>{course.category?.name}</span>
           </div>
-          <h1 className="text-lg font-extrabold text-slate-900 mt-0.5">{course.title}</h1>
+          <h1 className="text-lg font-extrabold text-zinc-900 mt-0.5">{course.title}</h1>
         </div>
 
         {/* Course Progress Indicator */}
         <div className="flex items-center space-x-4 shrink-0">
           <div className="text-right">
-            <div className="text-xs font-bold text-slate-700">{progressPercent}% Mastered</div>
-            <div className="text-[11px] text-slate-400">{completedCount} of {allLessons.length} lessons</div>
+            <div className="text-xs font-bold text-zinc-700">{progressPercent}% Mastered</div>
+            <div className="text-[11px] text-zinc-400">{completedCount} of {allLessons.length} lessons</div>
           </div>
-          <div className="w-24 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div className="w-24 bg-zinc-100 rounded-full h-2.5 overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-300 ${
-                progressPercent === 100 ? 'bg-emerald-500' : 'bg-blue-600'
+                progressPercent === 100 ? 'bg-emerald-500' : 'bg-black dark:bg-white text-white dark:text-black'
               }`}
               style={{ width: `${progressPercent}%` }}
             />
@@ -299,7 +299,7 @@ export const Classroom: React.FC = () => {
         {/* Left Column: Player & Interactive Tabs */}
         <div className="lg:col-span-8 space-y-4">
           {/* Lecture Player */}
-          <div className="bg-black rounded-2xl overflow-hidden shadow-md border border-slate-900">
+          <div className="bg-black rounded-2xl overflow-hidden shadow-md border border-zinc-900">
             {activeLesson?.videoUrl ? (
               <video
                 ref={videoRef}
@@ -312,16 +312,16 @@ export const Classroom: React.FC = () => {
                 poster={course.thumbnail}
               />
             ) : (
-              <div className="w-full aspect-video bg-slate-900 flex flex-col items-center justify-center text-slate-400 text-xs p-6 text-center space-y-2">
-                <PlayCircle className="w-12 h-12 text-slate-600" />
+              <div className="w-full aspect-video bg-zinc-900 flex flex-col items-center justify-center text-zinc-400 text-xs p-6 text-center space-y-2">
+                <PlayCircle className="w-12 h-12 text-zinc-600" />
                 <p>This lecture is an architectural reading / exercise module.</p>
-                <p className="text-slate-500">Read the lecture notes below and proceed to assessment.</p>
+                <p className="text-zinc-500">Read the lecture notes below and proceed to assessment.</p>
               </div>
             )}
 
-            <div className="p-4 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="p-4 bg-zinc-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Active Lesson</span>
+                <span className="text-[10px] font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-widest">Active Lesson</span>
                 <h2 className="text-base font-bold text-white mt-0.5">{activeLesson?.title}</h2>
               </div>
 
@@ -340,14 +340,14 @@ export const Classroom: React.FC = () => {
           </div>
 
           {/* Interactive Lesson Tabs */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div className="flex border-b border-slate-200 bg-slate-50/70 overflow-x-auto text-xs font-semibold">
+          <div className="bg-white rounded-2xl border border-zinc-200 shadow-xs overflow-hidden">
+            <div className="flex border-b border-zinc-200 bg-zinc-50/70 overflow-x-auto text-xs font-semibold">
               <button
                 onClick={() => setActiveTab('NOTES')}
                 className={`px-4 py-3 border-b-2 transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'NOTES'
-                    ? 'border-blue-600 text-blue-600 bg-white font-bold'
-                    : 'border-transparent text-slate-600 hover:text-slate-900'
+                    ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-zinc-100 bg-white font-bold'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 <FileText className="w-4 h-4" />
@@ -357,8 +357,8 @@ export const Classroom: React.FC = () => {
                 onClick={() => setActiveTab('RESOURCES')}
                 className={`px-4 py-3 border-b-2 transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'RESOURCES'
-                    ? 'border-blue-600 text-blue-600 bg-white font-bold'
-                    : 'border-transparent text-slate-600 hover:text-slate-900'
+                    ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-zinc-100 bg-white font-bold'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 <Download className="w-4 h-4" />
@@ -368,8 +368,8 @@ export const Classroom: React.FC = () => {
                 onClick={() => setActiveTab('FORUM')}
                 className={`px-4 py-3 border-b-2 transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'FORUM'
-                    ? 'border-blue-600 text-blue-600 bg-white font-bold'
-                    : 'border-transparent text-slate-600 hover:text-slate-900'
+                    ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-zinc-100 bg-white font-bold'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 <MessageSquare className="w-4 h-4" />
@@ -379,8 +379,8 @@ export const Classroom: React.FC = () => {
                 onClick={() => setActiveTab('DOUBT')}
                 className={`px-4 py-3 border-b-2 transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'DOUBT'
-                    ? 'border-blue-600 text-blue-600 bg-white font-bold'
-                    : 'border-transparent text-slate-600 hover:text-slate-900'
+                    ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-zinc-100 bg-white font-bold'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-900'
                 }`}
               >
                 <HelpCircle className="w-4 h-4" />
@@ -391,13 +391,13 @@ export const Classroom: React.FC = () => {
             <div className="p-6">
               {/* TAB 1: NOTES */}
               {activeTab === 'NOTES' && (
-                <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed space-y-4">
+                <div className="prose prose-sm max-w-none text-zinc-700 leading-relaxed space-y-4">
                   {activeLesson?.notesMarkdown ? (
-                    <div className="whitespace-pre-wrap font-sans bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div className="whitespace-pre-wrap font-sans bg-zinc-50 p-4 rounded-xl border border-zinc-200">
                       {activeLesson.notesMarkdown}
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-500 italic">
+                    <p className="text-xs text-zinc-500 italic">
                       No supplementary written notes for this specific lecture. Refer to video instruction above.
                     </p>
                   )}
@@ -411,24 +411,24 @@ export const Classroom: React.FC = () => {
                     activeLesson.resources.map((r: any) => (
                       <div
                         key={r.id}
-                        className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs"
+                        className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-between text-xs"
                       >
                         <div className="flex items-center space-x-2">
-                          <FileText className="w-4 h-4 text-blue-600" />
-                          <span className="font-semibold text-slate-800">{r.title}</span>
-                          <span className="text-slate-400 font-mono">({Math.round(r.fileSize / 1024)} KB)</span>
+                          <FileText className="w-4 h-4 text-zinc-900 dark:text-zinc-100" />
+                          <span className="font-semibold text-zinc-800">{r.title}</span>
+                          <span className="text-zinc-400 font-mono">({Math.round(r.fileSize / 1024)} KB)</span>
                         </div>
                         <a
                           href={r.fileUrl}
                           download
-                          className="px-3 py-1 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition"
+                          className="px-3 py-1 bg-white border border-zinc-300 rounded-lg text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-black dark:hover:text-white font-medium transition"
                         >
                           Download Resource
                         </a>
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-slate-500">No downloadable files attached to this lecture.</p>
+                    <p className="text-xs text-zinc-500">No downloadable files attached to this lecture.</p>
                   )}
                 </div>
               )}
@@ -436,10 +436,10 @@ export const Classroom: React.FC = () => {
               {/* TAB 3: QUIZ ASSESSMENT */}
               {activeTab === 'QUIZ' && currentQuiz && (
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center pb-3 border-b border-slate-200">
+                  <div className="flex justify-between items-center pb-3 border-b border-zinc-200">
                     <div>
-                      <h3 className="font-bold text-slate-900 text-base">{currentQuiz.title}</h3>
-                      <p className="text-xs text-slate-500">Passing score: {currentQuiz.passPercentage}%</p>
+                      <h3 className="font-bold text-zinc-900 text-base">{currentQuiz.title}</h3>
+                      <p className="text-xs text-zinc-500">Passing score: {currentQuiz.passPercentage}%</p>
                     </div>
                     {quizResult && (
                       <div
@@ -458,8 +458,8 @@ export const Classroom: React.FC = () => {
                     {currentQuiz.questions?.map((q: any, idx: number) => {
                       const feedback = quizResult?.feedback?.find((f: any) => f.questionId === q.id);
                       return (
-                        <div key={q.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                          <div className="text-xs font-bold text-slate-800">
+                        <div key={q.id} className="p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
+                          <div className="text-xs font-bold text-zinc-800">
                             Question {idx + 1}: {q.question}
                           </div>
 
@@ -474,13 +474,13 @@ export const Classroom: React.FC = () => {
                                   onClick={() => setSelectedAnswers((prev) => ({ ...prev, [q.id]: opt.id }))}
                                   className={`w-full p-2.5 rounded-lg border text-left text-xs font-medium transition flex items-center space-x-2 ${
                                     isSelected
-                                      ? 'border-blue-600 bg-blue-50 text-blue-900 font-semibold'
-                                      : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'
+                                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-semibold'
+                                      : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100'
                                   }`}
                                 >
                                   <div
                                     className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                                      isSelected ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'
+                                      isSelected ? 'border-zinc-900 dark:border-white bg-black dark:bg-white text-white dark:text-black text-white' : 'border-zinc-300'
                                     }`}
                                   >
                                     {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -505,14 +505,14 @@ export const Classroom: React.FC = () => {
                     <button
                       onClick={handleSubmitQuiz}
                       disabled={isSubmittingQuiz}
-                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition"
+                      className="w-full py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition"
                     >
                       {isSubmittingQuiz ? 'Grading Answers...' : 'Submit Assessment for Grading'}
                     </button>
                   ) : (
                     <button
                       onClick={() => setQuizResult(null)}
-                      className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow-xs transition"
+                      className="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-xl shadow-xs transition"
                     >
                       Retake Quiz
                     </button>
@@ -524,15 +524,15 @@ export const Classroom: React.FC = () => {
               {activeTab === 'FORUM' && (
                 <div className="space-y-6">
                   {/* Create Topic Form */}
-                  <form onSubmit={handleCreateTopic} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="font-bold text-xs text-slate-800">Ask a Question in Course Community</div>
+                  <form onSubmit={handleCreateTopic} className="p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
+                    <div className="font-bold text-xs text-zinc-800">Ask a Question in Course Community</div>
                     <input
                       type="text"
                       required
                       value={newTopicTitle}
                       onChange={(e) => setNewTopicTitle(e.target.value)}
                       placeholder="Topic title (e.g. Question on Module 1 Docker Compose)"
-                      className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs"
+                      className="w-full px-3 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs"
                     />
                     <textarea
                       required
@@ -540,12 +540,12 @@ export const Classroom: React.FC = () => {
                       value={newTopicContent}
                       onChange={(e) => setNewTopicContent(e.target.value)}
                       placeholder="Describe your question or insight in detail..."
-                      className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs"
+                      className="w-full px-3 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs"
                     />
                     <button
                       type="submit"
                       disabled={isPostingTopic}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition"
+                      className="px-4 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-lg transition"
                     >
                       {isPostingTopic ? 'Publishing...' : 'Publish Topic'}
                     </button>
@@ -554,15 +554,15 @@ export const Classroom: React.FC = () => {
                   {/* Topics List */}
                   <div className="space-y-3">
                     {topics.map((t) => (
-                      <div key={t.id} className="p-4 bg-white border border-slate-200 rounded-xl space-y-2">
+                      <div key={t.id} className="p-4 bg-white border border-zinc-200 rounded-xl space-y-2">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-bold text-slate-900 text-xs">{t.title}</h4>
-                          <span className="text-[10px] text-slate-400">
+                          <h4 className="font-bold text-zinc-900 text-xs">{t.title}</h4>
+                          <span className="text-[10px] text-zinc-400">
                             {new Date(t.createdAt).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-600">{t.content}</p>
-                        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+                        <p className="text-xs text-zinc-600">{t.content}</p>
+                        <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-2 border-t border-zinc-100">
                           <span>By {t.author?.name} ({t.author?.role})</span>
                           <span>{t._count?.posts || 0} replies</span>
                         </div>
@@ -584,41 +584,41 @@ export const Classroom: React.FC = () => {
 
                   <form onSubmit={handleSubmitDoubt} className="space-y-3">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Doubt Title</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Doubt Title</label>
                       <input
                         type="text"
                         required
                         value={doubtTitle}
                         onChange={(e) => setDoubtTitle(e.target.value)}
                         placeholder={`Question regarding ${activeLesson?.title || 'this lesson'}`}
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                        className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Detailed Explanation</label>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">Detailed Explanation</label>
                       <textarea
                         required
                         rows={4}
                         value={doubtDesc}
                         onChange={(e) => setDoubtDesc(e.target.value)}
                         placeholder="Explain the error code, timestamp, or concept you'd like your mentor to clarify..."
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                        className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1">
                         Optional Attachment (PDF, Image / Screenshot - max 10MB)
                       </label>
                       <input
                         type="file"
                         accept="image/png,image/jpeg,image/webp,application/pdf"
                         onChange={(e) => setDoubtFile(e.target.files?.[0] || null)}
-                        className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        className="w-full text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-zinc-100 dark:bg-zinc-900 file:text-zinc-900 dark:text-zinc-100 hover:file:bg-zinc-100 dark:bg-zinc-900"
                       />
                     </div>
                     <button
                       type="submit"
-                      className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition"
+                      className="px-5 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition"
                     >
                       Submit Doubt Ticket to Assigned Mentor
                     </button>
@@ -631,27 +631,27 @@ export const Classroom: React.FC = () => {
 
         {/* Right Column: Syllabus Navigation Accordion */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <h3 className="font-bold text-slate-900 text-sm mb-3">Syllabus Breakdown</h3>
+          <div className="bg-white rounded-2xl border border-zinc-200 shadow-xs p-4">
+            <h3 className="font-bold text-zinc-900 text-sm mb-3">Syllabus Breakdown</h3>
 
             <div className="space-y-2">
               {course.modules?.map((mod: any, mIdx: number) => {
                 const isExpanded = expandedModules[mod.id];
                 return (
-                  <div key={mod.id} className="border border-slate-200 rounded-xl overflow-hidden">
+                  <div key={mod.id} className="border border-zinc-200 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setExpandedModules((p) => ({ ...p, [mod.id]: !p[mod.id] }))}
-                      className="w-full p-3 bg-slate-50 hover:bg-slate-100 flex items-center justify-between text-left transition"
+                      className="w-full p-3 bg-zinc-50 hover:bg-zinc-100 flex items-center justify-between text-left transition"
                     >
                       <div>
-                        <div className="text-[10px] font-bold text-blue-600 uppercase">Module {mIdx + 1}</div>
-                        <div className="text-xs font-bold text-slate-800 line-clamp-1">{mod.title}</div>
+                        <div className="text-[10px] font-bold text-zinc-900 dark:text-zinc-100 uppercase">Module {mIdx + 1}</div>
+                        <div className="text-xs font-bold text-zinc-800 line-clamp-1">{mod.title}</div>
                       </div>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                      {isExpanded ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
                     </button>
 
                     {isExpanded && (
-                      <div className="divide-y divide-slate-100">
+                      <div className="divide-y divide-zinc-100">
                         {mod.lessons?.map((l: any) => {
                           const isActive = activeLesson?.id === l.id;
                           const completed = progressLookup[l.id]?.isCompleted;
@@ -660,18 +660,18 @@ export const Classroom: React.FC = () => {
                               key={l.id}
                               onClick={() => handleSelectLesson(l, mod.id)}
                               className={`w-full p-2.5 text-left text-xs flex items-center justify-between transition cursor-pointer ${
-                                isActive ? 'bg-blue-50/70 font-bold text-blue-900 border-l-4 border-blue-600' : 'hover:bg-slate-50 text-slate-700'
+                                isActive ? 'bg-zinc-100 dark:bg-zinc-900 font-bold text-zinc-900 dark:text-zinc-100 border-l-4 border-zinc-900 dark:border-white' : 'hover:bg-zinc-50 text-zinc-700'
                               }`}
                             >
                               <div className="flex items-center space-x-2 line-clamp-1">
                                 {completed ? (
                                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                 ) : (
-                                  <Circle className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                                  <Circle className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
                                 )}
                                 <span className="truncate">{l.title}</span>
                               </div>
-                              <span className="text-[10px] text-slate-400 font-mono ml-2 shrink-0">{l.durationMinutes}m</span>
+                              <span className="text-[10px] text-zinc-400 font-mono ml-2 shrink-0">{l.durationMinutes}m</span>
                             </button>
                           );
                         })}

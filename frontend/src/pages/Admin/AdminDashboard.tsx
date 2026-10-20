@@ -33,7 +33,7 @@ export const AdminDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export const AdminDashboard: React.FC = () => {
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="text-[11px] uppercase font-extrabold text-purple-600 dark:text-purple-400 tracking-wider bg-purple-50 dark:bg-purple-950/60 px-2.5 py-0.5 rounded-full border border-purple-200 dark:border-purple-800">
+            <span className="text-[11px] uppercase font-extrabold text-zinc-900 dark:text-white tracking-wider bg-zinc-100 dark:bg-zinc-900 px-2.5 py-0.5 rounded-full border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700">
               Super Administrator
             </span>
             <span className="flex items-center text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
@@ -67,10 +67,10 @@ export const AdminDashboard: React.FC = () => {
               Live Governance Node
             </span>
           </div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">
+          <h1 className="text-3xl font-black text-zinc-900 dark:text-white mt-1 tracking-tight">
             Platform Operations & Control Center
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             Global governance, least-privilege security oversight, user management, and audit verification.
           </p>
         </div>
@@ -79,7 +79,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             to="/admin/users"
-            className="px-3.5 py-2.5 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 font-bold text-xs rounded-xl border border-purple-200 dark:border-purple-800 transition shadow-xs"
+            className="px-3.5 py-2.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:bg-zinc-900 font-bold text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700 transition shadow-xs"
           >
             Users & Roles
           </Link>
@@ -91,7 +91,7 @@ export const AdminDashboard: React.FC = () => {
           </Link>
           <Link
             to="/admin/simulator"
-            className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition"
+            className="px-4 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition"
           >
             Webhook Simulator
           </Link>
@@ -101,9 +101,9 @@ export const AdminDashboard: React.FC = () => {
       {/* KPI Cards Grid with Trend Indicators */}
       <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
         {/* Total Users */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+        <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/60 text-zinc-900 dark:text-white flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <span className="flex items-center text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
@@ -111,15 +111,15 @@ export const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="mt-4">
-            <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">{m?.totalUsers || 0}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">{m?.totalUsers || 0}</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
               {m?.studentsCount || 0} Students • {m?.mentorsCount || 0} Mentors
             </div>
           </div>
         </div>
 
         {/* Platform Revenue */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+        <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <DollarSign className="w-5 h-5" />
@@ -129,35 +129,35 @@ export const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="mt-4">
-            <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">${m?.totalRevenue || 0}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">${m?.totalRevenue || 0}</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
               Platform Gross Revenue (USD)
             </div>
           </div>
         </div>
 
         {/* Published Courses */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+        <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/60 text-zinc-900 dark:text-white flex items-center justify-center">
               <BookOpen className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-black dark:text-white bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full">
               {Math.round(((m?.publishedCourses || 0) / (m?.totalCourses || 1)) * 100)}% Active
             </span>
           </div>
           <div className="mt-4">
-            <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">
               {m?.publishedCourses || 0} / {m?.totalCourses || 0}
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
               Published / Total Syllabi
             </div>
           </div>
         </div>
 
         {/* Pending Moderation */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
+        <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center">
               <ShieldAlert className="w-5 h-5" />
@@ -167,8 +167,8 @@ export const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="mt-4">
-            <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">{m?.pendingReports || 0}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">{m?.pendingReports || 0}</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
               Pending Reports in Queue
             </div>
           </div>
@@ -178,19 +178,19 @@ export const AdminDashboard: React.FC = () => {
       {/* Visual Analytics Grid: SVG Revenue Area Chart (2/3) + RBAC Distribution (1/3) */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* SVG Area Line Chart */}
-        <div className="lg:col-span-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-2 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                <BarChart3 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                <BarChart3 className="w-4 h-4 text-zinc-900 dark:text-white" />
                 <span>Gross Revenue & Enrolment Velocity</span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 Monthly revenue trajectory across May - October 2026.
               </p>
             </div>
             {activeChartPoint !== null && (
-              <div className="text-xs font-mono font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60 px-3 py-1 rounded-lg border border-purple-200 dark:border-purple-800">
+              <div className="text-xs font-mono font-bold text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-lg border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700">
                 {revenueHistory[activeChartPoint].month}: ${revenueHistory[activeChartPoint].rev.toLocaleString()} (
                 {revenueHistory[activeChartPoint].enrolments} enrollments)
               </div>
@@ -202,16 +202,16 @@ export const AdminDashboard: React.FC = () => {
             <svg viewBox="0 0 460 160" className="w-full h-full overflow-visible">
               <defs>
                 <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#9333ea" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#9333ea" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="currentColor" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
 
               {/* Grid Lines */}
-              <line x1="10" y1="30" x2="450" y2="30" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeDasharray="3 3" />
-              <line x1="10" y1="70" x2="450" y2="70" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeDasharray="3 3" />
-              <line x1="10" y1="110" x2="450" y2="110" stroke="currentColor" className="text-slate-100 dark:text-slate-800" strokeDasharray="3 3" />
-              <line x1="10" y1="150" x2="450" y2="150" stroke="currentColor" className="text-slate-200 dark:text-slate-800" />
+              <line x1="10" y1="30" x2="450" y2="30" stroke="currentColor" className="text-zinc-100 dark:text-zinc-800" strokeDasharray="3 3" />
+              <line x1="10" y1="70" x2="450" y2="70" stroke="currentColor" className="text-zinc-100 dark:text-zinc-800" strokeDasharray="3 3" />
+              <line x1="10" y1="110" x2="450" y2="110" stroke="currentColor" className="text-zinc-100 dark:text-zinc-800" strokeDasharray="3 3" />
+              <line x1="10" y1="150" x2="450" y2="150" stroke="currentColor" className="text-zinc-200 dark:text-zinc-800" />
 
               {/* Smooth Area Path */}
               <path
@@ -223,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
               <path
                 d="M 20 130 C 60 115, 80 110, 100 105 C 140 95, 160 90, 180 85 C 220 75, 240 70, 260 65 C 300 50, 320 45, 340 40 C 380 28, 400 24, 420 20"
                 fill="none"
-                stroke="#9333ea"
+                stroke="currentColor" className="text-zinc-900 dark:text-white"
                 strokeWidth="3.5"
                 strokeLinecap="round"
               />
@@ -240,14 +240,14 @@ export const AdminDashboard: React.FC = () => {
                     cx={p.x}
                     cy={p.y}
                     r={activeChartPoint === idx ? 7 : 4.5}
-                    className="fill-white dark:fill-slate-900 stroke-purple-600 transition-all duration-200"
+                    className="fill-white dark:fill-zinc-900 stroke-black dark:stroke-white transition-all duration-200"
                     strokeWidth="3"
                   />
                   <text
                     x={p.x}
                     y={162}
                     textAnchor="middle"
-                    className="text-[9px] font-bold fill-slate-400 dark:fill-slate-500"
+                    className="text-[9px] font-bold fill-zinc-400 dark:fill-zinc-500"
                   >
                     {p.month}
                   </text>
@@ -258,35 +258,35 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* RBAC Role Distribution */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
+        <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-              <PieChart className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+              <PieChart className="w-4 h-4 text-zinc-900 dark:text-white" />
               <span>Role Distribution</span>
             </h3>
-            <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400">
+            <span className="text-[11px] font-bold text-zinc-900 dark:text-white">
               6 Roles
             </span>
           </div>
 
           <div className="space-y-3 pt-1">
             {[
-              { label: 'Students', count: m?.studentsCount || 5, color: 'bg-blue-500', percent: 65 },
-              { label: 'Mentors', count: m?.mentorsCount || 1, color: 'bg-indigo-500', percent: 12 },
+              { label: 'Students', count: m?.studentsCount || 5, color: 'bg-black dark:bg-white text-white dark:text-black', percent: 65 },
+              { label: 'Mentors', count: m?.mentorsCount || 1, color: 'bg-black dark:bg-white text-white dark:text-black', percent: 12 },
               { label: 'Content Mgrs', count: 1, color: 'bg-amber-500', percent: 8 },
               { label: 'Finance Staff', count: 1, color: 'bg-emerald-500', percent: 6 },
               { label: 'Moderators', count: 1, color: 'bg-rose-500', percent: 5 },
-              { label: 'Super Admins', count: 1, color: 'bg-purple-600', percent: 4 },
+              { label: 'Super Admins', count: 1, color: 'bg-black dark:bg-white text-white dark:text-black', percent: 4 },
             ].map((role) => (
               <div key={role.label} className="space-y-1">
-                <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   <span className="flex items-center space-x-1.5">
                     <span className={`w-2 h-2 rounded-full ${role.color}`} />
                     <span>{role.label}</span>
                   </span>
-                  <span className="font-mono text-slate-500 dark:text-slate-400">{role.count}</span>
+                  <span className="font-mono text-zinc-500 dark:text-zinc-400">{role.count}</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-zinc-100 dark:bg-zinc-900 rounded-full h-1.5 overflow-hidden">
                   <div
                     className={`h-full ${role.color} rounded-full transition-all duration-500`}
                     style={{ width: `${role.percent}%` }}
@@ -299,43 +299,43 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Real-Time Security & Audit Event Stream (PRD ADM-05) */}
-      <div className="relative z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs p-6 space-y-4">
-        <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
+      <div className="relative z-10 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs p-6 space-y-4">
+        <div className="flex justify-between items-center pb-2 border-b border-zinc-100 dark:border-zinc-800">
           <div>
             <div className="flex items-center space-x-2">
-              <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              <Activity className="w-4 h-4 text-zinc-900 dark:text-white" />
+              <h2 className="text-base font-bold text-zinc-900 dark:text-white">
                 Real-Time Security & Audit Event Stream
               </h2>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
               Every sensitive and high-impact administrative action is permanently recorded.
             </p>
           </div>
           <Link
             to="/admin/audit-logs"
-            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center space-x-1"
+            className="text-xs font-semibold text-zinc-900 dark:text-white hover:underline flex items-center space-x-1"
           >
             <span>Full Audit Trail</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {data?.recentAuditLogs?.map((log: any) => (
             <div key={log.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
               <div className="space-y-0.5">
                 <div className="flex items-center space-x-2">
-                  <span className="font-mono font-bold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded text-[11px] border border-purple-200 dark:border-purple-800">
+                  <span className="font-mono font-bold text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded text-[11px] border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700">
                     {log.action}
                   </span>
-                  <span className="text-slate-400 font-mono text-[11px]">{log.entityType}</span>
+                  <span className="text-zinc-400 font-mono text-[11px]">{log.entityType}</span>
                 </div>
-                <div className="text-slate-600 dark:text-slate-300 text-xs">
-                  Actor: <strong className="text-slate-800 dark:text-white">{log.actor?.name || log.actorEmail || 'System'}</strong> ({log.actor?.role || 'SYSTEM'})
+                <div className="text-zinc-600 dark:text-zinc-300 text-xs">
+                  Actor: <strong className="text-zinc-800 dark:text-white">{log.actor?.name || log.actorEmail || 'System'}</strong> ({log.actor?.role || 'SYSTEM'})
                 </div>
               </div>
-              <div className="text-right text-[11px] text-slate-400 font-mono shrink-0">
+              <div className="text-right text-[11px] text-zinc-400 font-mono shrink-0">
                 <div>{new Date(log.createdAt).toLocaleString()}</div>
                 <div>IP: {log.ipAddress}</div>
               </div>

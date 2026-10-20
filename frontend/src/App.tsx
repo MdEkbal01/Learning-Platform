@@ -58,7 +58,7 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <ThemeLanguageProvider>
-          <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 selection:bg-blue-600 selection:text-white">
+          <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors duration-200 selection:bg-black dark:bg-white text-white dark:text-black selection:text-white">
             <QuickRoleSwitcher />
             <MaintenanceBanner />
             <Navbar />

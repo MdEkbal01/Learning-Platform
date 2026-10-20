@@ -147,22 +147,22 @@ export const CourseEditor: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
-      <div className="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+      <div className="flex items-center space-x-2 text-xs font-semibold text-zinc-500">
         <Link to="/content/courses" className="hover:underline flex items-center space-x-1">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Curriculum Studio</span>
         </Link>
         <span>/</span>
-        <span className="text-slate-800">{course.title}</span>
+        <span className="text-zinc-800">{course.title}</span>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200">
         <div>
           <span className="text-[10px] font-bold text-amber-700 uppercase bg-amber-50 px-2 py-0.5 rounded-full">
             Status: {course.status}
           </span>
-          <h1 className="text-2xl font-black text-slate-900 mt-1">{course.title}</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h1 className="text-2xl font-black text-zinc-900 mt-1">{course.title}</h1>
+          <p className="text-xs text-zinc-500 mt-0.5">
             Category: {course.category?.name} • Tuition: {course.isFree ? 'Free' : `$${course.price}`}
           </p>
         </div>
@@ -179,17 +179,17 @@ export const CourseEditor: React.FC = () => {
       {/* Modules & Lessons Curriculum Tree */}
       <div className="space-y-4">
         {course.modules?.length === 0 ? (
-          <div className="p-8 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-400">
+          <div className="p-8 bg-white rounded-2xl border border-zinc-200 text-center text-xs text-zinc-400">
             No modules yet. Click "Add New Module" to structure your syllabus.
           </div>
         ) : (
           course.modules?.map((mod: any, mIdx: number) => (
-            <div key={mod.id} className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-              <div className="p-4 bg-slate-50/80 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div key={mod.id} className="bg-white rounded-2xl border border-zinc-200 shadow-xs overflow-hidden">
+              <div className="p-4 bg-zinc-50/80 border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <div className="text-[10px] font-bold text-amber-700 uppercase">Module {mIdx + 1}</div>
-                  <h3 className="font-bold text-sm text-slate-900">{mod.title}</h3>
-                  {mod.description && <div className="text-xs text-slate-500">{mod.description}</div>}
+                  <h3 className="font-bold text-sm text-zinc-900">{mod.title}</h3>
+                  {mod.description && <div className="text-xs text-zinc-500">{mod.description}</div>}
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -198,7 +198,7 @@ export const CourseEditor: React.FC = () => {
                       setTargetModuleId(mod.id);
                       setShowLessonModal(true);
                     }}
-                    className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-semibold text-xs rounded-lg transition flex items-center space-x-1"
+                    className="px-3 py-1.5 bg-white border border-zinc-300 hover:bg-zinc-100 text-zinc-800 font-semibold text-xs rounded-lg transition flex items-center space-x-1"
                   >
                     <Plus className="w-3.5 h-3.5 text-amber-600" />
                     <span>Add Lesson</span>
@@ -218,28 +218,28 @@ export const CourseEditor: React.FC = () => {
               </div>
 
               {/* Lessons List in Module */}
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-zinc-100">
                 {mod.lessons?.map((les: any) => (
-                  <div key={les.id} className="p-3.5 px-5 flex items-center justify-between text-xs hover:bg-slate-50 transition">
+                  <div key={les.id} className="p-3.5 px-5 flex items-center justify-between text-xs hover:bg-zinc-50 transition">
                     <div className="flex items-center space-x-3">
-                      <Video className="w-4 h-4 text-slate-400" />
+                      <Video className="w-4 h-4 text-zinc-400" />
                       <div>
-                        <div className="font-semibold text-slate-900 flex items-center space-x-2">
+                        <div className="font-semibold text-zinc-900 flex items-center space-x-2">
                           <span>{les.title}</span>
                           {les.isPreview && (
-                            <span className="bg-blue-100 text-blue-700 text-[9px] font-bold px-1.5 py-0.2 rounded-full">
+                            <span className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 text-[9px] font-bold px-1.5 py-0.2 rounded-full">
                               Free Preview
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-slate-400">Duration: {les.durationMinutes} mins</div>
+                        <div className="text-[11px] text-zinc-400">Duration: {les.durationMinutes} mins</div>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleDeleteLesson(les.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition"
+                        className="p-1.5 text-zinc-400 hover:text-rose-600 rounded-lg transition"
                         title="Delete Lesson"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -256,35 +256,35 @@ export const CourseEditor: React.FC = () => {
       {/* Add Module Modal */}
       {showModuleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
-            <h3 className="font-bold text-base text-slate-900">Add Curriculum Module</h3>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-zinc-200 space-y-4">
+            <h3 className="font-bold text-base text-zinc-900">Add Curriculum Module</h3>
             <form onSubmit={handleAddModule} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Module Title</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Module Title</label>
                 <input
                   type="text"
                   required
                   value={modTitle}
                   onChange={(e) => setModTitle(e.target.value)}
                   placeholder="e.g. Module 3: Authentication & Token Security"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Description</label>
                 <textarea
                   rows={2}
                   value={modDesc}
                   onChange={(e) => setModDesc(e.target.value)}
                   placeholder="Brief synopsis of topics covered..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                 />
               </div>
               <div className="flex justify-end space-x-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowModuleModal(false)}
-                  className="px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg"
+                  className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-semibold rounded-lg"
                 >
                   Cancel
                 </button>
@@ -303,55 +303,55 @@ export const CourseEditor: React.FC = () => {
       {/* Add Lesson Modal */}
       {showLessonModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4">
-            <h3 className="font-bold text-base text-slate-900">Add Lesson Lecture</h3>
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-zinc-200 space-y-4">
+            <h3 className="font-bold text-base text-zinc-900">Add Lesson Lecture</h3>
             <form onSubmit={handleAddLesson} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Lesson Title</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Lesson Title</label>
                 <input
                   type="text"
                   required
                   value={lesTitle}
                   onChange={(e) => setLesTitle(e.target.value)}
                   placeholder="e.g. 3.1 JWT Architecture & Refresh Token Rotation"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Duration (Mins)</label>
+                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Duration (Mins)</label>
                   <input
                     type="number"
                     value={lesDuration}
                     onChange={(e) => setLesDuration(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                    className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Video Stream URL</label>
+                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Video Stream URL</label>
                   <input
                     type="url"
                     value={lesVideoUrl}
                     onChange={(e) => setLesVideoUrl(e.target.value)}
                     placeholder="https://...mp4"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono"
+                    className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Lesson Markdown Notes</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Lesson Markdown Notes</label>
                 <textarea
                   rows={4}
                   value={lesNotes}
                   onChange={(e) => setLesNotes(e.target.value)}
                   placeholder="### Notes for this lecture..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs font-mono"
                 />
               </div>
 
-              <label className="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer pt-1">
+              <label className="flex items-center space-x-2 text-xs font-medium text-zinc-700 cursor-pointer pt-1">
                 <input
                   type="checkbox"
                   checked={lesIsPreview}
@@ -361,11 +361,11 @@ export const CourseEditor: React.FC = () => {
                 <span>Allow as Free Preview for Visitors & Non-Enrolled</span>
               </label>
 
-              <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end space-x-2 pt-2 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={() => setShowLessonModal(false)}
-                  className="px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg"
+                  className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-semibold rounded-lg"
                 >
                   Cancel
                 </button>
@@ -384,39 +384,39 @@ export const CourseEditor: React.FC = () => {
       {/* Quiz Modal */}
       {showQuizModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4">
-            <h3 className="font-bold text-base text-slate-900">Module Assessment Quiz Builder</h3>
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-zinc-200 space-y-4">
+            <h3 className="font-bold text-base text-zinc-900">Module Assessment Quiz Builder</h3>
             <form onSubmit={handleSaveQuiz} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Quiz Title</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Quiz Title</label>
                 <input
                   type="text"
                   required
                   value={quizTitle}
                   onChange={(e) => setQuizTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Passing Percentage (e.g. 70)</label>
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">Passing Percentage (e.g. 70)</label>
                 <input
                   type="number"
                   required
                   value={quizPassPct}
                   onChange={(e) => setQuizPassPct(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                 />
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                <label className="block text-xs font-bold text-slate-800">Question 1</label>
+              <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-200 space-y-2">
+                <label className="block text-xs font-bold text-zinc-800">Question 1</label>
                 <input
                   type="text"
                   required
                   value={q1Text}
                   onChange={(e) => setQ1Text(e.target.value)}
-                  className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs"
+                  className="w-full px-3 py-1.5 bg-white border border-zinc-300 rounded-lg text-xs"
                 />
                 <div className="space-y-1.5 pt-1">
                   <div className="flex items-center space-x-2">
@@ -432,7 +432,7 @@ export const CourseEditor: React.FC = () => {
                       value={q1Opt1}
                       onChange={(e) => setQ1Opt1(e.target.value)}
                       placeholder="Option 1"
-                      className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs"
+                      className="flex-1 px-2.5 py-1 bg-white border border-zinc-300 rounded text-xs"
                     />
                     <span className="text-[10px] text-emerald-600 font-bold">Correct</span>
                   </div>
@@ -449,18 +449,18 @@ export const CourseEditor: React.FC = () => {
                       value={q1Opt2}
                       onChange={(e) => setQ1Opt2(e.target.value)}
                       placeholder="Option 2"
-                      className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs"
+                      className="flex-1 px-2.5 py-1 bg-white border border-zinc-300 rounded text-xs"
                     />
-                    <span className="text-[10px] text-slate-400">Incorrect</span>
+                    <span className="text-[10px] text-zinc-400">Incorrect</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end space-x-2 pt-2 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={() => setShowQuizModal(false)}
-                  className="px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg"
+                  className="px-3 py-1.5 bg-zinc-100 text-zinc-700 text-xs font-semibold rounded-lg"
                 >
                   Cancel
                 </button>

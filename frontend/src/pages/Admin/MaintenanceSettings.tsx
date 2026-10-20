@@ -67,7 +67,7 @@ export const MaintenanceSettings: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -75,9 +75,9 @@ export const MaintenanceSettings: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div>
-        <div className="text-xs uppercase font-bold text-purple-600 tracking-wider">System Operations</div>
-        <h1 className="text-2xl font-black text-slate-900 mt-0.5">Feature-Level Maintenance Switches</h1>
-        <p className="text-xs text-slate-500 mt-1">
+        <div className="text-xs uppercase font-bold text-zinc-900 dark:text-zinc-100 tracking-wider">System Operations</div>
+        <h1 className="text-2xl font-black text-zinc-900 mt-0.5">Feature-Level Maintenance Switches</h1>
+        <p className="text-xs text-zinc-500 mt-1">
           PRD ADM-04: Gracefully disable specific modules (checkout, forum, live streams) with custom user notices without taking down the entire LMS.
         </p>
       </div>
@@ -96,15 +96,15 @@ export const MaintenanceSettings: React.FC = () => {
             <div
               key={flag.id}
               className={`bg-white rounded-2xl border p-6 shadow-xs space-y-4 transition ${
-                isEnabled ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-slate-200'
+                isEnabled ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-zinc-200'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
                     Feature Switch
                   </span>
-                  <h3 className="font-bold text-base text-slate-900 mt-0.5">
+                  <h3 className="font-bold text-base text-zinc-900 mt-0.5">
                     {flag.featureKey.replace(/_/g, ' ')}
                   </h3>
                 </div>
@@ -114,7 +114,7 @@ export const MaintenanceSettings: React.FC = () => {
                   className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 transition cursor-pointer ${
                     isEnabled
                       ? 'bg-amber-500 text-amber-950 hover:bg-amber-600'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
                   }`}
                 >
                   {isEnabled ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
@@ -123,7 +123,7 @@ export const MaintenanceSettings: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 mb-1">
                   User-Facing Notice Banner Message
                 </label>
                 <div className="flex gap-2">
@@ -133,18 +133,18 @@ export const MaintenanceSettings: React.FC = () => {
                     onChange={(e) =>
                       setMessages((prev) => ({ ...prev, [flag.featureKey]: e.target.value }))
                     }
-                    className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                    className="flex-1 px-3 py-1.5 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
                   />
                   <button
                     onClick={() => handleSaveMessage(flag.featureKey, isEnabled)}
-                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition"
+                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs rounded-lg transition"
                   >
                     Save
                   </button>
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-400">
+              <div className="text-[11px] text-zinc-400">
                 Last updated: {new Date(flag.updatedAt).toLocaleString()}
               </div>
             </div>

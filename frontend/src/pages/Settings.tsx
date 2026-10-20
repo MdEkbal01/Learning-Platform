@@ -176,24 +176,24 @@ export const Settings: React.FC = () => {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
           {t('accountSettings')}
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
           {t('settingsSubtitle')}
         </p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
         {/* Navigation Sidebar Tabs */}
-        <div className="w-full md:w-64 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-2 shadow-xs shrink-0">
+        <div className="w-full md:w-64 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-2 shadow-xs shrink-0">
           <nav className="space-y-1">
             <button
               onClick={() => setActiveTab('appearance')}
               className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                 activeTab === 'appearance'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               <Palette className="w-4 h-4 shrink-0" />
@@ -204,8 +204,8 @@ export const Settings: React.FC = () => {
               onClick={() => setActiveTab('language')}
               className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                 activeTab === 'language'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               <Languages className="w-4 h-4 shrink-0" />
@@ -216,8 +216,8 @@ export const Settings: React.FC = () => {
               onClick={() => setActiveTab('notifications')}
               className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                 activeTab === 'notifications'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               <Bell className="w-4 h-4 shrink-0" />
@@ -230,8 +230,8 @@ export const Settings: React.FC = () => {
                   onClick={() => setActiveTab('profile')}
                   className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                     activeTab === 'profile'
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                      : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                   }`}
                 >
                   <User className="w-4 h-4 shrink-0" />
@@ -242,8 +242,8 @@ export const Settings: React.FC = () => {
                   onClick={() => setActiveTab('sessions')}
                   className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                     activeTab === 'sessions'
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                      : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                   }`}
                 >
                   <Laptop className="w-4 h-4 shrink-0" />
@@ -255,16 +255,16 @@ export const Settings: React.FC = () => {
         </div>
 
         {/* Tab Content Panel */}
-        <div className="flex-1 w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xs">
+        <div className="flex-1 w-full bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-xs">
           {/* 1. APPEARANCE & THEME (PREF-01 to PREF-04) */}
           {activeTab === 'appearance' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <Palette className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Palette className="w-5 h-5 text-zinc-900 dark:text-white" />
                   <span>{t('appearanceTab')}</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                   {t('themeDescription')}
                 </p>
               </div>
@@ -276,8 +276,8 @@ export const Settings: React.FC = () => {
                   onClick={() => setTheme('light')}
                   className={`cursor-pointer rounded-2xl border-2 p-5 transition relative flex flex-col justify-between ${
                     theme === 'light'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 shadow-md ring-2 ring-blue-500/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40'
+                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/20 shadow-md ring-2 ring-zinc-500/20'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40'
                   }`}
                 >
                   <div>
@@ -287,31 +287,31 @@ export const Settings: React.FC = () => {
                           <Sun className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                          <h3 className="font-bold text-zinc-900 dark:text-white text-sm">
                             {t('lightTheme')}
                           </h3>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                             Standard High-Clarity
                           </span>
                         </div>
                       </div>
                       {theme === 'light' && (
-                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                        <span className="w-5 h-5 rounded-full bg-black dark:bg-white text-white dark:text-black text-white flex items-center justify-center text-xs">
                           ✓
                         </span>
                       )}
                     </div>
                     {/* Visual Miniature Mockup */}
-                    <div className="mt-3 bg-white border border-slate-200 rounded-xl p-3 space-y-2 shadow-xs">
-                      <div className="h-2 w-16 bg-blue-600 rounded-full" />
-                      <div className="h-2 w-28 bg-slate-200 rounded-full" />
+                    <div className="mt-3 bg-white border border-zinc-200 rounded-xl p-3 space-y-2 shadow-xs">
+                      <div className="h-2 w-16 bg-black dark:bg-white text-white dark:text-black rounded-full" />
+                      <div className="h-2 w-28 bg-zinc-200 rounded-full" />
                       <div className="flex space-x-1.5 pt-1">
-                        <div className="h-4 w-12 bg-slate-100 rounded-md" />
-                        <div className="h-4 w-12 bg-blue-100 rounded-md" />
+                        <div className="h-4 w-12 bg-zinc-100 rounded-md" />
+                        <div className="h-4 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-md" />
                       </div>
                     </div>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-4">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-4">
                     Optimal readability in standard lit workspaces. Strict WCAG AA compliant.
                   </p>
                 </div>
@@ -321,49 +321,49 @@ export const Settings: React.FC = () => {
                   onClick={() => setTheme('dark')}
                   className={`cursor-pointer rounded-2xl border-2 p-5 transition relative flex flex-col justify-between ${
                     theme === 'dark'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 shadow-md ring-2 ring-blue-500/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40'
+                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/20 shadow-md ring-2 ring-zinc-500/20'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-slate-900 text-slate-100 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-900 text-zinc-100 flex items-center justify-center">
                           <Moon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                          <h3 className="font-bold text-zinc-900 dark:text-white text-sm">
                             {t('darkTheme')}
                           </h3>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                             High-Contrast Midnight
                           </span>
                         </div>
                       </div>
                       {theme === 'dark' && (
-                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                        <span className="w-5 h-5 rounded-full bg-black dark:bg-white text-white dark:text-black text-white flex items-center justify-center text-xs">
                           ✓
                         </span>
                       )}
                     </div>
                     {/* Visual Miniature Mockup */}
-                    <div className="mt-3 bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2 shadow-xs">
-                      <div className="h-2 w-16 bg-blue-400 rounded-full" />
-                      <div className="h-2 w-28 bg-slate-700 rounded-full" />
+                    <div className="mt-3 bg-zinc-950 border border-zinc-800 rounded-xl p-3 space-y-2 shadow-xs">
+                      <div className="h-2 w-16 bg-zinc-300 dark:bg-white rounded-full" />
+                      <div className="h-2 w-28 bg-zinc-700 rounded-full" />
                       <div className="flex space-x-1.5 pt-1">
-                        <div className="h-4 w-12 bg-slate-800 rounded-md" />
-                        <div className="h-4 w-12 bg-blue-950 rounded-md" />
+                        <div className="h-4 w-12 bg-zinc-800 rounded-md" />
+                        <div className="h-4 w-12 bg-zinc-900 rounded-md" />
                       </div>
                     </div>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-4">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-4">
                     Engineered to reduce eye fatigue during extended night study sessions.
                   </p>
                 </div>
               </div>
 
-              <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-xl text-xs text-blue-800 dark:text-blue-300 flex items-start space-x-3">
-                <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
+              <div className="p-4 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-zinc-100 dark:text-zinc-900 dark:text-zinc-100 flex items-start space-x-3">
+                <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900 dark:text-white" />
                 <span>
                   <strong>PREF-03 / PREF-04 Compliance:</strong> Theme transitions apply immediately across the active screen without triggering full page reloads or erasing form inputs. Preferences persist across guest sessions and sync to your learner profile when signed in.
                 </span>
@@ -375,11 +375,11 @@ export const Settings: React.FC = () => {
           {activeTab === 'language' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <Languages className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Languages className="w-5 h-5 text-zinc-900 dark:text-white" />
                   <span>{t('languageTab')}</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                   {t('langDescription')}
                 </p>
               </div>
@@ -391,37 +391,37 @@ export const Settings: React.FC = () => {
                   onClick={() => setLanguage('en')}
                   className={`cursor-pointer rounded-2xl border-2 p-5 transition flex flex-col justify-between ${
                     language === 'en'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 shadow-md ring-2 ring-blue-500/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40'
+                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/20 shadow-md ring-2 ring-zinc-500/20'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold flex items-center justify-center text-sm">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-zinc-950/60 text-zinc-900 dark:text-white font-bold flex items-center justify-center text-sm">
                           EN
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                          <h3 className="font-bold text-zinc-900 dark:text-white text-sm">
                             English
                           </h3>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                             International (EN)
                           </span>
                         </div>
                       </div>
                       {language === 'en' && (
-                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                        <span className="w-5 h-5 rounded-full bg-black dark:bg-white text-white dark:text-black text-white flex items-center justify-center text-xs">
                           ✓
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       All platform navigation, module instructions, assessments, certificates, and system dialogues will render in English.
                     </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 text-[11px] text-slate-500 dark:text-slate-400">
-                    HTML Lang Tag: <code className="text-blue-600 dark:text-blue-400 font-mono">lang="en"</code>
+                  <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-700 text-[11px] text-zinc-500 dark:text-zinc-400">
+                    HTML Lang Tag: <code className="text-zinc-900 dark:text-white font-mono">lang="en"</code>
                   </div>
                 </div>
 
@@ -430,8 +430,8 @@ export const Settings: React.FC = () => {
                   onClick={() => setLanguage('hi')}
                   className={`cursor-pointer rounded-2xl border-2 p-5 transition flex flex-col justify-between ${
                     language === 'hi'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 shadow-md ring-2 ring-blue-500/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40'
+                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/20 shadow-md ring-2 ring-zinc-500/20'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40'
                   }`}
                 >
                   <div>
@@ -441,26 +441,26 @@ export const Settings: React.FC = () => {
                           हिं
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+                          <h3 className="font-bold text-zinc-900 dark:text-white text-sm">
                             हिन्दी (Hindi)
                           </h3>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                             National / Regional (HI)
                           </span>
                         </div>
                       </div>
                       {language === 'hi' && (
-                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                        <span className="w-5 h-5 rounded-full bg-black dark:bg-white text-white dark:text-black text-white flex items-center justify-center text-xs">
                           ✓
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       समस्त प्लेटफ़ॉर्म नेविगेशन, मॉड्यूल निर्देश, सहायता केंद्र और महत्वपूर्ण अलर्ट हिन्दी में प्रदर्शित होंगे।
                     </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 text-[11px] text-slate-500 dark:text-slate-400">
-                    HTML Lang Tag: <code className="text-blue-600 dark:text-blue-400 font-mono">lang="hi"</code>
+                  <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-700 text-[11px] text-zinc-500 dark:text-zinc-400">
+                    HTML Lang Tag: <code className="text-zinc-900 dark:text-white font-mono">lang="hi"</code>
                   </div>
                 </div>
               </div>
@@ -478,11 +478,11 @@ export const Settings: React.FC = () => {
           {activeTab === 'notifications' && (
             <form onSubmit={handleSaveNotifications} className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <Bell className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Bell className="w-5 h-5 text-zinc-900 dark:text-white" />
                   <span>{t('notificationsTab')}</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                   Choose how and when AuraLMS notifies you about academic milestones and discussions.
                 </p>
               </div>
@@ -494,14 +494,14 @@ export const Settings: React.FC = () => {
                 </div>
               )}
 
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {/* Email Notifications */}
                 <div className="py-4 flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">
                       {t('emailNotifications')}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       {t('emailNotificationsDesc')}
                     </p>
                   </div>
@@ -511,17 +511,17 @@ export const Settings: React.FC = () => {
                     onChange={(e) =>
                       setNotificationPrefs({ ...notificationPrefs, email: e.target.checked })
                     }
-                    className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 border-slate-300 dark:border-slate-700 cursor-pointer"
+                    className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 cursor-pointer"
                   />
                 </div>
 
                 {/* SMS Notifications */}
                 <div className="py-4 flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">
                       {t('smsNotifications')}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       {t('smsNotificationsDesc')}
                     </p>
                   </div>
@@ -531,17 +531,17 @@ export const Settings: React.FC = () => {
                     onChange={(e) =>
                       setNotificationPrefs({ ...notificationPrefs, sms: e.target.checked })
                     }
-                    className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 border-slate-300 dark:border-slate-700 cursor-pointer"
+                    className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 cursor-pointer"
                   />
                 </div>
 
                 {/* Doubt Notifications */}
                 <div className="py-4 flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">
                       {t('doubtNotifications')}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       {t('doubtNotificationsDesc')}
                     </p>
                   </div>
@@ -551,17 +551,17 @@ export const Settings: React.FC = () => {
                     onChange={(e) =>
                       setNotificationPrefs({ ...notificationPrefs, doubts: e.target.checked })
                     }
-                    className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 border-slate-300 dark:border-slate-700 cursor-pointer"
+                    className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 cursor-pointer"
                   />
                 </div>
 
                 {/* Announcement Notifications */}
                 <div className="py-4 flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">
                       {t('announcementNotifications')}
                     </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       {t('announcementNotificationsDesc')}
                     </p>
                   </div>
@@ -571,7 +571,7 @@ export const Settings: React.FC = () => {
                     onChange={(e) =>
                       setNotificationPrefs({ ...notificationPrefs, announcements: e.target.checked })
                     }
-                    className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 border-slate-300 dark:border-slate-700 cursor-pointer"
+                    className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 cursor-pointer"
                   />
                 </div>
               </div>
@@ -579,7 +579,7 @@ export const Settings: React.FC = () => {
               <button
                 type="submit"
                 disabled={notifLoading}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                className="px-5 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
               >
                 {notifLoading ? 'Saving...' : t('savePreferences')}
               </button>
@@ -592,11 +592,11 @@ export const Settings: React.FC = () => {
               {/* Profile Details Form */}
               <form onSubmit={handleSaveProfile} className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                    <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                    <User className="w-5 h-5 text-zinc-900 dark:text-white" />
                     <span>{t('personalInfo')}</span>
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                     Keep your institutional affiliation and personal contact details current.
                   </p>
                 </div>
@@ -610,7 +610,7 @@ export const Settings: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('fullName')}
                     </label>
                     <input
@@ -618,24 +618,24 @@ export const Settings: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('emailAddress')}
                     </label>
                     <input
                       type="email"
                       value={user.email}
                       disabled
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/60 text-zinc-500 dark:text-zinc-400 cursor-not-allowed"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('collegeUniversity')}
                     </label>
                     <input
@@ -643,18 +643,18 @@ export const Settings: React.FC = () => {
                       value={college}
                       onChange={(e) => setCollege(e.target.value)}
                       placeholder="e.g. Indian Institute of Technology"
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('academicYear')}
                     </label>
                     <select
                       value={academicYear}
                       onChange={(e) => setAcademicYear(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     >
                       <option value="1st Year">1st Year</option>
                       <option value="2nd Year">2nd Year</option>
@@ -666,7 +666,7 @@ export const Settings: React.FC = () => {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('degreeProgram')}
                     </label>
                     <input
@@ -674,12 +674,12 @@ export const Settings: React.FC = () => {
                       value={academicCourse}
                       onChange={(e) => setAcademicCourse(e.target.value)}
                       placeholder="e.g. B.Tech Computer Science & Engineering"
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('bio')}
                     </label>
                     <textarea
@@ -687,7 +687,7 @@ export const Settings: React.FC = () => {
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       placeholder="Brief note about your engineering interests or aspirations..."
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     />
                   </div>
                 </div>
@@ -695,21 +695,21 @@ export const Settings: React.FC = () => {
                 <button
                   type="submit"
                   disabled={profileLoading}
-                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                  className="px-5 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
                 >
                   {profileLoading ? 'Saving...' : t('saveChanges')}
                 </button>
               </form>
 
               {/* Password Change Form */}
-              <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
+              <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
                 <form onSubmit={handleChangePassword} className="space-y-4">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                      <KeyRound className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <h3 className="text-base font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                      <KeyRound className="w-4 h-4 text-zinc-900 dark:text-white" />
                       <span>{t('changePassword')}</span>
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                       Ensure your account uses a secure password of at least 8 characters.
                     </p>
                   </div>
@@ -733,7 +733,7 @@ export const Settings: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                         {t('currentPassword')}
                       </label>
                       <input
@@ -741,12 +741,12 @@ export const Settings: React.FC = () => {
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                         required
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                         {t('newPassword')}
                       </label>
                       <input
@@ -754,12 +754,12 @@ export const Settings: React.FC = () => {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         required
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                         {t('confirmPassword')}
                       </label>
                       <input
@@ -767,7 +767,7 @@ export const Settings: React.FC = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                       />
                     </div>
                   </div>
@@ -775,7 +775,7 @@ export const Settings: React.FC = () => {
                   <button
                     type="submit"
                     disabled={pwdLoading}
-                    className="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                    className="px-4 py-2 bg-zinc-800 dark:bg-zinc-800 hover:bg-zinc-900 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
                   >
                     {pwdLoading ? 'Updating...' : t('updatePassword')}
                   </button>
@@ -788,19 +788,19 @@ export const Settings: React.FC = () => {
           {activeTab === 'sessions' && user && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <Laptop className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Laptop className="w-5 h-5 text-zinc-900 dark:text-white" />
                   <span>{t('sessionsTab')}</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                   Review logged-in browsers and devices associated with your credentials.
                 </p>
               </div>
 
               {sessionsLoading ? (
-                <div className="text-center py-8 text-xs text-slate-400">Loading active sessions...</div>
+                <div className="text-center py-8 text-xs text-zinc-400">Loading active sessions...</div>
               ) : sessions.length === 0 ? (
-                <div className="text-center py-8 text-xs text-slate-500">
+                <div className="text-center py-8 text-xs text-zinc-500">
                   No other active sessions recorded.
                 </div>
               ) : (
@@ -808,15 +808,15 @@ export const Settings: React.FC = () => {
                   {sessions.map((session) => (
                     <div
                       key={session.id}
-                      className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/40"
+                      className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/40"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-zinc-950/40 text-zinc-900 dark:text-white flex items-center justify-center">
                           <Laptop className="w-5 h-5" />
                         </div>
                         <div>
                           <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-slate-900 dark:text-white">
+                            <span className="text-xs font-bold text-zinc-900 dark:text-white">
                               {session.userAgent || 'Web Browser'}
                             </span>
                             {session.isCurrent && (
@@ -825,7 +825,7 @@ export const Settings: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                             IP: {session.ipAddress} • Logged in:{' '}
                             {new Date(session.createdAt).toLocaleDateString()}
                           </div>

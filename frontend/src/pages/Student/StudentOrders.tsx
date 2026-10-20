@@ -33,16 +33,16 @@ export const StudentOrders: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">Orders, Invoices & Receipts</h1>
-        <p className="text-xs text-slate-500 mt-1">
+        <h1 className="text-2xl font-black text-zinc-900 tracking-tight">Orders, Invoices & Receipts</h1>
+        <p className="text-xs text-zinc-500 mt-1">
           Review your verified course transactions, payment receipts, and billing history.
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-2xl border border-zinc-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
+            <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
               <tr>
                 <th className="p-4">Order ID</th>
                 <th className="p-4">Course Item</th>
@@ -52,20 +52,20 @@ export const StudentOrders: React.FC = () => {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-zinc-100">
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-400">
+                  <td colSpan={6} className="p-8 text-center text-zinc-400">
                     No purchase history found. Free courses do not require billing receipts.
                   </td>
                 </tr>
               ) : (
                 orders.map((o) => (
-                  <tr key={o.id} className="hover:bg-slate-50/80 transition">
-                    <td className="p-4 font-mono font-bold text-slate-900">{o.orderNumber}</td>
-                    <td className="p-4 font-semibold text-slate-800">{o.course?.title}</td>
-                    <td className="p-4 text-slate-500">{new Date(o.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 font-bold text-slate-900">${o.amount} {o.currency}</td>
+                  <tr key={o.id} className="hover:bg-zinc-50/80 transition">
+                    <td className="p-4 font-mono font-bold text-zinc-900">{o.orderNumber}</td>
+                    <td className="p-4 font-semibold text-zinc-800">{o.course?.title}</td>
+                    <td className="p-4 text-zinc-500">{new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4 font-bold text-zinc-900">${o.amount} {o.currency}</td>
                     <td className="p-4">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -82,7 +82,7 @@ export const StudentOrders: React.FC = () => {
                     <td className="p-4 text-right">
                       <button
                         onClick={() => setSelectedInvoice(o)}
-                        className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition cursor-pointer"
+                        className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 font-bold rounded-lg text-xs transition cursor-pointer"
                       >
                         View Receipt
                       </button>
@@ -98,45 +98,45 @@ export const StudentOrders: React.FC = () => {
       {/* Official Tax Invoice / Receipt Modal */}
       {selectedInvoice && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-zinc-200 relative animate-in fade-in zoom-in-95">
             <button
               onClick={() => setSelectedInvoice(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full"
+              className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-zinc-600 rounded-full"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Printable Invoice Header */}
             <div className="space-y-6">
-              <div className="flex justify-between items-start border-b border-slate-100 pb-4">
+              <div className="flex justify-between items-start border-b border-zinc-100 pb-4">
                 <div>
-                  <div className="text-xl font-black text-slate-900">AuraLMS</div>
-                  <div className="text-xs text-slate-400">Accredited Online Learning Platform</div>
+                  <div className="text-xl font-black text-zinc-900">AuraLMS</div>
+                  <div className="text-xs text-zinc-400">Accredited Online Learning Platform</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-mono font-bold text-blue-600">RECEIPT</div>
-                  <div className="text-xs text-slate-600 font-mono mt-0.5">{selectedInvoice.orderNumber}</div>
+                  <div className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100">RECEIPT</div>
+                  <div className="text-xs text-zinc-600 font-mono mt-0.5">{selectedInvoice.orderNumber}</div>
                 </div>
               </div>
 
               {/* Billed To */}
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div>
-                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Billed To:</span>
-                  <div className="font-bold text-slate-800">{user?.name}</div>
-                  <div className="text-slate-500">{user?.email}</div>
+                  <span className="text-zinc-400 font-semibold uppercase tracking-wider block text-[10px]">Billed To:</span>
+                  <div className="font-bold text-zinc-800">{user?.name}</div>
+                  <div className="text-zinc-500">{user?.email}</div>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Transaction Details:</span>
-                  <div className="text-slate-600">Date: {new Date(selectedInvoice.createdAt).toLocaleDateString()}</div>
-                  <div className="text-slate-600">Gateway: {selectedInvoice.paymentGateway}</div>
+                  <span className="text-zinc-400 font-semibold uppercase tracking-wider block text-[10px]">Transaction Details:</span>
+                  <div className="text-zinc-600">Date: {new Date(selectedInvoice.createdAt).toLocaleDateString()}</div>
+                  <div className="text-zinc-600">Gateway: {selectedInvoice.paymentGateway}</div>
                 </div>
               </div>
 
               {/* Item Table */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <div className="border border-zinc-200 rounded-xl overflow-hidden">
                 <table className="w-full text-xs text-left">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                  <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-600 font-semibold">
                     <tr>
                       <th className="p-3">Description</th>
                       <th className="p-3 text-right">Price</th>
@@ -144,19 +144,19 @@ export const StudentOrders: React.FC = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-3 font-semibold text-slate-800">
+                      <td className="p-3 font-semibold text-zinc-800">
                         {selectedInvoice.course?.title}
-                        <div className="text-[10px] text-slate-400 font-normal">Full curriculum entitlement & certificate</div>
+                        <div className="text-[10px] text-zinc-400 font-normal">Full curriculum entitlement & certificate</div>
                       </td>
-                      <td className="p-3 text-right font-bold text-slate-900">
+                      <td className="p-3 text-right font-bold text-zinc-900">
                         ${selectedInvoice.amount}
                       </td>
                     </tr>
                   </tbody>
-                  <tfoot className="border-t border-slate-200 bg-slate-50/50 font-bold">
+                  <tfoot className="border-t border-zinc-200 bg-zinc-50/50 font-bold">
                     <tr>
-                      <td className="p-3 text-slate-700">Total Paid</td>
-                      <td className="p-3 text-right text-blue-600 font-extrabold text-sm">
+                      <td className="p-3 text-zinc-700">Total Paid</td>
+                      <td className="p-3 text-right text-zinc-900 dark:text-zinc-100 font-extrabold text-sm">
                         ${selectedInvoice.amount} {selectedInvoice.currency}
                       </td>
                     </tr>
@@ -178,7 +178,7 @@ export const StudentOrders: React.FC = () => {
                 </div>
                 <button
                   onClick={handlePrint}
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
+                  className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
                   <span>Print Receipt</span>

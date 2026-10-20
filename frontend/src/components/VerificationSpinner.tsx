@@ -57,11 +57,11 @@ export const VerificationSpinner: React.FC<VerificationSpinnerProps> = ({
     <div className="flex flex-col items-center justify-center p-6 text-center space-y-5 animate-in fade-in duration-300">
       {/* Header text */}
       <div className="space-y-1">
-        <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
           {title}
         </h3>
         {subtitle && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-xs">
             {subtitle}
           </p>
         )}
@@ -69,8 +69,8 @@ export const VerificationSpinner: React.FC<VerificationSpinnerProps> = ({
 
       {/* Circular Animated SVG Progress Gauge */}
       <div className="relative flex items-center justify-center my-2">
-        {/* Soft background glow */}
-        <div className="absolute inset-0 rounded-full bg-blue-500/15 dark:bg-blue-400/20 blur-xl scale-75 animate-pulse" />
+        {/* Soft background glow (Monochrome) */}
+        <div className="absolute inset-0 rounded-full bg-zinc-400/10 dark:bg-zinc-600/10 blur-xl scale-75 animate-pulse" />
 
         <svg width={dimension} height={dimension} className="transform -rotate-90">
           {/* Background Track */}
@@ -80,7 +80,7 @@ export const VerificationSpinner: React.FC<VerificationSpinnerProps> = ({
             r={radius}
             stroke="currentColor"
             strokeWidth={strokeWidth}
-            className="text-slate-100 dark:text-slate-800"
+            className="text-zinc-200 dark:text-zinc-800"
             fill="transparent"
           />
           {/* Active Gradient Indicator */}
@@ -98,16 +98,15 @@ export const VerificationSpinner: React.FC<VerificationSpinnerProps> = ({
           />
           <defs>
             <linearGradient id="verifyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="50%" stopColor="#6366f1" />
-              <stop offset="100%" stopColor="#8b5cf6" />
+              <stop offset="0%" stopColor="#18181b" />
+              <stop offset="100%" stopColor="#71717a" />
             </linearGradient>
           </defs>
         </svg>
 
         {/* Counter Number */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
+          <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-mono">
             {progress}
           </span>
         </div>
@@ -115,12 +114,12 @@ export const VerificationSpinner: React.FC<VerificationSpinnerProps> = ({
 
       {/* Resend Link if requested */}
       {showResend && (
-        <div className="pt-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="pt-2 text-xs text-zinc-500 dark:text-zinc-400">
           Didn't receive it?{' '}
           <button
             type="button"
             onClick={onResend}
-            className="text-blue-600 dark:text-blue-400 font-semibold hover:underline cursor-pointer"
+            className="text-zinc-900 dark:text-zinc-100 font-semibold hover:underline cursor-pointer"
           >
             Resend
           </button>

@@ -233,15 +233,15 @@ export const HelpCenter: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'OPEN':
-        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">OPEN</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black text-zinc-900 dark:text-white">OPEN</span>;
       case 'IN_PROGRESS':
         return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300">IN PROGRESS</span>;
       case 'WAITING_ON_USER':
-        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300">WAITING ON YOU</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black text-zinc-900 dark:text-white">WAITING ON YOU</span>;
       case 'RESOLVED':
         return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">RESOLVED</span>;
       default:
-        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">CLOSED</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300">CLOSED</span>;
     }
   };
 
@@ -250,11 +250,11 @@ export const HelpCenter: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
-            <LifeBuoy className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
+            <LifeBuoy className="w-8 h-8 text-zinc-900 dark:text-white" />
             <span>{t('helpTitle')}</span>
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
             {t('helpSubtitle')}
           </p>
         </div>
@@ -264,7 +264,7 @@ export const HelpCenter: React.FC = () => {
             setTicketCreatedRef(null);
             setShowCreateTicketModal(true);
           }}
-          className="inline-flex items-center space-x-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition shrink-0"
+          className="inline-flex items-center space-x-2 px-4 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs transition shrink-0"
         >
           <PlusCircle className="w-4 h-4" />
           <span>{t('contactSupport')}</span>
@@ -290,13 +290,13 @@ export const HelpCenter: React.FC = () => {
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-4">
+      <div className="flex border-b border-zinc-200 dark:border-zinc-800 space-x-4">
         <button
           onClick={() => setActiveTab('faqs')}
           className={`pb-3 text-xs font-bold border-b-2 transition flex items-center space-x-2 ${
             activeTab === 'faqs'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
+              : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
           }`}
         >
           <Search className="w-4 h-4" />
@@ -308,14 +308,14 @@ export const HelpCenter: React.FC = () => {
             onClick={() => setActiveTab('tickets')}
             className={`pb-3 text-xs font-bold border-b-2 transition flex items-center space-x-2 ${
               activeTab === 'tickets'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
+                : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             <LifeBuoy className="w-4 h-4" />
             <span>{t('myTickets')}</span>
             {tickets.length > 0 && (
-              <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+              <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-zinc-950/60 text-zinc-900 dark:text-white">
                 {tickets.length}
               </span>
             )}
@@ -326,8 +326,8 @@ export const HelpCenter: React.FC = () => {
           onClick={() => setActiveTab('feedback')}
           className={`pb-3 text-xs font-bold border-b-2 transition flex items-center space-x-2 ${
             activeTab === 'feedback'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
+              : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
@@ -339,15 +339,15 @@ export const HelpCenter: React.FC = () => {
       {activeTab === 'faqs' && (
         <div className="space-y-6">
           {/* Search Bar & Categories */}
-          <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-zinc-950 p-4 sm:p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-4">
             <div className="relative">
-              <Search className="w-5 h-5 absolute left-3.5 top-3 text-slate-400" />
+              <Search className="w-5 h-5 absolute left-3.5 top-3 text-zinc-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('searchFaqs')}
-                className="w-full pl-11 pr-4 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                className="w-full pl-11 pr-4 py-2.5 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
               />
             </div>
 
@@ -366,8 +366,8 @@ export const HelpCenter: React.FC = () => {
                   onClick={() => setFaqCategory(c.key)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                     faqCategory === c.key
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-xs'
+                      : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
                   }`}
                 >
                   {c.label}
@@ -379,9 +379,9 @@ export const HelpCenter: React.FC = () => {
           {/* FAQ Accordion List */}
           <div className="space-y-3">
             {faqLoading ? (
-              <div className="text-center py-10 text-xs text-slate-400">Loading FAQs...</div>
+              <div className="text-center py-10 text-xs text-zinc-400">Loading FAQs...</div>
             ) : faqs.length === 0 ? (
-              <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+              <div className="text-center py-12 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400">
                 No matching FAQs found for your query. Try raising a support ticket!
               </div>
             ) : (
@@ -393,28 +393,28 @@ export const HelpCenter: React.FC = () => {
                 return (
                   <div
                     key={faq.id}
-                    className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition"
+                    className="bg-white dark:bg-zinc-950 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xs overflow-hidden transition"
                   >
                     <button
                       type="button"
                       onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
-                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition"
+                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between hover:bg-zinc-50/50 dark:hover:bg-zinc-800/40 transition"
                     >
                       <div className="flex items-center space-x-3 pr-4">
-                        <Tag className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                        <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                        <Tag className="w-4 h-4 text-zinc-900 dark:text-white shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white">
                           {question}
                         </span>
                       </div>
                       {isExpanded ? (
-                        <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" />
+                        <ChevronUp className="w-4 h-4 text-zinc-500 shrink-0" />
                       ) : (
-                        <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
+                        <ChevronDown className="w-4 h-4 text-zinc-500 shrink-0" />
                       )}
                     </button>
 
                     {isExpanded && (
-                      <div className="px-5 pb-5 pt-1 text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/30 dark:bg-slate-800/20">
+                      <div className="px-5 pb-5 pt-1 text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed border-t border-zinc-100 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-900/20">
                         {answer}
                       </div>
                     )}
@@ -431,23 +431,23 @@ export const HelpCenter: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Tickets List */}
           <div className="lg:col-span-1 space-y-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center justify-between">
               <span>{t('myTickets')}</span>
               <button
                 onClick={() => {
                   setTicketCreatedRef(null);
                   setShowCreateTicketModal(true);
                 }}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                className="text-xs text-zinc-900 dark:text-white hover:underline font-semibold"
               >
                 + New Ticket
               </button>
             </h3>
 
             {ticketsLoading ? (
-              <div className="text-center py-6 text-xs text-slate-400">Loading tickets...</div>
+              <div className="text-center py-6 text-xs text-zinc-400">Loading tickets...</div>
             ) : tickets.length === 0 ? (
-              <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">
+              <div className="p-6 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-center text-xs text-zinc-500">
                 {t('noTicketsFound')}
               </div>
             ) : (
@@ -457,20 +457,20 @@ export const HelpCenter: React.FC = () => {
                   onClick={() => setSelectedTicket(tkt)}
                   className={`cursor-pointer p-4 rounded-xl border transition ${
                     selectedTicket?.id === tkt.id
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/20 shadow-xs'
-                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
+                      ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 dark:bg-zinc-100 dark:bg-black/20 shadow-xs'
+                      : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 hover:border-zinc-300 dark:hover:border-zinc-700'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-mono font-bold text-blue-600 dark:text-blue-400">
+                    <span className="text-[11px] font-mono font-bold text-zinc-900 dark:text-white">
                       {tkt.ticketNumber}
                     </span>
                     {getStatusBadge(tkt.status)}
                   </div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
+                  <h4 className="text-xs font-bold text-zinc-900 dark:text-white line-clamp-1">
                     {tkt.subject}
                   </h4>
-                  <div className="text-[10px] text-slate-400 mt-2 flex items-center space-x-2">
+                  <div className="text-[10px] text-zinc-400 mt-2 flex items-center space-x-2">
                     <span>{tkt.category}</span>
                     <span>•</span>
                     <span>{new Date(tkt.createdAt).toLocaleDateString()}</span>
@@ -483,27 +483,27 @@ export const HelpCenter: React.FC = () => {
           {/* Ticket Conversation Detail */}
           <div className="lg:col-span-2">
             {selectedTicket ? (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-2">
+              <div className="bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-xs space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800 gap-2">
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">
+                      <span className="text-xs font-mono font-bold text-zinc-900 dark:text-white">
                         {selectedTicket.ticketNumber}
                       </span>
                       {getStatusBadge(selectedTicket.status)}
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                    <h3 className="text-base font-bold text-zinc-900 dark:text-white mt-1">
                       {selectedTicket.subject}
                     </h3>
                   </div>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300">
                     Priority: {selectedTicket.priority}
                   </span>
                 </div>
 
                 {/* Initial Description */}
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300">
+                  <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">
                     Initial Inquiry
                   </div>
                   {selectedTicket.description}
@@ -511,12 +511,12 @@ export const HelpCenter: React.FC = () => {
 
                 {/* Message Thread */}
                 <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
                     {t('conversationThread')}
                   </h4>
 
                   {selectedTicket.messages?.length === 0 ? (
-                    <div className="text-xs text-slate-400 italic">No replies yet.</div>
+                    <div className="text-xs text-zinc-400 italic">No replies yet.</div>
                   ) : (
                     selectedTicket.messages?.map((msg) => {
                       const isStaff = msg.senderRole !== 'STUDENT';
@@ -525,24 +525,24 @@ export const HelpCenter: React.FC = () => {
                           key={msg.id}
                           className={`p-4 rounded-xl text-xs space-y-1.5 ${
                             isStaff
-                              ? 'bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900'
-                              : 'bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800'
+                              ? 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 dark:border-zinc-800'
+                              : 'bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800'
                           }`}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-slate-900 dark:text-white flex items-center space-x-1.5">
+                            <span className="font-bold text-zinc-900 dark:text-white flex items-center space-x-1.5">
                               <span>{msg.sender?.name || (isStaff ? 'Academic Support' : 'You')}</span>
                               {isStaff && (
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-600 text-white font-semibold">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black dark:bg-white text-white dark:text-black text-white font-semibold">
                                   {t('staffBadge')}
                                 </span>
                               )}
                             </span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-zinc-400">
                               {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
-                          <p className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                          <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap">
                             {msg.message}
                           </p>
                         </div>
@@ -553,20 +553,20 @@ export const HelpCenter: React.FC = () => {
 
                 {/* Reply Box (if ticket not closed) */}
                 {selectedTicket.status !== 'CLOSED' && (
-                  <form onSubmit={handleSendReply} className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                  <form onSubmit={handleSendReply} className="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-3">
                     <textarea
                       rows={3}
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder={t('typeReplyPlaceholder')}
                       required
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                     />
                     <div className="flex justify-end">
                       <button
                         type="submit"
                         disabled={replyLoading}
-                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                        className="inline-flex items-center space-x-1.5 px-4 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
                       >
                         <Send className="w-3.5 h-3.5" />
                         <span>{replyLoading ? 'Sending...' : t('sendReply')}</span>
@@ -577,14 +577,14 @@ export const HelpCenter: React.FC = () => {
 
                 {/* Post-Resolution Satisfaction Rating (SUP-05) */}
                 {(selectedTicket.status === 'RESOLVED' || selectedTicket.status === 'CLOSED') && (
-                  <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
+                  <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
                     <div className="p-5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/60 space-y-4">
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                        <h4 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
                           <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                           <span>{t('rateSupportExperience')}</span>
                         </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                           {t('rateSupportDesc')}
                         </p>
                       </div>
@@ -606,12 +606,12 @@ export const HelpCenter: React.FC = () => {
                               >
                                 <Star
                                   className={`w-6 h-6 ${
-                                    star <= ticketRating ? 'fill-amber-400 text-amber-400' : 'text-slate-300 dark:text-slate-700'
+                                    star <= ticketRating ? 'fill-amber-400 text-amber-400' : 'text-zinc-300 dark:text-zinc-700'
                                   }`}
                                 />
                               </button>
                             ))}
-                            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 ml-2">
+                            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 ml-2">
                               {ticketRating} of 5 Stars
                             </span>
                           </div>
@@ -621,7 +621,7 @@ export const HelpCenter: React.FC = () => {
                             value={ticketFeedbackComment}
                             onChange={(e) => setTicketFeedbackComment(e.target.value)}
                             placeholder="Optional feedback about our resolution speed or clarity..."
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-hidden"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-hidden"
                           />
 
                           <button
@@ -637,7 +637,7 @@ export const HelpCenter: React.FC = () => {
                 )}
               </div>
             ) : (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-12 text-center text-xs text-slate-400">
+              <div className="bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center text-xs text-zinc-400">
                 Select a ticket on the left to read messages and post follow-ups.
               </div>
             )}
@@ -647,13 +647,13 @@ export const HelpCenter: React.FC = () => {
 
       {/* TAB 3: FEEDBACK & PLATFORM RATINGS (FDBK-01 to FDBK-05) */}
       {activeTab === 'feedback' && (
-        <div className="max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xs">
+        <div className="max-w-2xl mx-auto bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-xs">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-              <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+              <MessageSquare className="w-5 h-5 text-zinc-900 dark:text-white" />
               <span>{t('feedbackTitle')}</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
               {t('feedbackSubtitle')}
             </p>
           </div>
@@ -663,13 +663,13 @@ export const HelpCenter: React.FC = () => {
               <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
                 {t('submitFeedbackSuccess')}
               </h3>
               <div className="text-base font-mono font-extrabold text-emerald-700 dark:text-emerald-300">
                 {fbSuccessRef}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
                 {t('feedbackTimeline')}
               </p>
               <button
@@ -684,7 +684,7 @@ export const HelpCenter: React.FC = () => {
             <form onSubmit={handleSubmitFeedback} className="mt-6 space-y-5">
               {/* Category */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                   {t('feedbackCategory')}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -700,8 +700,8 @@ export const HelpCenter: React.FC = () => {
                       onClick={() => setFbCategory(cat.id as any)}
                       className={`p-2.5 text-xs font-semibold rounded-xl border text-center transition ${
                         fbCategory === cat.id
-                          ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 shadow-xs'
-                          : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400'
+                          ? 'border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs'
+                          : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-600 dark:text-zinc-400'
                       }`}
                     >
                       {cat.label}
@@ -713,14 +713,14 @@ export const HelpCenter: React.FC = () => {
               {/* Course Selector if Course Feedback */}
               {fbCategory === 'COURSE_FEEDBACK' && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     {t('selectCourseOptional')}
                   </label>
                   <select
                     value={fbCourseId}
                     onChange={(e) => setFbCourseId(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                   >
                     <option value="">Select a Course...</option>
                     {courses.map((c) => (
@@ -734,7 +734,7 @@ export const HelpCenter: React.FC = () => {
 
               {/* Rating */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                   {t('ratingLabel')}
                 </label>
                 <div className="flex items-center space-x-2">
@@ -747,12 +747,12 @@ export const HelpCenter: React.FC = () => {
                     >
                       <Star
                         className={`w-7 h-7 ${
-                          star <= fbRating ? 'fill-amber-400 text-amber-400' : 'text-slate-300 dark:text-slate-700'
+                          star <= fbRating ? 'fill-amber-400 text-amber-400' : 'text-zinc-300 dark:text-zinc-700'
                         }`}
                       />
                     </button>
                   ))}
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 ml-2">
+                  <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 ml-2">
                     {fbRating} / 5 Stars
                   </span>
                 </div>
@@ -760,7 +760,7 @@ export const HelpCenter: React.FC = () => {
 
               {/* Title */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                   {t('feedbackTitleLabel')}
                 </label>
                 <input
@@ -769,13 +769,13 @@ export const HelpCenter: React.FC = () => {
                   onChange={(e) => setFbTitle(e.target.value)}
                   placeholder={t('feedbackTitlePlaceholder')}
                   required
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                   {t('feedbackDescLabel')}
                 </label>
                 <textarea
@@ -784,7 +784,7 @@ export const HelpCenter: React.FC = () => {
                   onChange={(e) => setFbDescription(e.target.value)}
                   placeholder={t('feedbackDescPlaceholder')}
                   required
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-hidden"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white outline-hidden"
                 />
               </div>
 
@@ -796,9 +796,9 @@ export const HelpCenter: React.FC = () => {
                   checked={fbConsent}
                   onChange={(e) => setFbConsent(e.target.checked)}
                   required
-                  className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500 border-slate-300 dark:border-slate-700 mt-0.5 cursor-pointer"
+                  className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 mt-0.5 cursor-pointer"
                 />
-                <label htmlFor="consent" className="text-xs text-slate-600 dark:text-slate-400 cursor-pointer">
+                <label htmlFor="consent" className="text-xs text-zinc-600 dark:text-zinc-400 cursor-pointer">
                   {t('consentNotice')}
                 </label>
               </div>
@@ -806,7 +806,7 @@ export const HelpCenter: React.FC = () => {
               <button
                 type="submit"
                 disabled={fbLoading}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                className="w-full py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs transition disabled:opacity-50"
               >
                 {fbLoading ? 'Submitting...' : t('submitFeedbackBtn')}
               </button>
@@ -817,17 +817,17 @@ export const HelpCenter: React.FC = () => {
 
       {/* CREATE TICKET MODAL */}
       {showCreateTicketModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-lg w-full p-6 shadow-xl space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                <PlusCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/50 backdrop-blur-xs">
+          <div className="bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 max-w-lg w-full p-6 shadow-xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                <PlusCircle className="w-5 h-5 text-zinc-900 dark:text-white" />
                 <span>{t('createTicket')}</span>
               </h3>
               <button
                 type="button"
                 onClick={() => setShowCreateTicketModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-bold"
+                className="text-zinc-400 hover:text-zinc-600 text-sm font-bold"
               >
                 ✕
               </button>
@@ -838,18 +838,18 @@ export const HelpCenter: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h4 className="text-sm font-bold text-zinc-900 dark:text-white">
                   {t('ticketSubmittedSuccess')}
                 </h4>
-                <div className="text-base font-mono font-extrabold text-blue-600 dark:text-blue-400">
+                <div className="text-base font-mono font-extrabold text-zinc-900 dark:text-white">
                   {ticketCreatedRef}
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   {t('ticketResponseTimeline')}
                 </p>
                 <button
                   onClick={() => setShowCreateTicketModal(false)}
-                  className="mt-3 px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold shadow-xs"
+                  className="mt-3 px-5 py-2 bg-black dark:bg-white text-white dark:text-black text-white rounded-xl text-xs font-semibold shadow-xs"
                 >
                   Done
                 </button>
@@ -859,7 +859,7 @@ export const HelpCenter: React.FC = () => {
                 {!isAuthenticated && (
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                         Name
                       </label>
                       <input
@@ -867,11 +867,11 @@ export const HelpCenter: React.FC = () => {
                         value={guestName}
                         onChange={(e) => setGuestName(e.target.value)}
                         required
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                         Email
                       </label>
                       <input
@@ -879,7 +879,7 @@ export const HelpCenter: React.FC = () => {
                         value={guestEmail}
                         onChange={(e) => setGuestEmail(e.target.value)}
                         required
-                        className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                       />
                     </div>
                   </div>
@@ -887,13 +887,13 @@ export const HelpCenter: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('category')}
                     </label>
                     <select
                       value={ticketCategory}
                       onChange={(e) => setTicketCategory(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                     >
                       <option value="GENERAL">{t('ticketCategoryGeneral')}</option>
                       <option value="COURSE_ACCESS">{t('ticketCategoryCourse')}</option>
@@ -904,13 +904,13 @@ export const HelpCenter: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                       {t('priority')}
                     </label>
                     <select
                       value={ticketPriority}
                       onChange={(e) => setTicketPriority(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                     >
                       <option value="LOW">{t('priorityLow')}</option>
                       <option value="MEDIUM">{t('priorityMedium')}</option>
@@ -921,7 +921,7 @@ export const HelpCenter: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     {t('subject')}
                   </label>
                   <input
@@ -930,12 +930,12 @@ export const HelpCenter: React.FC = () => {
                     onChange={(e) => setTicketSubject(e.target.value)}
                     placeholder="Brief description of the issue..."
                     required
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     {t('description')}
                   </label>
                   <textarea
@@ -944,7 +944,7 @@ export const HelpCenter: React.FC = () => {
                     onChange={(e) => setTicketDescription(e.target.value)}
                     placeholder="Provide detailed information, error messages, or course titles..."
                     required
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white outline-hidden"
                   />
                 </div>
 
@@ -952,14 +952,14 @@ export const HelpCenter: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowCreateTicketModal(false)}
-                    className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300"
+                    className="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-xl text-xs font-semibold text-zinc-700 dark:text-zinc-300"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={ticketCreating}
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs disabled:opacity-50"
+                    className="px-5 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold shadow-xs disabled:opacity-50"
                   >
                     {ticketCreating ? 'Submitting...' : t('submitTicket')}
                   </button>

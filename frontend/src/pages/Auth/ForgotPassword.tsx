@@ -74,15 +74,15 @@ export const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-black transition-colors duration-200">
       {/* Ambient pointer light */}
       <PointerLight intensity="vibrant" />
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h2 className="text-center text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
           Reset your password
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
           {step === 'REQUEST'
             ? 'Enter your verified email or mobile to receive a single-use reset code.'
             : step === 'RESET'
@@ -92,8 +92,8 @@ export const ForgotPassword: React.FC = () => {
       </div>
 
       <div className="relative z-10 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Glassmorphic Card Container */}
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-3xl sm:px-10 border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
+        {/* Card Container */}
+        <div className="bg-white dark:bg-black py-8 px-6 shadow-xl rounded-3xl sm:px-10 border border-zinc-200 dark:border-zinc-800 transition-all duration-300">
           {error && (
             <div className="mb-4 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 rounded-xl text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
@@ -102,8 +102,8 @@ export const ForgotPassword: React.FC = () => {
           )}
 
           {message && step !== 'VERIFYING_ANIMATION' && (
-            <div className="mb-4 p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="mb-4 p-3.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-xl text-xs flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-zinc-700 dark:text-zinc-300 shrink-0" />
               <span>{message}</span>
             </div>
           )}
@@ -111,7 +111,7 @@ export const ForgotPassword: React.FC = () => {
           {step === 'REQUEST' ? (
             <form onSubmit={handleRequest} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
                   Email or Mobile Identifier
                 </label>
                 <div className="relative">
@@ -121,19 +121,19 @@ export const ForgotPassword: React.FC = () => {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="student@lms.local"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition outline-hidden"
+                    className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
                   />
-                  <Mail className="w-4 h-4 text-slate-400 absolute right-3 top-3.5" />
+                  <Mail className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition cursor-pointer disabled:opacity-50"
+                className="w-full flex justify-center items-center py-3 px-4 rounded-xl shadow-xs text-sm font-bold text-white bg-black hover:bg-zinc-800 dark:text-black dark:bg-white dark:hover:bg-zinc-200 transition cursor-pointer disabled:opacity-50"
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <span className="flex items-center space-x-1.5">
                     <span>Send Verification Challenge</span>
@@ -146,11 +146,11 @@ export const ForgotPassword: React.FC = () => {
             /* CodeByGaurav Secure Vault Access OTP Screen */
             <form onSubmit={handleReset} className="space-y-5">
               {demoCode && (
-                <div className="p-3.5 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-2xl text-xs text-blue-900 dark:text-blue-300 flex items-start space-x-3">
-                  <KeyRound className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                <div className="p-3.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-zinc-100 flex items-start space-x-3">
+                  <KeyRound className="w-5 h-5 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold">Demo Single-Use PIN:</span>{' '}
-                    <span className="font-mono font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-blue-300 dark:border-blue-700">
+                    <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black px-2 py-0.5 rounded-lg border border-zinc-300 dark:border-zinc-700">
                       {demoCode}
                     </span>
                   </div>
@@ -159,7 +159,7 @@ export const ForgotPassword: React.FC = () => {
 
               {/* 6-Digit Individual Boxed PIN Input */}
               <div className="space-y-2">
-                <label className="block text-center text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <label className="block text-center text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                   Enter 6-Digit Code
                 </label>
                 <OtpInputBoxes
@@ -170,7 +170,7 @@ export const ForgotPassword: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
                   New Password (8+ characters)
                 </label>
                 <div className="relative">
@@ -180,15 +180,15 @@ export const ForgotPassword: React.FC = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition outline-hidden"
+                    className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
                   />
-                  <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3.5" />
+                  <Lock className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition cursor-pointer"
+                className="w-full flex justify-center items-center py-3 px-4 rounded-xl shadow-xs text-sm font-bold text-white bg-black hover:bg-zinc-800 dark:text-black dark:bg-white dark:hover:bg-zinc-200 transition cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4 mr-2" />
                 <span>Reset Password & Invalidate Sessions</span>
@@ -197,7 +197,7 @@ export const ForgotPassword: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setStep('REQUEST')}
-                className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-center py-1 transition"
+                className="w-full text-xs text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white text-center py-1 transition"
               >
                 ← Back to Identifier
               </button>
@@ -212,9 +212,9 @@ export const ForgotPassword: React.FC = () => {
             />
           )}
 
-          <div className="mt-6 text-center text-xs text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-4">
+          <div className="mt-6 text-center text-xs text-zinc-600 dark:text-zinc-400 border-t border-zinc-200 dark:border-zinc-800 pt-4">
             Remember your credentials?{' '}
-            <Link to="/login" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+            <Link to="/login" className="font-semibold text-zinc-900 dark:text-white underline">
               Sign In
             </Link>
           </div>

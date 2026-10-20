@@ -7,10 +7,10 @@
     color-scheme: dark;
   }
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col transition-colors duration-200;
+    @apply bg-white text-zinc-900 font-sans antialiased min-h-screen flex flex-col transition-colors duration-200;
   }
   html.dark body {
-    @apply bg-slate-950 text-slate-100;
+    @apply bg-black text-zinc-100;
   }
 }
 
@@ -20,22 +20,22 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #e4e4e7;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a1a1aa;
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #000000;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #27272a;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3f3f46;
 }

@@ -28,9 +28,9 @@ export const PointerLight: React.FC<PointerLightProps> = ({ className = '', inte
         isVisible ? 'opacity-100' : 'opacity-0'
       } ${className}`}
     >
-      {/* Ambient Mouse-following Radial Light (CodeByGaurav signature pointer-light) */}
+      {/* Ambient Mouse-following Radial Light (Monochrome White/Black) */}
       <div
-        className={`absolute rounded-full blur-3xl transition-transform duration-75 ease-out -translate-x-1/2 -translate-y-1/2 ${opacityClass} bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500`}
+        className={`absolute rounded-full blur-3xl transition-transform duration-75 ease-out -translate-x-1/2 -translate-y-1/2 ${opacityClass} bg-gradient-to-tr from-zinc-300 via-zinc-200 to-zinc-400 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900`}
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
