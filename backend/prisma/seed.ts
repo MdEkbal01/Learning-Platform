@@ -7,6 +7,10 @@ async function main() {
   console.log('Seeding LMS platform data...');
 
   // Clean existing tables in correct order if any
+  await prisma.supportTicketMessage.deleteMany();
+  await prisma.supportTicket.deleteMany();
+  await prisma.feedback.deleteMany();
+  await prisma.faqArticle.deleteMany();
   await prisma.auditEvent.deleteMany();
   await prisma.maintenanceFlag.deleteMany();
   await prisma.moderationReport.deleteMany();
@@ -686,7 +690,108 @@ async function main() {
     },
   });
 
-  console.log('Database seeded successfully with realistic test data for all 6 roles!');
+  // 11. PRD Section 15.4 FAQs in English and Hindi
+  const faqs = [
+    {
+      category: 'REGISTRATION',
+      questionEn: 'How do I register and verify my account?',
+      answerEn: 'Sign up with your legal name, verified email, and academic details. You will receive a 6-digit one-time code to activate your learning credentials.',
+      questionHi: 'मैं अपना खाता कैसे पंजीकृत और सत्यापित करूं?',
+      answerHi: 'अपने नाम, ईमेल और शैक्षणिक विवरण के साथ साइन अप करें। अपना खाता सक्रिय करने के लिए आपको 6-अंकीय सत्यापन कोड प्राप्त होगा।',
+      orderIndex: 1,
+    },
+    {
+      category: 'PAYMENTS_REFUNDS',
+      questionEn: 'What is your course refund policy?',
+      answerEn: 'Paid courses include a 7-day refund guarantee if less than 25% of lessons have been completed. Authorized refunds automatically revoke course enrolment.',
+      questionHi: 'आपकी पाठ्यक्रम धनवापसी नीति क्या है?',
+      answerHi: 'सशुल्क पाठ्यक्रमों में 7-दिवसीय धनवापसी गारंटी शामिल है यदि 25% से कम पाठ पूरे किए गए हों। स्वीकृत धनवापसी से पाठ्यक्रम का एक्सेस स्वतः रद्द हो जाता है।',
+      orderIndex: 2,
+    },
+    {
+      category: 'COURSE_ACCESS',
+      questionEn: 'Do enrolled courses expire?',
+      answerEn: 'Courses grant 365 days of active access or lifetime access depending on the syllabus tier. Free foundational courses provide indefinite lifetime access.',
+      questionHi: 'क्या नामांकित पाठ्यक्रमों की वैधता समाप्त होती है?',
+      answerHi: 'पाठ्यक्रम 365 दिनों की सक्रिय पहुंच या आजीवन पहुंच प्रदान करते हैं। निःशुल्क बुनियादी पाठ्यक्रम असीमित आजीवन पहुंच प्रदान करते हैं।',
+      orderIndex: 3,
+    },
+    {
+      category: 'LIVE_CLASSES',
+      questionEn: 'How do I join live masterclasses?',
+      answerEn: 'Go to your Student Dashboard or Live Classes tab. Active meeting links are visible to enrolled learners 15 minutes before the scheduled session.',
+      questionHi: 'मैं लाइव मास्टरक्लास में कैसे शामिल हो सकता हूं?',
+      answerHi: 'अपने छात्र डैशबोर्ड या लाइव क्लास टैब पर जाएं। सक्रिय मीटिंग लिंक निर्धारित समय से 15 मिनट पहले नामांकित शिक्षार्थियों के लिए दिखाई देंगे।',
+      orderIndex: 4,
+    },
+    {
+      category: 'CERTIFICATES',
+      questionEn: 'How do I claim and verify my certificate of completion?',
+      answerEn: 'Complete 100% of the lessons in a course and achieve at least 70% in all module quizzes. Your verifiable certificate code can be verified publicly at /verify-certificate.',
+      questionHi: 'मैं अपना पूर्णता प्रमाणपत्र कैसे प्राप्त और सत्यापित कर सकता हूं?',
+      answerHi: 'पाठ्यक्रम के 100% पाठ पूरे करें और सभी मॉड्यूल क्विज़ में कम से कम 70% अंक प्राप्त करें। आपका प्रमाणपत्र कोड /verify-certificate पर सार्वजनिक रूप से सत्यापित किया जा सकता है।',
+      orderIndex: 5,
+    },
+    {
+      category: 'ACCOUNT_SECURITY',
+      questionEn: 'Why was I signed out automatically?',
+      answerEn: 'For your security, our platform automatically invalidates sessions after 2 hours of inactivity. Simply sign back in to continue where you left off.',
+      questionHi: 'मुझे स्वचालित रूप से साइन आउट क्यों किया गया?',
+      answerHi: 'आपकी सुरक्षा के लिए, हमारा प्लेटफ़ॉर्म 2 घंटे की निष्क्रियता के बाद सत्रों को स्वचालित रूप से अमान्य कर देता है। फिर से साइन इन करके जारी रखें।',
+      orderIndex: 6,
+    },
+  ];
+
+  for (const faq of faqs) {
+    await prisma.faqArticle.create({ data: faq });
+  }
+
+  // 12. PRD Section 15.3 Feedback Sample
+  await prisma.feedback.create({
+    data: {
+      referenceNumber: 'FDBK-2026-1001',
+      userId: student.id,
+      courseId: course1.id,
+      category: 'COURSE_FEEDBACK',
+      title: 'Outstanding TypeScript Architecture Curriculum',
+      description: 'The real-world focus on TypeScript types and system architecture in Module 1 was phenomenal.',
+      rating: 5,
+      status: 'RESOLVED',
+      internalNotes: 'Positive learner review. Featured in student testimonials.',
+    },
+  });
+
+  // 13. PRD Section 15.4 Support Ticket Sample
+  const sampleTicket = await prisma.supportTicket.create({
+    data: {
+      ticketNumber: 'SUP-2026-5001',
+      userId: student.id,
+      requesterEmail: student.email,
+      requesterName: student.name,
+      category: 'COURSE_CONTENT',
+      subject: 'Clarification regarding Docker Compose resource files',
+      description: 'Is the Docker Compose template in Lesson 1.2 compatible with Apple Silicon M-series chips?',
+      status: 'IN_PROGRESS',
+      priority: 'MEDIUM',
+      assignedToUserId: mentor.id,
+      messages: {
+        create: [
+          {
+            senderId: student.id,
+            senderRole: 'USER',
+            message: 'Hello Support team, I have a quick question on the local PostgreSQL docker configuration for Apple Silicon.',
+          },
+          {
+            senderId: mentor.id,
+            senderRole: 'STAFF',
+            message: 'Hi John! Yes, the compose file uses the official arm64 multi-arch PostgreSQL image and works seamlessly on Apple Silicon.',
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Database seeded successfully with realistic test data for all 6 roles and preferences/support!');
 }
 
 main()

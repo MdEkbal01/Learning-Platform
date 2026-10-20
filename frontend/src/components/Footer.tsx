@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, ShieldCheck, CheckCircle2, LifeBuoy, Settings, MessageSquare } from 'lucide-react';
+import { useThemeLanguage } from '../context/ThemeLanguageContext';
 
 export const Footer: React.FC = () => {
+  const { t } = useThemeLanguage();
+
   return (
-    <footer className="bg-slate-900 text-slate-400 text-sm mt-auto border-t border-slate-800">
+    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-400 text-sm mt-auto border-t border-slate-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Col 1 */}
@@ -38,23 +41,25 @@ export const Footer: React.FC = () => {
 
           {/* Col 3 */}
           <div>
-            <h4 className="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Governance & Security</h4>
+            <h4 className="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Help & Preferences</h4>
             <ul className="space-y-2 text-xs">
-              <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>2-Hour Inactivity Auto-Timeout</span>
+              <li>
+                <Link to="/help" className="hover:text-white transition flex items-center space-x-1.5">
+                  <LifeBuoy className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{t('helpAndSupport')}</span>
+                </Link>
               </li>
-              <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Idempotent Webhook Verification</span>
+              <li>
+                <Link to="/settings" className="hover:text-white transition flex items-center space-x-1.5">
+                  <Settings className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{t('accountSettings')}</span>
+                </Link>
               </li>
-              <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Private Moderation Audit Queue</span>
-              </li>
-              <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Anti-Tamper Order Enforcement</span>
+              <li>
+                <Link to="/help" className="hover:text-white transition flex items-center space-x-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{t('feedback')}</span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -65,7 +70,7 @@ export const Footer: React.FC = () => {
             <p className="text-xs text-slate-400 mb-3">
               Technical issues or billing reconciliation questions?
             </p>
-            <div className="bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs">
+            <div className="bg-slate-800/80 dark:bg-slate-900 p-3 rounded-lg border border-slate-700 dark:border-slate-800 text-xs">
               <div className="font-medium text-white">System Status: Operational</div>
               <div className="text-[11px] text-slate-400 mt-1">99.5% Monthly Target SLA</div>
               <div className="text-[11px] text-slate-400">support@lms.local</div>

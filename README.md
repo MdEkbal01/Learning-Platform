@@ -145,6 +145,14 @@ flowchart TD
 | **LRN-04** | Live-class schedules & authenticated join links. | ✅ **Met** | Mentors schedule live classes; enrolled students access room links. |
 | **LRN-05** | Verifiable completion certificates. | ✅ **Met** | Issued upon 100% lesson and quiz completion, publicly verifiable via `/verify-certificate/:code`. |
 
+### 8. Preferences, Feedback & Support (Section 15)
+| Requirement ID | Specification | Status | Implementation Details |
+| :--- | :--- | :---: | :--- |
+| **PREF-01 to 04** | Strict 2-theme design (`light` and `dark`). No system/auto mode. Persists to profile and `localStorage`, applies instantly without page reload. | ✅ **Met** | Managed via `ThemeLanguageContext.tsx`, `GET/PUT /api/preferences`, rejects invalid themes with 400. Strict WCAG AA contrast. |
+| **LANG-01 to 06** | Strict 2-language design (`en` and `hi`). Available in global header and Settings page. Applies instantly without reload; sets `lang` on `<html>`. | ✅ **Met** | Comprehensive bilingual dictionaries (`src/i18n/index.ts`), dynamic `html.lang` updates, rejects invalid languages with 400. |
+| **FDBK-01 to 05** | Platform feedback, suggestions, bug reports, and course reviews with 1-5 star ratings, mandatory consent, reference `FDBK-2026-XXXX`. | ✅ **Met** | `POST /api/feedback`, generates unique reference ID, staff triage with internal notes hidden from students. |
+| **SUP-01 to 06** | Centralized Help Centre (`/help`), searchable bilingual FAQs (EN/HI), support ticket generation (`SUP-2026-XXXX`), threaded conversation viewer, post-resolution rating, and account recovery route. | ✅ **Met** | `HelpCenter.tsx` with category filters, live search, `POST /api/support/tickets`, post-resolution rating modal, and prominent account recovery link. |
+
 ---
 
 ## 🛠️ Testing Verification Checklist
@@ -162,3 +170,9 @@ flowchart TD
 - [x] Test `admin@lms.local` login, view KPI analytics, audit logs, and toggle maintenance mode.
 - [x] Test `/verify-certificate` public validation endpoint.
 - [x] Test 2-hour inactivity session invalidation logic.
+- [x] Test Theme toggle in Navbar & Settings: instant switch between Light and Dark mode (no reload).
+- [x] Test Language toggle in Navbar & Settings: instant switch between English and हिन्दी (no reload).
+- [x] Test searching bilingual FAQs in English and Hindi on `/help`.
+- [x] Test opening a support ticket (`SUP-2026-XXXX`) and viewing message conversation thread.
+- [x] Test submitting platform feedback (`FDBK-2026-XXXX`) with 1-5 star rating and consent confirmation.
+- [x] Test session management and password change on `/settings`.

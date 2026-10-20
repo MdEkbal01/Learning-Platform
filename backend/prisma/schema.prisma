@@ -44,6 +44,11 @@ model User {
   auditLogs         AuditEvent[]       @relation("ActorAuditLogs")
   refundsProcessed  Refund[]           @relation("StaffRefunds")
   mentorCourses     Course[]           @relation("MentorAssignedCourses")
+  feedbacks         Feedback[]
+  assignedFeedbacks Feedback[]         @relation("StaffAssignedFeedbacks")
+  supportTickets    SupportTicket[]
+  assignedTickets   SupportTicket[]    @relation("StaffAssignedTickets")
+  ticketMessages    SupportTicketMessage[]
 }
 
 model UserProfile {
@@ -53,6 +58,8 @@ model UserProfile {
   academicYear      String?
   academicCourse    String?
   bio               String?
+  theme             String   @default("light") // light, dark
+  language          String   @default("en")    // en, hi
   notificationPrefs String?  @default("{\"email\":true,\"sms\":false,\"doubts\":true,\"announcements\":true}")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -130,6 +137,7 @@ model Course {
   liveClasses        LiveClass[]
   certificates       Certificate[]
   resources          CourseResource[]
+  feedbacks          Feedback[]
 }
 
 model CourseModule {
@@ -458,4 +466,77 @@ model AuditEvent {
   createdAt   DateTime @default(now())
 
   actor       User?    @relation("ActorAuditLogs", fields: [actorId], references: [id], onDelete: SetNull)
+}
+
+// PRD Section 15.3 Feedback & Ratings
+model Feedback {
+  id               String   @id @default(uuid())
+  referenceNumber  String   @unique // e.g. "FDBK-2026-1001"
+  userId           String?
+  courseId         String?
+  category         String   @default("GENERAL") // GENERAL, SUGGESTION, BUG_REPORT, COURSE_FEEDBACK
+  title            String
+  description      String
+  rating           Int?     // 1 to 5 stars
+  attachmentUrl    String?
+  status           String   @default("NEW") // NEW, UNDER_REVIEW, PLANNED, RESOLVED, DECLINED
+  internalNotes    String?  // Staff only (hidden from student)
+  assignedToUserId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  course           Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  assignedTo       User?    @relation("StaffAssignedFeedbacks", fields: [assignedToUserId], references: [id])
+}
+
+// PRD Section 15.4 Help & Support Tickets
+model SupportTicket {
+  id               String                 @id @default(uuid())
+  ticketNumber     String                 @unique // e.g. "SUP-2026-5001"
+  userId           String?                // nullable for pre-login account recovery tickets
+  requesterEmail   String
+  requesterName    String
+  category         String                 @default("GENERAL_INQUIRY") // ACCOUNT_ACCESS, PAYMENT_BILLING, COURSE_CONTENT, TECHNICAL_BUG, GENERAL_INQUIRY
+  subject          String
+  description      String
+  status           String                 @default("OPEN") // OPEN, IN_PROGRESS, WAITING_FOR_USER, ESCALATED, RESOLVED
+  priority         String                 @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  assignedToUserId String?
+  internalNotes    String?                // Staff only (hidden from requester)
+  feedbackRating   Int?                   // 1 to 5 post-resolution rating
+  feedbackComment  String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  user             User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  assignedTo       User?                  @relation("StaffAssignedTickets", fields: [assignedToUserId], references: [id])
+  messages         SupportTicketMessage[]
+}
+
+model SupportTicketMessage {
+  id            String        @id @default(uuid())
+  ticketId      String
+  senderId      String?
+  senderRole    String        @default("USER") // USER, STAFF
+  message       String
+  attachmentUrl String?
+  isInternal    Boolean       @default(false) // Staff internal note
+  createdAt     DateTime      @default(now())
+
+  ticket        SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender        User?         @relation(fields: [senderId], references: [id], onDelete: SetNull)
+}
+
+// PRD Section 15.4 Searchable FAQs
+model FaqArticle {
+  id         String   @id @default(uuid())
+  category   String   // REGISTRATION, PAYMENTS_REFUNDS, COURSE_ACCESS, LIVE_CLASSES, CERTIFICATES, ACCOUNT_SECURITY
+  questionEn String
+  answerEn   String
+  questionHi String
+  answerHi   String
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

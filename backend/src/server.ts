@@ -17,6 +17,9 @@ import financeRoutes from './routes/finance.routes';
 import moderatorRoutes from './routes/moderator.routes';
 import adminRoutes from './routes/admin.routes';
 import publicRoutes from './routes/public.routes';
+import preferencesRoutes from './routes/preferences.routes';
+import feedbackRoutes from './routes/feedback.routes';
+import supportRoutes from './routes/support.routes';
 
 const app = express();
 
@@ -78,6 +81,9 @@ app.use('/api/content', contentRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/moderator', moderatorRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/preferences', preferencesRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/support', supportRoutes);
 app.use('/api', publicRoutes);
 
 // Health check endpoint

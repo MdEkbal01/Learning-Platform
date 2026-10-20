@@ -543,3 +543,114 @@ export async function logout(req: Request, res: Response): Promise<void> {
     res.status(500).json({ error: 'Logout failed.' });
   }
 }
+
+export async function changePassword(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized.' });
+      return;
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      res.status(400).json({ error: 'Current password and new password are required.' });
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      res.status(400).json({ error: 'New password must be at least 8 characters long.' });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found.' });
+      return;
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isMatch) {
+      res.status(400).json({ error: 'Current password does not match.' });
+      return;
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash: newPasswordHash },
+    });
+
+    await logAuditEvent({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'PASSWORD_CHANGED',
+      entityType: 'USER',
+      entityId: user.id,
+      req,
+    });
+
+    res.json({ message: 'Password has been updated successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update password.' });
+  }
+}
+
+export async function getActiveSessions(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized.' });
+      return;
+    }
+
+    const sessions = await prisma.session.findMany({
+      where: {
+        userId: req.user.id,
+        isRevoked: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+
+    const formattedSessions = sessions.map((s) => ({
+      id: s.id,
+      ipAddress: s.ipAddress,
+      userAgent: s.userAgent,
+      createdAt: s.createdAt,
+      expiresAt: s.expiresAt,
+      isCurrent: req.sessionToken ? s.tokenHash === req.sessionToken : false,
+    }));
+
+    res.json(formattedSessions);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve active sessions.' });
+  }
+}
+
+export async function revokeSession(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized.' });
+      return;
+    }
+
+    const { id } = req.params;
+
+    await prisma.session.updateMany({
+      where: {
+        id: id as string,
+        userId: req.user.id,
+      },
+      data: { isRevoked: true },
+    });
+
+    res.json({ message: 'Session revoked successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to revoke session.' });
+  }
+}
+
