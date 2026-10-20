@@ -547,6 +547,18 @@ async function main() {
     },
   });
 
+  // Seed an official verifiable certificate for John Doe on Course 3
+  await prisma.certificate.create({
+    data: {
+      certificateCode: 'CERT-2026-CS101-JOHN',
+      userId: student.id,
+      courseId: course3.id,
+      studentName: student.name,
+      courseTitle: course3.title,
+      issuedAt: new Date(),
+    },
+  });
+
   // John has completed Lesson 1.1 and has progress on Lesson 1.2
   await prisma.lessonProgress.create({
     data: {

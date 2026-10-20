@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="780" viewBox="0 0 1200 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap');
+      text { font-family: 'Inter', -apple-system, sans-serif; }
+    </style>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <radialGradient id="pointerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect x="0" y="0" width="1200" height="780" fill="#0A0F1D" />
+  
+  <!-- Subtle Ambient Glow (CodeByGaurav signature) -->
+  <circle cx="850" cy="200" r="300" fill="url(#pointerGlow)" />
+
+  
+    <!-- Top Navigation Bar -->
+    <rect x="0" y="0" width="1200" height="64" fill="#0F172A" />
+    <line x1="0" y1="64" x2="1200" y2="64" stroke="#1E293B" stroke-width="1" />
+    
+    <!-- Logo -->
+    <rect x="32" y="16" width="32" height="32" rx="8" fill="#4F46E5" />
+    <text x="48" y="38" font-family="Inter, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">A</text>
+    <text x="74" y="38" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">Aura<tspan fill="#6366F1">LMS</tspan></text>
+    
+    <!-- Navigation Links -->
+    <g font-family="Inter, sans-serif" font-size="13" font-weight="500">
+      <text x="210" y="37" fill="#94A3B8">Explore</text>
+      <text x="280" y="37" fill="#FFFFFF">My Courses</text>
+      <text x="375" y="37" fill="#94A3B8">Live Classes</text>
+      <text x="475" y="37" fill="#94A3B8">Doubts</text>
+      <text x="550" y="37" fill="#94A3B8">Help</text>
+    </g>
+
+    <!-- Search Bar Mock -->
+    <rect x="630" y="14" width="260" height="36" rx="8" fill="#1E293B" stroke="#334155" />
+    <circle cx="650" cy="32" r="6" stroke="#64748B" stroke-width="1.5" fill="none" />
+    <line x1="655" y1="36" x2="661" y2="42" stroke="#64748B" stroke-width="1.5" />
+    <text x="670" y="37" font-family="Inter, sans-serif" font-size="12" fill="#64748B">Search courses, topics...</text>
+
+    <!-- Right Controls: Theme Toggle & Role Badge & Profile -->
+    <circle cx="930" cy="32" r="16" fill="#1E293B" stroke="#334155" />
+    <path d="M925 32 A 5 5 0 0 0 935 32 A 5 5 0 1 1 925 32" fill="#F59E0B" />
+
+    <!-- Role Pill -->
+    <rect x="965" y="18" width="85" height="26" rx="13" fill="#1E1B4B" stroke="#4F46E5" />
+    <text x="1007" y="35" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#818CF8" text-anchor="middle">STUDENT</text>
+
+    <!-- User Profile Dropdown Pill -->
+    <circle cx="1080" cy="32" r="16" fill="#3B82F6" />
+    <text x="1080" y="37" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">J</text>
+    <text x="1105" y="37" font-family="Inter, sans-serif" font-size="13" font-weight="500" fill="#E2E8F0">John Doe</text>
+  
+        <g transform="translate(48, 80)">
+          <!-- Breadcrumb & Top Bar -->
+          <text x="0" y="16" font-size="12" fill="#64748B">Intro to Computer Science &gt; Module 1 &gt; Lesson 3: Asymptotic Analysis</text>
+
+          <!-- Main Player Window (16:9) -->
+          <g transform="translate(0, 35)">
+            <rect x="0" y="0" width="760" height="460" rx="12" fill="#000000" stroke="#1E293B" />
+            
+            <!-- Video Mock Canvas -->
+            <rect x="40" y="40" width="680" height="340" rx="8" fill="#0B132B" />
+            <circle cx="380" cy="210" r="32" fill="#4F46E5" />
+            <polygon points="375,200 395,210 375,220" fill="#FFFFFF" />
+
+            <!-- Code Overlay on Video -->
+            <text x="70" y="80" font-family="monospace" font-size="13" fill="#38BDF8">function binarySearch(arr, target) {</text>
+            <text x="90" y="105" font-family="monospace" font-size="13" fill="#94A3B8">  let low = 0, high = arr.length - 1;</text>
+            <text x="90" y="130" font-family="monospace" font-size="13" fill="#38BDF8">  // O(log n) time complexity</text>
+            <text x="70" y="155" font-family="monospace" font-size="13" fill="#38BDF8">}</text>
+
+            <!-- Video Controls Bar -->
+            <rect x="0" y="415" width="760" height="45" rx="0" fill="#0F172A" />
+            <line x1="0" y1="415" x2="760" y2="415" stroke="#334155" stroke-width="1" />
+            <!-- Play Button -->
+            <polygon points="25,432 35,438 25,444" fill="#FFFFFF" />
+            <!-- Progress scrubber -->
+            <rect x="50" y="435" width="560" height="6" rx="3" fill="#334155" />
+            <rect x="50" y="435" width="280" height="6" rx="3" fill="#4F46E5" />
+            <text x="630" y="441" font-size="11" fill="#94A3B8">14:22 / 28:50</text>
+            <!-- Fullscreen icon -->
+            <rect x="725" y="432" width="12" height="12" stroke="#FFFFFF" stroke-width="1.5" fill="none" />
+          </g>
+
+          <!-- Right Column: Lesson Syllabus & Quiz Drawer -->
+          <g transform="translate(780, 35)">
+            <rect x="0" y="0" width="324" height="460" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="20" y="32" font-size="15" font-weight="700" fill="#FFFFFF">Course Modules</text>
+            <text x="250" y="32" font-size="11" fill="#818CF8">80% Done</text>
+
+            <g transform="translate(20, 50)">
+              <rect x="0" y="0" width="284" height="46" rx="6" fill="#1E1B4B" stroke="#4F46E5" />
+              <circle cx="20" cy="23" r="7" fill="#22C55E" />
+              <text x="35" y="27" font-size="12" font-weight="600" fill="#FFFFFF">1. Complexity Analysis</text>
+
+              <rect x="0" y="55" width="284" height="46" rx="6" fill="#0F172A" />
+              <circle cx="20" cy="78" r="7" fill="#22C55E" />
+              <text x="35" y="82" font-size="12" fill="#E2E8F0">2. Big-O &amp; Big-Theta</text>
+
+              <rect x="0" y="110" width="284" height="46" rx="6" fill="#0F172A" stroke="#3B82F6" stroke-width="1" />
+              <circle cx="20" cy="133" r="7" fill="#3B82F6" />
+              <text x="35" y="137" font-size="12" font-weight="600" fill="#60A5FA">3. Sorting Algorithms (Current)</text>
+
+              <rect x="0" y="165" width="284" height="46" rx="6" fill="#0F172A" />
+              <circle cx="20" cy="188" r="7" stroke="#64748B" stroke-width="1.5" fill="none" />
+              <text x="35" y="192" font-size="12" fill="#94A3B8">4. Module 1 Graded Quiz</text>
+
+              <!-- Graded Quiz Snapshot Modal inside panel -->
+              <g transform="translate(0, 230)">
+                <rect x="0" y="0" width="284" height="150" rx="8" fill="#0B132B" stroke="#374151" />
+                <text x="15" y="25" font-size="12" font-weight="700" fill="#FBBF24">⚡ Quick Check Quiz</text>
+                <text x="15" y="48" font-size="11" fill="#E5E7EB">What is average time complexity of QuickSort?</text>
+                
+                <rect x="15" y="60" width="254" height="26" rx="4" fill="#1E293B" stroke="#4F46E5" />
+                <text x="25" y="77" font-size="10" fill="#C7D2FE">● O(n log n) [Selected]</text>
+
+                <rect x="15" y="92" width="254" height="26" rx="4" fill="#0F172A" />
+                <text x="25" y="109" font-size="10" fill="#94A3B8">○ O(n²)</text>
+
+                <rect x="15" y="124" width="254" height="20" rx="4" fill="#22C55E" />
+                <text x="142" y="138" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">Submit Answer</text>
+              </g>
+            </g>
+          </g>
+
+          <!-- Bottom Action Tabs: Notes, Doubts, Resources -->
+          <g transform="translate(0, 515)">
+            <rect x="0" y="0" width="760" height="160" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="24" y="32" font-size="14" font-weight="700" fill="#FFFFFF">Discussion &amp; Doubt Assistance</text>
+            <text x="640" y="32" font-size="12" font-weight="600" fill="#818CF8">+ Ask New Doubt</text>
+
+            <rect x="24" y="50" width="712" height="85" rx="8" fill="#0F172A" />
+            <circle cx="50" cy="80" r="14" fill="#3B82F6" />
+            <text x="50" y="85" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">J</text>
+            <text x="75" y="75" font-size="12" font-weight="600" fill="#FFFFFF">John Doe: <tspan font-weight="400" fill="#CBD5E1">Does space complexity increase with recursive call stacks?</tspan></text>
+            <text x="75" y="98" font-size="11" fill="#34D399">✓ Answered by Prof. Alan Turing: Yes, each recursive frame adds O(d) memory overhead.</text>
+          </g>
+        </g>
+      
+
+  <!-- Viewport Badge -->
+  <rect x="1050" y="745" width="120" height="24" rx="6" fill="#1E293B" stroke="#334155" />
+  <text x="1110" y="761" font-size="10" font-weight="600" fill="#94A3B8" text-anchor="middle">10_ClassroomPlayer.svg</text>
+</svg>

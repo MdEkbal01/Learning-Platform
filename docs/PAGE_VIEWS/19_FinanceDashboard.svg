@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap');
+      text { font-family: 'Inter', -apple-system, sans-serif; }
+    </style>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <radialGradient id="pointerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect x="0" y="0" width="1200" height="800" fill="#0A0F1D" />
+  
+  <!-- Subtle Ambient Glow (CodeByGaurav signature) -->
+  <circle cx="850" cy="200" r="300" fill="url(#pointerGlow)" />
+
+  
+    <!-- Top Navigation Bar -->
+    <rect x="0" y="0" width="1200" height="64" fill="#0F172A" />
+    <line x1="0" y1="64" x2="1200" y2="64" stroke="#1E293B" stroke-width="1" />
+    
+    <!-- Logo -->
+    <rect x="32" y="16" width="32" height="32" rx="8" fill="#4F46E5" />
+    <text x="48" y="38" font-family="Inter, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">A</text>
+    <text x="74" y="38" font-family="Inter, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">Aura<tspan fill="#6366F1">LMS</tspan></text>
+    
+    <!-- Navigation Links -->
+    <g font-family="Inter, sans-serif" font-size="13" font-weight="500">
+      <text x="210" y="37" fill="#FFFFFF">Explore</text>
+      <text x="280" y="37" fill="#94A3B8">My Courses</text>
+      <text x="375" y="37" fill="#94A3B8">Live Classes</text>
+      <text x="475" y="37" fill="#94A3B8">Doubts</text>
+      <text x="550" y="37" fill="#94A3B8">Help</text>
+    </g>
+
+    <!-- Search Bar Mock -->
+    <rect x="630" y="14" width="260" height="36" rx="8" fill="#1E293B" stroke="#334155" />
+    <circle cx="650" cy="32" r="6" stroke="#64748B" stroke-width="1.5" fill="none" />
+    <line x1="655" y1="36" x2="661" y2="42" stroke="#64748B" stroke-width="1.5" />
+    <text x="670" y="37" font-family="Inter, sans-serif" font-size="12" fill="#64748B">Search courses, topics...</text>
+
+    <!-- Right Controls: Theme Toggle & Role Badge & Profile -->
+    <circle cx="930" cy="32" r="16" fill="#1E293B" stroke="#334155" />
+    <path d="M925 32 A 5 5 0 0 0 935 32 A 5 5 0 1 1 925 32" fill="#F59E0B" />
+
+    <!-- Role Pill -->
+    <rect x="965" y="18" width="85" height="26" rx="13" fill="#1E1B4B" stroke="#4F46E5" />
+    <text x="1007" y="35" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#818CF8" text-anchor="middle">FINANCE_SUPPORT</text>
+
+    <!-- User Profile Dropdown Pill -->
+    <circle cx="1080" cy="32" r="16" fill="#3B82F6" />
+    <text x="1080" y="37" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">R</text>
+    <text x="1105" y="37" font-family="Inter, sans-serif" font-size="13" font-weight="500" fill="#E2E8F0">Rachel Zane</text>
+  
+        <g transform="translate(48, 90)">
+          <text x="0" y="24" font-size="24" font-weight="800" fill="#FFFFFF">Financial Ledger &amp; Refunds</text>
+          <text x="0" y="48" font-size="13" fill="#94A3B8">Monitor transactions, process refunds, and reconcile gateway settlement records</text>
+
+          <!-- Top Financial Stats -->
+          <g transform="translate(0, 70)">
+            <rect x="0" y="0" width="255" height="90" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="24" y="32" font-size="12" font-weight="600" fill="#94A3B8">Total Gross Volume</text>
+            <text x="24" y="65" font-size="26" font-weight="800" fill="#FFFFFF">$48,290.00</text>
+
+            <rect x="283" y="0" width="255" height="90" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="307" y="32" font-size="12" font-weight="600" fill="#94A3B8">Successful Orders</text>
+            <text x="307" y="65" font-size="26" font-weight="800" fill="#10B981">612</text>
+
+            <rect x="566" y="0" width="255" height="90" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="590" y="32" font-size="12" font-weight="600" fill="#94A3B8">Pending Refunds</text>
+            <text x="590" y="65" font-size="26" font-weight="800" fill="#F59E0B">1</text>
+
+            <rect x="849" y="0" width="255" height="90" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <text x="873" y="32" font-size="12" font-weight="600" fill="#94A3B8">Refund Rate</text>
+            <text x="873" y="65" font-size="26" font-weight="800" fill="#3B82F6">0.4%</text>
+          </g>
+
+          <!-- Transaction Table -->
+          <g transform="translate(0, 190)">
+            <rect x="0" y="0" width="1104" height="340" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1" />
+            <rect x="0" y="0" width="1104" height="45" rx="12" fill="#0F172A" />
+            <text x="24" y="28" font-size="12" font-weight="600" fill="#94A3B8">TRANSACTION ID</text>
+            <text x="240" y="28" font-size="12" font-weight="600" fill="#94A3B8">USER</text>
+            <text x="440" y="28" font-size="12" font-weight="600" fill="#94A3B8">GATEWAY</text>
+            <text x="600" y="28" font-size="12" font-weight="600" fill="#94A3B8">AMOUNT</text>
+            <text x="740" y="28" font-size="12" font-weight="600" fill="#94A3B8">STATUS</text>
+            <text x="940" y="28" font-size="12" font-weight="600" fill="#94A3B8">ACTIONS</text>
+
+            <!-- Row 1 -->
+            <line x1="0" y1="45" x2="1104" y2="45" stroke="#334155" stroke-width="1" />
+            <text x="24" y="85" font-family="monospace" font-size="12" fill="#818CF8">txn_rzp_9921_success</text>
+            <text x="240" y="85" font-size="13" fill="#FFFFFF">john_student</text>
+            <text x="440" y="85" font-size="13" fill="#CBD5E1">Razorpay UPI</text>
+            <text x="600" y="85" font-size="14" font-weight="700" fill="#FFFFFF">$49.99</text>
+            <rect x="740" y="70" width="95" height="24" rx="12" fill="#064E3B" />
+            <text x="787" y="86" font-size="11" font-weight="700" fill="#34D399" text-anchor="middle">CAPTURED</text>
+            <rect x="940" y="68" width="120" height="28" rx="6" fill="#1E293B" stroke="#334155" />
+            <text x="1000" y="86" font-size="11" fill="#E2E8F0" text-anchor="middle">Issue Refund</text>
+
+            <!-- Row 2 -->
+            <line x1="0" y1="120" x2="1104" y2="120" stroke="#334155" stroke-width="1" />
+            <text x="24" y="160" font-family="monospace" font-size="12" fill="#818CF8">txn_stp_5411_refund</text>
+            <text x="240" y="160" font-size="13" fill="#FFFFFF">alex_dev</text>
+            <text x="440" y="160" font-size="13" fill="#CBD5E1">Stripe Card</text>
+            <text x="600" y="160" font-size="14" font-weight="700" fill="#FFFFFF">$79.99</text>
+            <rect x="740" y="145" width="95" height="24" rx="12" fill="#1E293B" />
+            <text x="787" y="161" font-size="11" font-weight="700" fill="#94A3B8" text-anchor="middle">REFUNDED</text>
+            <text x="1000" y="161" font-size="11" fill="#64748B" text-anchor="middle">Reconciled</text>
+          </g>
+        </g>
+      
+
+  <!-- Viewport Badge -->
+  <rect x="1050" y="765" width="120" height="24" rx="6" fill="#1E293B" stroke="#334155" />
+  <text x="1110" y="781" font-size="10" font-weight="600" fill="#94A3B8" text-anchor="middle">19_FinanceDashboard.svg</text>
+</svg>
