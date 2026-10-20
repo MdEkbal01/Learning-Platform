@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../api/client';
-import { Lock, Mail, KeyRound, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
+import { PointerLight } from '../../components/PointerLight';
+import { OtpInputBoxes } from '../../components/OtpInputBoxes';
+import { VerificationSpinner } from '../../components/VerificationSpinner';
+import { Lock, Mail, KeyRound, AlertCircle, CheckCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<'REQUEST' | 'RESET'>('REQUEST');
+  const [step, setStep] = useState<'REQUEST' | 'RESET' | 'VERIFYING_ANIMATION'>('REQUEST');
 
   const [identifier, setIdentifier] = useState('');
   const [code, setCode] = useState('');
@@ -41,7 +44,18 @@ export const ForgotPassword: React.FC = () => {
     e.preventDefault();
     setError(null);
     setMessage(null);
-    setIsLoading(true);
+
+    if (code.length < 6) {
+      setError('Please enter the 6-digit verification code.');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('New password must be at least 8 characters long.');
+      return;
+    }
+
+    setStep('VERIFYING_ANIMATION');
 
     try {
       const res = await api.post('/auth/reset-password', {
@@ -52,57 +66,53 @@ export const ForgotPassword: React.FC = () => {
       setMessage(res.data.message);
       setTimeout(() => {
         navigate('/login');
-      }, 2000);
+      }, 1400);
     } catch (err: any) {
+      setStep('RESET');
       setError(err.response?.data?.error || 'Password reset failed.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-slate-900 tracking-tight">
+    <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Ambient pointer light */}
+      <PointerLight intensity="vibrant" />
+
+      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Reset your password
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600">
+        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
           {step === 'REQUEST'
             ? 'Enter your verified email or mobile to receive a single-use reset code.'
-            : 'Enter the verification code and your new password.'}
+            : step === 'RESET'
+            ? 'Enter the 6-digit verification PIN and your new password.'
+            : 'Verifying identity credentials and updating security record.'}
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-slate-200">
+      <div className="relative z-10 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        {/* Glassmorphic Card Container */}
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-3xl sm:px-10 border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
           {error && (
-            <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="mb-4 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 rounded-xl text-xs flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          {message && (
-            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+          {message && step !== 'VERIFYING_ANIMATION' && (
+            <div className="mb-4 p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>{message}</span>
-            </div>
-          )}
-
-          {demoCode && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-xs">
-              <strong>Demo Reset Code:</strong>{' '}
-              <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-blue-300">
-                {demoCode}
-              </span>
             </div>
           )}
 
           {step === 'REQUEST' ? (
             <form onSubmit={handleRequest} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Email or Mobile
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                  Email or Mobile Identifier
                 </label>
                 <div className="relative">
                   <input
@@ -111,7 +121,7 @@ export const ForgotPassword: React.FC = () => {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="student@lms.local"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition outline-hidden"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute right-3 top-3.5" />
                 </div>
@@ -120,34 +130,48 @@ export const ForgotPassword: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition cursor-pointer"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition cursor-pointer disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <span>Send Reset Code</span>
+                  <span className="flex items-center space-x-1.5">
+                    <span>Send Verification Challenge</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </span>
                 )}
               </button>
             </form>
-          ) : (
-            <form onSubmit={handleReset} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  6-Digit Reset Code
+          ) : step === 'RESET' ? (
+            /* CodeByGaurav Secure Vault Access OTP Screen */
+            <form onSubmit={handleReset} className="space-y-5">
+              {demoCode && (
+                <div className="p-3.5 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-2xl text-xs text-blue-900 dark:text-blue-300 flex items-start space-x-3">
+                  <KeyRound className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold">Demo Single-Use PIN:</span>{' '}
+                    <span className="font-mono font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-blue-300 dark:border-blue-700">
+                      {demoCode}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* 6-Digit Individual Boxed PIN Input */}
+              <div className="space-y-2">
+                <label className="block text-center text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Enter 6-Digit Code
                 </label>
-                <input
-                  type="text"
-                  required
+                <OtpInputBoxes
+                  length={6}
                   value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="123456"
-                  className="w-full text-center tracking-widest text-xl font-mono px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+                  onChange={(val) => setCode(val)}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  New Password (Min 8 Characters)
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                  New Password (8+ characters)
                 </label>
                 <div className="relative">
                   <input
@@ -156,30 +180,42 @@ export const ForgotPassword: React.FC = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition outline-hidden"
                   />
-                  <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3.5" />
                 </div>
               </div>
 
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition cursor-pointer"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition cursor-pointer"
               >
-                {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <span>Update Password & Revoke Old Sessions</span>
-                )}
+                <ShieldCheck className="w-4 h-4 mr-2" />
+                <span>Reset Password & Invalidate Sessions</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep('REQUEST')}
+                className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-center py-1 transition"
+              >
+                ← Back to Identifier
               </button>
             </form>
+          ) : (
+            /* CodeByGaurav signature circular verification state */
+            <VerificationSpinner
+              title="Updating Password..."
+              subtitle="Validating identity token and renewing credentials."
+              targetPercent={100}
+              durationMs={1200}
+            />
           )}
 
-          <div className="mt-6 text-center text-xs text-slate-600 border-t border-slate-100 pt-4">
-            Remembered your password?{' '}
-            <Link to="/login" className="font-semibold text-blue-600 hover:underline">
-              Back to Sign In
+          <div className="mt-6 text-center text-xs text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-4">
+            Remember your credentials?{' '}
+            <Link to="/login" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+              Sign In
             </Link>
           </div>
         </div>
