@@ -5,7 +5,7 @@ import { PointerLight } from '../../components/PointerLight';
 import { OtpInputBoxes } from '../../components/OtpInputBoxes';
 import { VerificationSpinner } from '../../components/VerificationSpinner';
 import { sendOtpEmail, sendWelcomeEmail } from '../../services/emailService';
-import { Lock, Mail, User, Phone, BookOpen, AlertCircle, ArrowRight, KeyRound, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, User, Phone, BookOpen, AlertCircle, ArrowRight, KeyRound, ShieldCheck, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const { register, verifyOtp } = useAuth();
@@ -23,6 +23,10 @@ export const Register: React.FC = () => {
     academicCourse: '',
   });
 
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [demoVerificationCode, setDemoVerificationCode] = useState<string>('');
   const [enteredOtp, setEnteredOtp] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +42,11 @@ export const Register: React.FC = () => {
 
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    if (formData.password !== confirmPassword) {
+      setError('Passwords do not match. Please ensure both passwords match identically.');
       return;
     }
 
@@ -167,40 +176,88 @@ export const Register: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
-                    Mobile Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="tel"
-                      name="mobile"
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      placeholder="+91 9876543210"
-                      className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
-                    />
-                    <Phone className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
-                  </div>
+              {/* Mobile Number */}
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
+                  Mobile Number
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    name="mobile"
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    placeholder="+91 9876543210"
+                    className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
+                  />
+                  <Phone className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
                 </div>
+              </div>
 
+              {/* Password & Confirm Password with View Password Toggle */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
                     Password (8+ chars) *
                   </label>
                   <div className="relative">
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       required
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
+                      className="w-full pl-3.5 pr-10 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
                     />
-                    <Lock className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 absolute right-2.5 top-2.5 transition cursor-pointer"
+                      title={showPassword ? 'Hide password' : 'View password'}
+                      aria-label={showPassword ? 'Hide password' : 'View password'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
+                    Confirm Password *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className={`w-full pl-3.5 pr-10 py-2.5 bg-zinc-50 dark:bg-zinc-950 border rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden ${
+                        confirmPassword && confirmPassword !== formData.password
+                          ? 'border-rose-400 dark:border-rose-600'
+                          : confirmPassword && confirmPassword === formData.password
+                          ? 'border-emerald-500'
+                          : 'border-zinc-300 dark:border-zinc-800'
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 absolute right-2.5 top-2.5 transition cursor-pointer"
+                      title={showConfirmPassword ? 'Hide password' : 'View password'}
+                      aria-label={showConfirmPassword ? 'Hide password' : 'View password'}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  {confirmPassword && (
+                    <span className={`text-[10px] mt-1 block font-medium ${
+                      confirmPassword === formData.password ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'
+                    }`}>
+                      {confirmPassword === formData.password ? '✓ Passwords match' : '✗ Passwords do not match'}
+                    </span>
+                  )}
                 </div>
               </div>
 

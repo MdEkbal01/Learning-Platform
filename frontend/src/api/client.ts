@@ -48,13 +48,16 @@ api.interceptors.response.use(
       }
     }
 
-    // Graceful fallback if backend is offline or static hosting 404s on API routes
+    // Graceful fallback if backend is offline or static hosting 404s/405s on API routes
     if (
       error.code === 'ERR_NETWORK' ||
       error.code === 'ECONNABORTED' ||
       error.response?.status === 404 ||
+      error.response?.status === 405 ||
+      error.response?.status === 500 ||
       error.response?.status === 502 ||
-      error.response?.status === 503
+      error.response?.status === 503 ||
+      !error.response
     ) {
       const mock = getMockResponse(error.config?.method, error.config?.url, error.config?.data);
       if (mock) {

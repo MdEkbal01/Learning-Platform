@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { PointerLight } from '../../components/PointerLight';
 import { VerificationSpinner } from '../../components/VerificationSpinner';
-import { Lock, Mail, AlertCircle, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { Lock, Mail, AlertCircle, ArrowRight, ShieldCheck, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { login } = useAuth();
@@ -12,6 +12,7 @@ export const Login: React.FC = () => {
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifyingState, setIsVerifyingState] = useState(false);
@@ -115,14 +116,22 @@ export const Login: React.FC = () => {
                   </div>
                   <div className="relative">
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
+                      className="w-full pl-3.5 pr-10 py-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white focus:border-transparent transition outline-hidden"
                     />
-                    <Lock className="w-4 h-4 text-zinc-400 absolute right-3 top-3.5" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 absolute right-2.5 top-2.5 transition cursor-pointer"
+                      title={showPassword ? 'Hide password' : 'View password'}
+                      aria-label={showPassword ? 'Hide password' : 'View password'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
 

@@ -421,19 +421,68 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
       try { payload = JSON.parse(body); } catch {}
     }
     const email = payload?.email || 'newuser@auralms.io';
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const user: MockUser = {
       id: 'user_reg_' + Date.now(),
       email,
       name: payload?.name || 'New Learner',
-      role: payload?.role || 'STUDENT',
-      isEmailVerified: true,
+      role: 'STUDENT',
+      mobile: payload?.mobile,
+      isEmailVerified: false,
     };
     return {
       status: 201,
       data: {
-        message: 'Account created successfully.',
-        token: 'auralms_demo_jwt_token_' + Date.now(),
+        message: 'Account created successfully. Please verify your email with the verification code.',
+        token: 'ken_classes_jwt_token_' + Date.now(),
+        demoVerificationCode: otp,
         user,
+      },
+    };
+  }
+
+  // Authentication: Verify OTP
+  if (cleanUrl === '/auth/verify-otp') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const email = payload?.identifier || payload?.email || 'student@auralms.io';
+    const user: MockUser = {
+      id: 'user_verified_' + Date.now(),
+      email,
+      name: payload?.name || email.split('@')[0] || 'Ken Classes Student',
+      role: 'STUDENT',
+      isEmailVerified: true,
+    };
+    return {
+      status: 200,
+      data: {
+        message: 'Account verified successfully!',
+        token: 'ken_classes_jwt_token_' + Date.now(),
+        user,
+      },
+    };
+  }
+
+  // Authentication: Forgot Password
+  if (cleanUrl === '/auth/forgot-password') {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    return {
+      status: 200,
+      data: {
+        message: 'If an account matches that contact, a password reset code has been sent.',
+        demoResetCode: otp,
+      },
+    };
+  }
+
+  // Authentication: Reset Password
+  if (cleanUrl === '/auth/reset-password') {
+    return {
+      status: 200,
+      data: {
+        message: 'Password reset successfully. You can now sign in with your new password.',
       },
     };
   }
