@@ -7,16 +7,19 @@ export const EMAILJS_CONFIG = {
   templateWelcome: process.env.EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
   companyName: 'Ken Classes',
   supportEmail: 'kenclasses95@gmail.com',
-  publicKey: process.env.EMAILJS_PUBLIC_KEY || '',
+  publicKey: process.env.EMAILJS_PUBLIC_KEY || 'e8iQcLkwbSNDb6a5h',
+  privateKey: process.env.EMAILJS_PRIVATE_KEY || '',
 };
 
 export async function sendOtpEmail(toEmail: string, otpCode: string, toName?: string, purpose: string = 'Verification'): Promise<boolean> {
   const publicKey = EMAILJS_CONFIG.publicKey;
+  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const payload = {
     service_id: EMAILJS_CONFIG.serviceId,
     template_id: EMAILJS_CONFIG.templateOtp,
     user_id: publicKey,
+    accessToken: privateKey,
     template_params: {
       to_name: toName || toEmail.split('@')[0],
       to_email: toEmail,
@@ -31,16 +34,12 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, toName?: st
     },
   };
 
-  if (!publicKey) {
-    console.log(`[Ken Classes] Simulated OTP ${otpCode} for ${toEmail}. Set EMAILJS_PUBLIC_KEY in .env for live Gmail sending.`);
-    return true;
-  }
-
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': process.env.APP_ORIGIN || 'https://auralms-platform.pages.dev',
       },
       body: JSON.stringify(payload),
     });
@@ -61,11 +60,13 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, toName?: st
 
 export async function sendWelcomeEmail(toEmail: string, toName: string): Promise<boolean> {
   const publicKey = EMAILJS_CONFIG.publicKey;
+  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const payload = {
     service_id: EMAILJS_CONFIG.serviceId,
     template_id: EMAILJS_CONFIG.templateWelcome,
     user_id: publicKey,
+    accessToken: privateKey,
     template_params: {
       to_name: toName,
       to_email: toEmail,
@@ -76,16 +77,12 @@ export async function sendWelcomeEmail(toEmail: string, toName: string): Promise
     },
   };
 
-  if (!publicKey) {
-    console.log(`[Ken Classes] Welcome email simulated for ${toEmail}.`);
-    return true;
-  }
-
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': process.env.APP_ORIGIN || 'https://auralms-platform.pages.dev',
       },
       body: JSON.stringify(payload),
     });

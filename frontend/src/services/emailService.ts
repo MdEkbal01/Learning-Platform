@@ -7,7 +7,8 @@ export const EMAILJS_CONFIG = {
   templateWelcome: import.meta.env.VITE_EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
   companyName: 'Ken Classes',
   supportEmail: 'kenclasses95@gmail.com',
-  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || localStorage.getItem('emailjs_public_key') || '',
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || localStorage.getItem('emailjs_public_key') || 'e8iQcLkwbSNDb6a5h',
+  privateKey: import.meta.env.VITE_EMAILJS_PRIVATE_KEY || '',
 };
 
 export interface SendOtpParams {
@@ -27,7 +28,8 @@ export interface SendWelcomeParams {
  * Send 6-digit One-Time Password via EmailJS
  */
 export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: boolean; message: string }> {
-  const publicKey = EMAILJS_CONFIG.publicKey || localStorage.getItem('emailjs_public_key') || '';
+  const publicKey = EMAILJS_CONFIG.publicKey;
+  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const templateParams = {
     to_name: params.toName || params.toEmail.split('@')[0],
@@ -42,17 +44,6 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
     message: `Your Ken Classes verification code is: ${params.otpCode}. It expires in 15 minutes.`,
   };
 
-  if (!publicKey) {
-    console.warn(
-      `[Ken Classes EmailJS] Public key not yet set. OTP: ${params.otpCode} generated for ${params.toEmail}. ` +
-      `To send live emails, obtain your Public Key from EmailJS dashboard (Account -> API Keys) and set VITE_EMAILJS_PUBLIC_KEY.`
-    );
-    return {
-      success: true,
-      message: `[Simulated Ken Classes Dispatch] OTP ${params.otpCode} prepared for ${params.toEmail}.`,
-    };
-  }
-
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
@@ -63,6 +54,7 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateOtp,
         user_id: publicKey,
+        accessToken: privateKey,
         template_params: templateParams,
       }),
     });
@@ -85,7 +77,8 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
  * Send Welcome Email to newly registered student via EmailJS
  */
 export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ success: boolean; message: string }> {
-  const publicKey = EMAILJS_CONFIG.publicKey || localStorage.getItem('emailjs_public_key') || '';
+  const publicKey = EMAILJS_CONFIG.publicKey;
+  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const templateParams = {
     to_name: params.toName,
@@ -97,11 +90,6 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
     message: `Welcome to ${EMAILJS_CONFIG.companyName}! Your account has been verified successfully.`,
   };
 
-  if (!publicKey) {
-    console.log(`[Ken Classes EmailJS] Simulated Welcome email for ${params.toEmail}`);
-    return { success: true, message: 'Welcome email simulated.' };
-  }
-
   try {
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
@@ -112,6 +100,7 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateWelcome,
         user_id: publicKey,
+        accessToken: privateKey,
         template_params: templateParams,
       }),
     });
