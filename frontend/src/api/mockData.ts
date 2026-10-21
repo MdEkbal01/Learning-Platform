@@ -5,8 +5,11 @@ export interface MockUser {
   id: string;
   email: string;
   name: string;
-  role: 'STUDENT' | 'MENTOR' | 'CONTENT_MANAGER' | 'FINANCE_SUPPORT' | 'MODERATOR' | 'SUPER_ADMIN';
+  role: 'STUDENT' | 'MENTOR' | 'CONTENT_MANAGER' | 'FINANCE_SUPPORT' | 'MODERATOR' | 'SUPER_ADMIN' | 'MAINTENANCE_TEAM' | string;
   mobile?: string;
+  status?: 'ACTIVE' | 'SUSPENDED' | 'BLOCKED';
+  permissions?: string[];
+  createdAt?: string;
   isEmailVerified: boolean;
   profile?: {
     college?: string;
@@ -15,6 +18,76 @@ export interface MockUser {
     bio?: string;
   };
 }
+
+export const MOCK_USER_LOGS: Record<string, any[]> = {
+  user_student_01: [
+    {
+      id: 'log_std_01',
+      timestamp: new Date().toISOString(),
+      eventType: 'AUTH_LOGIN',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Chrome 122.0 (Windows NT 10.0; Win64)',
+      details: 'Authenticated successfully via single-session password verification.',
+      status: 'SUCCESS',
+    },
+    {
+      id: 'log_std_02',
+      timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
+      eventType: 'LESSON_COMPLETED',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Chrome 122.0 (Windows NT 10.0; Win64)',
+      details: 'Completed Lesson 1.2: Schema-First API Design & Validation.',
+      status: 'SUCCESS',
+    },
+    {
+      id: 'log_std_03',
+      timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
+      eventType: 'QUIZ_SUBMITTED',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Chrome 122.0 (Windows NT 10.0; Win64)',
+      details: 'Completed Module 1 Knowledge Assessment. Score: 100% (Distinction).',
+      status: 'SUCCESS',
+    },
+    {
+      id: 'log_std_04',
+      timestamp: new Date(Date.now() - 86400000).toISOString(),
+      eventType: 'COURSE_ENROLLED',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Chrome 122.0 (Windows NT 10.0; Win64)',
+      details: 'Enrolled in "Modern Full-Stack TypeScript & Microservices". Order ID: KEN-ORD-8812.',
+      status: 'SUCCESS',
+    },
+    {
+      id: 'log_std_05',
+      timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
+      eventType: 'ACCOUNT_REGISTERED',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Chrome 122.0 (Windows NT 10.0; Win64)',
+      details: 'Account created and verified via 6-digit email confirmation code.',
+      status: 'SUCCESS',
+    },
+  ],
+  user_admin_01: [
+    {
+      id: 'log_adm_01',
+      timestamp: new Date().toISOString(),
+      eventType: 'ADMIN_GOVERNANCE',
+      ipAddress: '127.0.0.1',
+      userAgent: 'Chrome 122.0 (Admin Console)',
+      details: 'Root admin inspected user activity logs and verified least-privilege RBAC matrix.',
+      status: 'SUCCESS',
+    },
+    {
+      id: 'log_adm_02',
+      timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
+      eventType: 'MAINTENANCE_VERIFIED',
+      ipAddress: '127.0.0.1',
+      userAgent: 'Chrome 122.0 (Admin Console)',
+      details: 'Verified health switchboards for community forum, payments, and live masterclasses.',
+      status: 'SUCCESS',
+    },
+  ],
+};
 
 export const MOCK_USERS: Record<string, MockUser> = {
   'admin@auralms.io': {
@@ -82,6 +155,7 @@ export const MOCK_USERS: Record<string, MockUser> = {
     email: 'student@auralms.io',
     name: 'Aarav Sharma',
     role: 'STUDENT',
+    status: 'ACTIVE',
     mobile: '+91 98765 43210',
     isEmailVerified: true,
     profile: {
@@ -89,6 +163,24 @@ export const MOCK_USERS: Record<string, MockUser> = {
       academicYear: 'Final Year (2026)',
       academicCourse: 'B.Tech Computer Science & Engineering',
       bio: 'Aspiring Systems & Distributed Computing Engineer.',
+    },
+  },
+  'maintenance@auralms.io': {
+    id: 'user_maint_01',
+    email: 'maintenance@auralms.io',
+    name: 'Vikram Mehta (Maintenance Lead)',
+    role: 'MAINTENANCE_TEAM',
+    status: 'ACTIVE',
+    mobile: '+91 98765 11223',
+    isEmailVerified: true,
+    permissions: [
+      'COMMUNITY_FORUM_MAINTENANCE',
+      'PAYMENT_CHECKOUT_MAINTENANCE',
+      'LIVE_CLASSES_MAINTENANCE',
+    ],
+    profile: {
+      college: 'Ken Classes Operations Center',
+      bio: 'Infrastructure, edge switches, and incident management lead.',
     },
   },
 };
@@ -535,9 +627,8 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return {
       status: 201,
       data: {
-        message: 'Account created successfully. Please verify your email with the verification code.',
+        message: 'Account created successfully. A verification code has been dispatched to your email.',
         token: 'ken_classes_jwt_token_' + Date.now(),
-        demoVerificationCode: otp,
         user,
       },
     };
@@ -569,12 +660,10 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
 
   // Authentication: Forgot Password
   if (cleanUrl === '/auth/forgot-password') {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     return {
       status: 200,
       data: {
-        message: 'If an account matches that contact, a password reset code has been sent.',
-        demoResetCode: otp,
+        message: 'If an account matches that contact, a confidential password reset code has been dispatched to your email.',
       },
     };
   }
@@ -653,6 +742,55 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
   // Student Orders
   if (cleanUrl === '/student/orders') {
     return { status: 200, data: MOCK_STUDENT_ORDERS };
+  }
+
+  // Student Personal Activity & Performance Logs
+  if (cleanUrl === '/student/activity-logs') {
+    return {
+      status: 200,
+      data: [
+        {
+          id: 'act_1',
+          timestamp: new Date().toISOString(),
+          title: 'Secure Session Login',
+          category: 'SECURITY',
+          description: 'Single-session token verified from Chrome 122 (Windows 11)',
+          status: 'SUCCESS',
+        },
+        {
+          id: 'act_2',
+          timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
+          title: 'Lesson Completed',
+          category: 'LEARNING',
+          description: 'Completed Lesson 1.2: Schema-First API Design & Validation',
+          status: 'SUCCESS',
+        },
+        {
+          id: 'act_3',
+          timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
+          title: 'Knowledge Assessment Passed',
+          category: 'ASSESSMENT',
+          description: 'Completed Module 1 Knowledge Assessment. Score: 100% (Distinction)',
+          status: 'SUCCESS',
+        },
+        {
+          id: 'act_4',
+          timestamp: new Date(Date.now() - 86400000).toISOString(),
+          title: 'Live Masterclass Attended',
+          category: 'LIVE',
+          description: 'Attended Microservices Fault Tolerance live cohort Q&A with Dr. Alex Vance',
+          status: 'SUCCESS',
+        },
+        {
+          id: 'act_5',
+          timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
+          title: 'Course Enrolment Activated',
+          category: 'COMMERCE',
+          description: 'Enrolled in Modern Full-Stack TypeScript & Microservices (Order KEN-ORD-8812)',
+          status: 'SUCCESS',
+        },
+      ],
+    };
   }
 
   // Checkout: Create Order
@@ -871,35 +1009,168 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
 
   // Admin User Management
   if (cleanUrl === '/admin/users') {
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      const newId = 'user_' + Date.now();
+      const email = payload?.email || `user_${Date.now()}@kenclasses.com`;
+      const newUser: MockUser = {
+        id: newId,
+        email,
+        name: payload?.name || 'New Platform User',
+        role: payload?.role || 'STUDENT',
+        mobile: payload?.mobile || '',
+        status: 'ACTIVE',
+        isEmailVerified: true,
+        permissions: payload?.permissions || [],
+        createdAt: new Date().toISOString(),
+      };
+      MOCK_USERS[email] = newUser;
+      MOCK_USER_LOGS[newId] = [
+        {
+          id: 'log_' + Date.now(),
+          timestamp: new Date().toISOString(),
+          eventType: 'USER_CREATED_BY_ADMIN',
+          ipAddress: '127.0.0.1',
+          userAgent: 'Admin Governance Console',
+          details: `User account created with assigned role ${newUser.role}.`,
+          status: 'SUCCESS',
+        },
+      ];
+      return { status: 201, data: newUser };
+    }
     return {
       status: 200,
       data: Object.values(MOCK_USERS).map((u) => ({
         ...u,
-        createdAt: '2026-01-15T00:00:00Z',
-        status: 'ACTIVE',
+        createdAt: u.createdAt || '2026-01-15T00:00:00Z',
+        status: u.status || 'ACTIVE',
         _count: { enrolments: 3 },
       })),
     };
   }
 
-  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/role')) {
+  // Delete User
+  if (cleanUrl.startsWith('/admin/users/') && m === 'DELETE') {
+    const userId = cleanUrl.replace('/admin/users/', '').split('/')[0];
+    const emailKey = Object.keys(MOCK_USERS).find((k) => MOCK_USERS[k].id === userId);
+    if (emailKey) {
+      delete MOCK_USERS[emailKey];
+    }
+    delete MOCK_USER_LOGS[userId];
+    return { status: 200, data: { success: true, message: 'User permanently removed from registry.' } };
+  }
+
+  // User-Specific Logs Dossier
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/logs')) {
+    const userId = cleanUrl.split('/')[3];
+    const targetUser = Object.values(MOCK_USERS).find((u) => u.id === userId);
+    const logs = MOCK_USER_LOGS[userId] || [
+      {
+        id: 'log_gen_1',
+        timestamp: new Date().toISOString(),
+        eventType: 'AUTH_SESSION',
+        ipAddress: '152.58.14.88',
+        userAgent: 'Chrome 122.0 / Windows 11',
+        details: 'User authenticated with verified session token.',
+        status: 'SUCCESS',
+      },
+      {
+        id: 'log_gen_2',
+        timestamp: new Date(Date.now() - 3600000 * 4).toISOString(),
+        eventType: 'LESSON_PROGRESS',
+        ipAddress: '152.58.14.88',
+        userAgent: 'Chrome 122.0 / Windows 11',
+        details: 'Completed course module lesson successfully.',
+        status: 'SUCCESS',
+      },
+      {
+        id: 'log_gen_3',
+        timestamp: new Date(Date.now() - 86400000).toISOString(),
+        eventType: 'ACCOUNT_STATUS_VERIFIED',
+        ipAddress: '127.0.0.1',
+        userAgent: 'System Monitor',
+        details: 'Account RBAC status verified under current security policy.',
+        status: 'SUCCESS',
+      },
+    ];
+    return {
+      status: 200,
+      data: {
+        user: targetUser,
+        logs,
+        summary: {
+          totalLogins: logs.filter((l: any) => l.eventType.includes('AUTH')).length || 1,
+          lastActive: logs[0]?.timestamp || new Date().toISOString(),
+          accountHealth: targetUser?.status === 'SUSPENDED' ? 'Suspended' : '100% Verified',
+          securityViolations: targetUser?.status === 'SUSPENDED' ? 1 : 0,
+        },
+      },
+    };
+  }
+
+  // User Permissions (for Maintenance Team Members)
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/permissions')) {
+    const userId = cleanUrl.split('/')[3];
+    const targetUser = Object.values(MOCK_USERS).find((u) => u.id === userId);
     let payload = body;
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
     }
-    return { status: 200, data: { success: true, role: payload?.role || 'STUDENT' } };
+    if (targetUser) {
+      targetUser.permissions = payload?.permissions || [];
+    }
+    return { status: 200, data: { success: true, permissions: targetUser?.permissions || [] } };
   }
 
-  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/status')) {
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/role')) {
+    const userId = cleanUrl.split('/')[3];
+    const targetUser = Object.values(MOCK_USERS).find((u) => u.id === userId);
     let payload = body;
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
+    }
+    if (targetUser) {
+      targetUser.role = payload?.newRole || payload?.role || 'STUDENT';
+    }
+    return { status: 200, data: { success: true, role: payload?.newRole || payload?.role || 'STUDENT' } };
+  }
+
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/status')) {
+    const userId = cleanUrl.split('/')[3];
+    const targetUser = Object.values(MOCK_USERS).find((u) => u.id === userId);
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    if (targetUser) {
+      targetUser.status = payload?.status || 'ACTIVE';
     }
     return { status: 200, data: { success: true, status: payload?.status || 'ACTIVE' } };
   }
 
   if (cleanUrl === '/admin/enrolments/manual') {
-    return { status: 200, data: { success: true, message: 'Enrolment manually granted.' } };
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const courseId = payload?.courseId;
+    const course = MOCK_COURSES.find((c) => c.id === courseId) || MOCK_COURSES[0];
+    if (payload?.action === 'GRANT') {
+      const already = MOCK_ENROLMENTS.some((e) => e.courseId === course.id);
+      if (!already) {
+        MOCK_ENROLMENTS.unshift({
+          id: 'enr_' + Date.now(),
+          courseId: course.id,
+          course,
+          progress: { completedLessons: 0, totalLessons: 4, percentage: 0 },
+          enrolledAt: new Date().toISOString(),
+        });
+      }
+    }
+    return { status: 200, data: { success: true, message: 'Enrolment operation executed successfully.' } };
   }
 
   // Admin Audit Logs
@@ -1035,6 +1306,44 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
         },
       },
     };
+  }
+
+  // Delete Course
+  if (cleanUrl.startsWith('/content/courses/') && m === 'DELETE') {
+    const id = cleanUrl.replace('/content/courses/', '').split('/')[0];
+    const idx = MOCK_COURSES.findIndex((c) => c.id === id || c.slug === id);
+    if (idx !== -1) {
+      MOCK_COURSES.splice(idx, 1);
+    }
+    return { status: 200, data: { success: true, message: 'Course permanently removed.' } };
+  }
+
+  // Update Course Attributes
+  if (cleanUrl.startsWith('/content/courses/') && (m === 'PUT' || m === 'PATCH') && !cleanUrl.endsWith('/status')) {
+    const id = cleanUrl.replace('/content/courses/', '').split('/')[0];
+    const found = MOCK_COURSES.find((c) => c.id === id || c.slug === id);
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    if (found && payload) {
+      if (payload.title) found.title = payload.title;
+      if (payload.subtitle) found.subtitle = payload.subtitle;
+      if (payload.description) found.description = payload.description;
+      if (payload.price !== undefined) {
+        found.price = Number(payload.price);
+        found.isFree = payload.isFree !== undefined ? Boolean(payload.isFree) : Number(payload.price) === 0;
+      }
+      if (payload.level) found.level = payload.level;
+      if (payload.status) found.status = payload.status;
+      if (payload.thumbnail) found.thumbnail = payload.thumbnail;
+      if (payload.instructorName) found.instructor = { name: payload.instructorName, bio: found.instructor?.bio || 'Senior Faculty' };
+      if (payload.categoryId) {
+        const cat = MOCK_CATEGORIES.find((c) => c.id === payload.categoryId || c.slug === payload.categoryId);
+        if (cat) found.category = cat;
+      }
+    }
+    return { status: 200, data: { success: true, course: found } };
   }
 
   if (cleanUrl.startsWith('/content/courses/')) {

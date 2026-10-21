@@ -15,7 +15,6 @@ export const ForgotPassword: React.FC = () => {
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [demoCode, setDemoCode] = useState<string | null>(null);
 
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -30,16 +29,16 @@ export const ForgotPassword: React.FC = () => {
     try {
       const res = await api.post('/auth/forgot-password', { identifier });
       setMessage(res.data.message);
-      const resetCode = res.data.demoResetCode || Math.floor(100000 + Math.random() * 900000).toString();
-      setDemoCode(resetCode);
-      setCode(resetCode);
+      const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+      sessionStorage.setItem('ken_classes_reset_otp', resetCode);
+      setCode('');
 
-      // Dispatch One-Time Password via Ken Classes EmailJS
-      sendOtpEmail({
+      // Dispatch One-Time Password via Ken Classes EmailJS strictly to real email
+      await sendOtpEmail({
         toEmail: identifier,
         otpCode: resetCode,
         purpose: 'PASSWORD_RESET',
-      }).catch(() => {});
+      });
 
       setStep('RESET');
     } catch (err: any) {
@@ -159,24 +158,21 @@ export const ForgotPassword: React.FC = () => {
               </button>
             </form>
           ) : step === 'RESET' ? (
-            /* CodeByGaurav Secure Vault Access OTP Screen */
             <form onSubmit={handleReset} className="space-y-5">
-              {demoCode && (
-                <div className="p-3.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-zinc-100 flex items-start space-x-3">
-                  <KeyRound className="w-5 h-5 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold">Demo Single-Use PIN:</span>{' '}
-                    <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black px-2 py-0.5 rounded-lg border border-zinc-300 dark:border-zinc-700">
-                      {demoCode}
-                    </span>
-                  </div>
+              <div className="p-4 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-zinc-100 flex items-start space-x-3">
+                <KeyRound className="w-5 h-5 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold text-sm">Security PIN Dispatched</span>
+                  <p className="mt-1 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    A single-use 6-digit PIN has been emailed to <span className="font-semibold text-zinc-900 dark:text-white">{identifier}</span>. Please check your inbox or spam folder. For your protection, the code is confidential and is not visible on-screen.
+                  </p>
                 </div>
-              )}
+              </div>
 
               {/* 6-Digit Individual Boxed PIN Input */}
               <div className="space-y-2">
                 <label className="block text-center text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                  Enter 6-Digit Code
+                  Enter 6-Digit Code From Email
                 </label>
                 <OtpInputBoxes
                   length={6}

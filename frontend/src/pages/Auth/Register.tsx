@@ -27,9 +27,9 @@ export const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [demoVerificationCode, setDemoVerificationCode] = useState<string>('');
   const [enteredOtp, setEnteredOtp] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [resendStatus, setResendStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -39,6 +39,7 @@ export const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setResendStatus(null);
 
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long.');
@@ -53,22 +54,42 @@ export const Register: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const data = await register(formData);
-      const generatedOtp = data.demoVerificationCode || Math.floor(100000 + Math.random() * 900000).toString();
-      setDemoVerificationCode(generatedOtp);
-      setEnteredOtp(generatedOtp);
+      await register(formData);
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      sessionStorage.setItem('ken_classes_reg_otp', generatedOtp);
+      setEnteredOtp('');
 
-      // Dispatch One-Time Password via Ken Classes EmailJS
-      sendOtpEmail({
+      // Dispatch One-Time Password strictly via Ken Classes EmailJS to the user's real email
+      await sendOtpEmail({
         toEmail: formData.email,
         toName: formData.name,
         otpCode: generatedOtp,
         purpose: 'REGISTRATION',
-      }).catch(() => {});
+      });
 
       setStep('VERIFY_OTP');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Registration failed. Please check inputs.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const freshOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      sessionStorage.setItem('ken_classes_reg_otp', freshOtp);
+      await sendOtpEmail({
+        toEmail: formData.email,
+        toName: formData.name,
+        otpCode: freshOtp,
+        purpose: 'REGISTRATION',
+      });
+      setResendStatus(`A fresh verification code was sent to ${formData.email}. Please check your inbox.`);
+    } catch {
+      setError('Failed to resend email code. Please check your network and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -337,25 +358,30 @@ export const Register: React.FC = () => {
               </button>
             </form>
           ) : step === 'VERIFY_OTP' ? (
-            /* CodeByGaurav Secure Vault Access OTP Screen */
             <form onSubmit={handleVerifyOtp} className="space-y-6">
               <div className="p-4 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-zinc-100 flex items-start space-x-3">
                 <KeyRound className="w-5 h-5 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-sm">Security Challenge Initiated</div>
-                  <p className="mt-1">
-                    Single-use verification code generated. For demo convenience, the code is:{' '}
-                    <span className="font-mono font-extrabold text-zinc-900 dark:text-zinc-100 text-sm bg-white dark:bg-black px-2 py-0.5 rounded-lg border border-zinc-300 dark:border-zinc-700">
-                      {demoVerificationCode}
-                    </span>
+                  <div className="font-bold text-sm">Confidential Verification Code Sent</div>
+                  <p className="mt-1 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    A single-use 6-digit verification code has been dispatched to{' '}
+                    <span className="font-semibold text-zinc-900 dark:text-white">{formData.email}</span>.
+                    Please check your inbox or spam folder. For your privacy and security, the code is only delivered to your verified email.
                   </p>
                 </div>
               </div>
 
+              {resendStatus && (
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>{resendStatus}</span>
+                </div>
+              )}
+
               {/* 6-Digit Individual Boxed PIN Input */}
               <div className="space-y-3">
                 <label className="block text-center text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                  Enter 6-Digit Verification PIN
+                  Enter 6-Digit Verification PIN From Email
                 </label>
                 <OtpInputBoxes
                   length={6}
@@ -366,7 +392,8 @@ export const Register: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full flex justify-center items-center py-3 px-4 rounded-xl shadow-xs text-sm font-bold text-white bg-black hover:bg-zinc-800 dark:text-black dark:bg-white dark:hover:bg-zinc-200 transition cursor-pointer"
+                disabled={isLoading}
+                className="w-full flex justify-center items-center py-3 px-4 rounded-xl shadow-xs text-sm font-bold text-white bg-black hover:bg-zinc-800 dark:text-black dark:bg-white dark:hover:bg-zinc-200 transition cursor-pointer disabled:opacity-50"
               >
                 <ShieldCheck className="w-4 h-4 mr-2" />
                 <span>Verify Credentials & Sign In</span>
@@ -382,10 +409,11 @@ export const Register: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => alert(`Resent code: ${demoVerificationCode}`)}
-                  className="text-zinc-900 dark:text-zinc-100 font-semibold underline"
+                  onClick={handleResendOtp}
+                  disabled={isLoading}
+                  className="text-zinc-900 dark:text-zinc-100 font-semibold underline hover:text-black dark:hover:text-white transition cursor-pointer"
                 >
-                  Didn't receive it? Resend
+                  {isLoading ? 'Sending fresh code...' : "Didn't receive it? Resend to Email"}
                 </button>
               </div>
             </form>
