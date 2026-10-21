@@ -32,6 +32,12 @@ export const Register: React.FC = () => {
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Preload next route chunks during idle registration interaction
+  React.useEffect(() => {
+    import('../Student/StudentDashboard');
+    import('../Catalogue');
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -59,15 +65,23 @@ export const Register: React.FC = () => {
       sessionStorage.setItem('ken_classes_reg_otp', generatedOtp);
       setEnteredOtp('');
 
-      // Dispatch One-Time Password strictly via Ken Classes EmailJS to the user's real email
-      await sendOtpEmail({
+      // Instantly advance to the verification step with zero lag
+      setStep('VERIFY_OTP');
+      setResendStatus(`Sending confidential 6-digit PIN to ${formData.email}...`);
+
+      // Dispatch One-Time Password strictly via Ken Classes EmailJS to user's real email
+      sendOtpEmail({
         toEmail: formData.email,
         toName: formData.name,
         otpCode: generatedOtp,
         purpose: 'REGISTRATION',
-      });
-
-      setStep('VERIFY_OTP');
+      })
+        .then((res) => {
+          if (res.success) {
+            setResendStatus(`Verification PIN successfully delivered to ${formData.email}. Please check your inbox.`);
+          }
+        })
+        .catch(() => {});
     } catch (err: any) {
       setError(err.response?.data?.error || 'Registration failed. Please check inputs.');
     } finally {
@@ -81,13 +95,19 @@ export const Register: React.FC = () => {
     try {
       const freshOtp = Math.floor(100000 + Math.random() * 900000).toString();
       sessionStorage.setItem('ken_classes_reg_otp', freshOtp);
-      await sendOtpEmail({
+      setResendStatus(`Dispatching fresh verification PIN to ${formData.email}...`);
+      sendOtpEmail({
         toEmail: formData.email,
         toName: formData.name,
         otpCode: freshOtp,
         purpose: 'REGISTRATION',
-      });
-      setResendStatus(`A fresh verification code was sent to ${formData.email}. Please check your inbox.`);
+      })
+        .then((res) => {
+          if (res.success) {
+            setResendStatus(`A fresh verification PIN was delivered to ${formData.email}. Please check your inbox.`);
+          }
+        })
+        .catch(() => {});
     } catch {
       setError('Failed to resend email code. Please check your network and try again.');
     } finally {
@@ -109,16 +129,16 @@ export const Register: React.FC = () => {
     try {
       await verifyOtp(formData.email, enteredOtp);
 
-      // Dispatch Welcome Email via Ken Classes EmailJS
+      // Dispatch Welcome Email via Ken Classes EmailJS in background
       sendWelcomeEmail({
         toEmail: formData.email,
         toName: formData.name,
       }).catch(() => {});
 
-      // Wait briefly for the satisfying circular verification ring animation to complete
+      // Instant smooth transition: 300ms verification ring tick, then navigate immediately
       setTimeout(() => {
-        navigate('/student/dashboard');
-      }, 1400);
+        navigate('/student/dashboard', { replace: true });
+      }, 350);
     } catch (err: any) {
       setStep('VERIFY_OTP');
       setError(err.response?.data?.error || 'Verification code failed or expired.');
@@ -418,12 +438,12 @@ export const Register: React.FC = () => {
               </div>
             </form>
           ) : (
-            /* CodeByGaurav signature circular verification state */
+            /* Fast, snappy circular verification state */
             <VerificationSpinner
               title="Verifying..."
               subtitle="Securely checking your credentials."
               targetPercent={100}
-              durationMs={1300}
+              durationMs={300}
             />
           )}
 

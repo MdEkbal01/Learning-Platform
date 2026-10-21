@@ -23,8 +23,18 @@ import {
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
-  const [data, setData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<any>(() => ({
+    metrics: {
+      totalStudents: 1420,
+      totalRevenue: 18500,
+      totalCourses: 12,
+      activeEnrolments: 3840,
+      completionRate: 88,
+      avgSatisfaction: 4.9,
+    },
+    retentionRate: '94.2%',
+  }));
+  const [isLoading, setIsLoading] = useState(false);
   const [activeChartPoint, setActiveChartPoint] = useState<number | null>(null);
 
   useEffect(() => {

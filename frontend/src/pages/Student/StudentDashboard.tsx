@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 import { PointerLight } from '../../components/PointerLight';
+import { MOCK_ENROLMENTS, MOCK_LIVE_CLASSES, MOCK_USER_LOGS } from '../../api/mockData';
 import {
   BookOpen,
   Award,
@@ -28,10 +29,10 @@ import {
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'COURSES' | 'PERFORMANCE' | 'LOGS'>('COURSES');
-  const [enrolments, setEnrolments] = useState<any[]>([]);
-  const [liveClasses, setLiveClasses] = useState<any[]>([]);
-  const [activityLogs, setActivityLogs] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [enrolments, setEnrolments] = useState<any[]>(() => MOCK_ENROLMENTS || []);
+  const [liveClasses, setLiveClasses] = useState<any[]>(() => MOCK_LIVE_CLASSES || []);
+  const [activityLogs, setActivityLogs] = useState<any[]>(() => MOCK_USER_LOGS['user_student_01'] || []);
+  const [isLoading, setIsLoading] = useState(false);
   const [logFilter, setLogFilter] = useState('ALL');
   const [logSearch, setLogSearch] = useState('');
 

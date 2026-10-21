@@ -11,15 +11,15 @@ export const EntranceSplash: React.FC = () => {
       setVisible(true);
       sessionStorage.setItem('ken_classes_splash_seen', 'true');
 
-      // Begin fade-out sequence after 1.5 seconds
+      // Begin snappy fade-out sequence after 450ms
       const fadeTimer = setTimeout(() => {
         setFading(true);
-      }, 1500);
+      }, 450);
 
-      // Fully unmount after fade transition completes (1.9s total)
+      // Fully unmount after fade transition completes (700ms total)
       const hideTimer = setTimeout(() => {
         setVisible(false);
-      }, 1950);
+      }, 700);
 
       return () => {
         clearTimeout(fadeTimer);
@@ -30,7 +30,7 @@ export const EntranceSplash: React.FC = () => {
 
   const handleDismiss = () => {
     setFading(true);
-    setTimeout(() => setVisible(false), 300);
+    setTimeout(() => setVisible(false), 150);
   };
 
   if (!visible) return null;

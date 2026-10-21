@@ -614,22 +614,41 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
     }
-    const email = payload?.email || 'newuser@auralms.io';
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const user: MockUser = {
+    const email = (payload?.email || 'newuser@auralms.io').toLowerCase();
+    const newUser: MockUser = {
       id: 'user_reg_' + Date.now(),
       email,
       name: payload?.name || 'New Learner',
       role: 'STUDENT',
-      mobile: payload?.mobile,
+      mobile: payload?.mobile || '',
+      status: 'ACTIVE',
       isEmailVerified: false,
+      profile: {
+        college: payload?.college || 'Ken Classes Student',
+        academicYear: payload?.academicYear || '1st Year',
+        academicCourse: payload?.academicCourse || 'Computer Science',
+      },
+      createdAt: new Date().toISOString(),
     };
+    MOCK_USERS[email] = newUser;
+    MOCK_USER_LOGS[newUser.id] = [
+      {
+        id: 'log_reg_' + Date.now(),
+        timestamp: new Date().toISOString(),
+        eventType: 'ACCOUNT_REGISTERED',
+        ipAddress: '152.58.14.88',
+        userAgent: 'Web Registration Client',
+        details: `Account created for ${newUser.name}. Pending single-use email verification PIN.`,
+        status: 'SUCCESS',
+      },
+    ];
+
     return {
       status: 201,
       data: {
         message: 'Account created successfully. A verification code has been dispatched to your email.',
         token: 'ken_classes_jwt_token_' + Date.now(),
-        user,
+        user: newUser,
       },
     };
   }
@@ -640,14 +659,37 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
     }
-    const email = payload?.identifier || payload?.email || 'student@auralms.io';
+    const email = (payload?.identifier || payload?.email || 'student@auralms.io').toLowerCase();
+    const existing = MOCK_USERS[email];
     const user: MockUser = {
-      id: 'user_verified_' + Date.now(),
+      id: existing?.id || 'user_verified_' + Date.now(),
       email,
-      name: payload?.name || email.split('@')[0] || 'Ken Classes Student',
-      role: 'STUDENT',
+      name: existing?.name || payload?.name || email.split('@')[0] || 'Ken Classes Student',
+      role: existing?.role || 'STUDENT',
+      mobile: existing?.mobile || payload?.mobile || '',
+      status: 'ACTIVE',
       isEmailVerified: true,
+      profile: existing?.profile || {
+        college: 'Ken Classes Academy',
+        academicCourse: 'Software Engineering',
+      },
+      createdAt: existing?.createdAt || new Date().toISOString(),
     };
+    MOCK_USERS[email] = user;
+
+    if (!MOCK_USER_LOGS[user.id]) {
+      MOCK_USER_LOGS[user.id] = [];
+    }
+    MOCK_USER_LOGS[user.id].unshift({
+      id: 'log_ver_' + Date.now(),
+      timestamp: new Date().toISOString(),
+      eventType: 'AUTH_VERIFIED',
+      ipAddress: '152.58.14.88',
+      userAgent: 'Web Client',
+      details: 'Email ownership cryptographically verified via single-use 6-digit OTP.',
+      status: 'SUCCESS',
+    });
+
     return {
       status: 200,
       data: {

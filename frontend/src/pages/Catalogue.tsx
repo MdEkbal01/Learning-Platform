@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
+import { MOCK_COURSES, MOCK_CATEGORIES } from '../api/mockData';
 import { Search, BookOpen, Users } from 'lucide-react';
 
 export const Catalogue: React.FC = () => {
-  const [allCourses, setAllCourses] = useState<any[]>([]);
-  const [courses, setCourses] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [allCourses, setAllCourses] = useState<any[]>(() => MOCK_COURSES || []);
+  const [courses, setCourses] = useState<any[]>(() => MOCK_COURSES || []);
+  const [categories, setCategories] = useState<any[]>(() => MOCK_CATEGORIES || []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');

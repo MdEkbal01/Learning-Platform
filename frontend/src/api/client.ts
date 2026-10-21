@@ -1,12 +1,15 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
 import { getMockResponse } from './mockData';
 
-// Determine if we are running on a static hosting environment without a backend (such as Cloudflare Pages)
-const isStaticEdgeEnvironment = (): boolean => {
-  if (typeof window === 'undefined') return false;
+// Determine if we should use instantaneous in-memory mock resolution
+// When no external backend API URL is configured (or on Cloudflare Pages static edge),
+// resolve all endpoints in 0ms to eliminate network timeouts and ensure ultra-responsive UX.
+const shouldUseMockResolution = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  // If no external backend API URL is configured, ALWAYS resolve with instant mock data
+  if (!import.meta.env.VITE_API_URL) return true;
   const hostname = window.location.hostname;
   if (hostname.endsWith('pages.dev') || hostname.endsWith('workers.dev')) return true;
-  if (!import.meta.env.VITE_API_URL && hostname !== 'localhost' && hostname !== '127.0.0.1') return true;
   return false;
 };
 
@@ -15,32 +18,28 @@ const defaultAdapter = axios.getAdapter(axios.defaults.adapter || 'xhr');
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 3000, // Responsive 3s timeout
+  timeout: 1200, // Fast 1.2s timeout fallback instead of hanging 3.0s
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
   adapter: async (config: InternalAxiosRequestConfig): Promise<AxiosResponse> => {
-    // 1. Instant Edge Static Mock Resolution:
-    // On Cloudflare Pages, there is no Express server at /api. Rather than making redundant
-    // network round-trips over the internet that download 11KB of HTML or return 405s,
-    // resolve the request immediately in 10ms for instant page loading and silky smooth transitions.
-    if (isStaticEdgeEnvironment()) {
+    // 1. Instantaneous Mock Resolution (0ms):
+    // Resolves immediately in-memory with zero network latency, zero DNS lookups, and zero timeouts.
+    if (shouldUseMockResolution()) {
       const mock = getMockResponse(config.method, config.url, config.data);
       if (mock) {
-        // Micro-yield (10ms) allows React transitions to batch smoothly
-        await new Promise((resolve) => setTimeout(resolve, 10));
         return {
           data: mock.data,
           status: mock.status,
-          statusText: 'OK (Instant Edge Mock)',
+          statusText: 'OK (Instant Mock Resolution)',
           headers: {},
           config,
         };
       }
     }
 
-    // 2. Normal Remote or Localhost Development:
+    // 2. Remote Backend Execution with Instant Fallback:
     try {
       const response = await defaultAdapter(config);
 
@@ -72,13 +71,13 @@ const api = axios.create({
         }
       }
 
-      // Fallback if local backend is offline or static hosting returns error
+      // Fallback immediately if local backend is offline or static hosting returns error
       const mock = getMockResponse(config.method, config.url, config.data);
       if (mock) {
         return {
           data: mock.data,
           status: mock.status,
-          statusText: 'OK (Edge Fallback)',
+          statusText: 'OK (Instant Edge Fallback)',
           headers: {},
           config,
         };

@@ -49,11 +49,15 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
   };
 
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      signal: controller.signal,
       body: JSON.stringify({
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateOtp,
@@ -62,6 +66,7 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
         template_params: templateParams,
       }),
     });
+    clearTimeout(timer);
 
     if (res.ok) {
       console.log(`[Ken Classes EmailJS] OTP successfully sent to ${params.toEmail}`);
@@ -98,11 +103,15 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
   };
 
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      signal: controller.signal,
       body: JSON.stringify({
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateWelcome,
@@ -111,6 +120,7 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
         template_params: templateParams,
       }),
     });
+    clearTimeout(timer);
 
     if (res.ok) {
       console.log(`[Ken Classes EmailJS] Welcome email sent to ${params.toEmail}`);
