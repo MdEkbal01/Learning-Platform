@@ -5,21 +5,22 @@ export const EntranceSplash: React.FC = () => {
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    // Check if splash has already been shown in this browser session
-    const hasSeen = sessionStorage.getItem('ken_classes_splash_seen');
+    // Check if splash has already been seen (persistent in localStorage to ensure zero delay on return)
+    const hasSeen = localStorage.getItem('ken_classes_splash_seen') || sessionStorage.getItem('ken_classes_splash_seen');
     if (!hasSeen) {
       setVisible(true);
+      localStorage.setItem('ken_classes_splash_seen', 'true');
       sessionStorage.setItem('ken_classes_splash_seen', 'true');
 
-      // Begin snappy fade-out sequence after 450ms
+      // Snappy micro-entrance that clears almost instantly (180ms)
       const fadeTimer = setTimeout(() => {
         setFading(true);
-      }, 450);
+      }, 180);
 
-      // Fully unmount after fade transition completes (700ms total)
+      // Fully unmount after 280ms total
       const hideTimer = setTimeout(() => {
         setVisible(false);
-      }, 700);
+      }, 280);
 
       return () => {
         clearTimeout(fadeTimer);
@@ -30,7 +31,7 @@ export const EntranceSplash: React.FC = () => {
 
   const handleDismiss = () => {
     setFading(true);
-    setTimeout(() => setVisible(false), 150);
+    setVisible(false);
   };
 
   if (!visible) return null;
@@ -38,52 +39,27 @@ export const EntranceSplash: React.FC = () => {
   return (
     <div
       onClick={handleDismiss}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/95 backdrop-blur-md transition-opacity duration-500 cursor-pointer select-none ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-xs transition-opacity duration-200 cursor-pointer select-none ${
         fading ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      aria-label="Welcome to Ken Classes - Click to enter"
+      aria-label="Welcome to Ken Classes"
     >
-      {/* Ambient background glow ring */}
-      <div className="absolute w-[360px] h-[360px] sm:w-[480px] sm:h-[480px] rounded-full bg-gradient-to-tr from-amber-500/15 via-yellow-400/20 to-transparent blur-3xl animate-pulse pointer-events-none" />
-
-      {/* Main Branding Container */}
-      <div className="relative z-10 flex flex-col items-center space-y-6 px-4 text-center">
-        {/* Animated Emblem Frame */}
-        <div className="relative group">
-          {/* Pulsing halo */}
-          <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-amber-400/40 via-yellow-300/60 to-amber-500/40 blur-md animate-spin-slow opacity-80" />
-
-          {/* Logo circular badge */}
-          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full p-1 bg-gradient-to-b from-amber-300 to-amber-600 shadow-2xl overflow-hidden transform transition hover:scale-105 duration-300">
-            <img
-              src="/logo.png"
-              alt="Ken Classes Official Emblem"
-              className="w-full h-full object-cover rounded-full"
-            />
-          </div>
+      <div className="relative z-10 flex flex-col items-center space-y-4 px-4 text-center">
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-600 shadow-2xl overflow-hidden">
+          <img
+            src="/logo.png"
+            alt="Ken Classes Official Emblem"
+            className="w-full h-full object-cover rounded-full"
+          />
         </div>
-
-        {/* Text Sequence with Staggered Fade */}
-        <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[0.25em] text-white uppercase drop-shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-700">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-black tracking-widest text-white uppercase">
             Ken Classes
           </h1>
-          <p className="text-xs sm:text-sm font-semibold tracking-[0.3em] text-amber-300 uppercase animate-in fade-in slide-in-from-bottom-3 duration-1000 delay-150">
+          <p className="text-[11px] font-semibold tracking-wider text-amber-300 uppercase mt-0.5">
             Learning Without Limits
           </p>
         </div>
-
-        {/* Golden accent bar divider */}
-        <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent rounded-full animate-in zoom-in duration-700 delay-300" />
-
-        {/* Progress indicator line */}
-        <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden mt-4 relative">
-          <div className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-400 w-full animate-splash-progress rounded-full" />
-        </div>
-
-        <span className="text-[10px] tracking-widest uppercase text-zinc-500 pt-2 animate-pulse">
-          Click anywhere to skip
-        </span>
       </div>
     </div>
   );

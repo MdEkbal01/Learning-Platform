@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/client';
+import { MOCK_USERS, MOCK_COURSES } from '../../api/mockData';
 import {
   Users,
   Search,
@@ -61,12 +62,14 @@ const MAINTENANCE_OPERATIONS = [
 ];
 
 export const UserManagement: React.FC = () => {
-  const [users, setUsers] = useState<any[]>([]);
-  const [courses, setCourses] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>(() =>
+    MOCK_USERS ? Object.values(MOCK_USERS) : []
+  );
+  const [courses, setCourses] = useState<any[]>(() => MOCK_COURSES || []);
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [search, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Create User Modal
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -115,7 +118,7 @@ export const UserManagement: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      setIsLoading(true);
+      if (users.length === 0) setIsLoading(true);
       const [uRes, cRes] = await Promise.all([
         api.get(`/admin/users?role=${roleFilter}&status=${statusFilter}&search=${encodeURIComponent(search)}`),
         api.get('/content/courses'),

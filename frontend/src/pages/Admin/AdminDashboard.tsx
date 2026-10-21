@@ -38,15 +38,16 @@ export const AdminDashboard: React.FC = () => {
   const [activeChartPoint, setActiveChartPoint] = useState<number | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     api
       .get('/admin/analytics')
-      .then((res) => setData(res.data))
+      .then((res) => {
+        if (res.data) setData(res.data);
+      })
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="w-8 h-8 border-3 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />

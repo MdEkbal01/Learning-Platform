@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
+import { MOCK_COURSES } from '../api/mockData';
 import {
   ShieldCheck,
   Award,
@@ -13,7 +14,9 @@ import {
 } from 'lucide-react';
 
 export const Home: React.FC = () => {
-  const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
+  const [featuredCourses, setFeaturedCourses] = useState<any[]>(() =>
+    Array.isArray(MOCK_COURSES) ? MOCK_COURSES.slice(0, 3) : []
+  );
 
   useEffect(() => {
     api.get('/courses')

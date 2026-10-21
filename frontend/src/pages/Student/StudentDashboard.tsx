@@ -37,22 +37,18 @@ export const StudentDashboard: React.FC = () => {
   const [logSearch, setLogSearch] = useState('');
 
   useEffect(() => {
-    setIsLoading(true);
     Promise.all([
       api.get('/student/my-courses'),
       api.get('/student/live-classes'),
       api.get('/student/activity-logs'),
     ])
       .then(([coursesRes, liveRes, logsRes]) => {
-        setEnrolments(Array.isArray(coursesRes?.data) ? coursesRes.data : []);
-        setLiveClasses(Array.isArray(liveRes?.data) ? liveRes.data : []);
-        setActivityLogs(Array.isArray(logsRes?.data) ? logsRes.data : []);
+        if (Array.isArray(coursesRes?.data)) setEnrolments(coursesRes.data);
+        if (Array.isArray(liveRes?.data)) setLiveClasses(liveRes.data);
+        if (Array.isArray(logsRes?.data)) setActivityLogs(logsRes.data);
       })
       .catch((err) => {
         console.error(err);
-        setEnrolments([]);
-        setLiveClasses([]);
-        setActivityLogs([]);
       })
       .finally(() => setIsLoading(false));
   }, []);

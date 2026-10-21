@@ -32,12 +32,6 @@ export const Register: React.FC = () => {
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Preload next route chunks during idle registration interaction
-  React.useEffect(() => {
-    import('../Student/StudentDashboard');
-    import('../Catalogue');
-  }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

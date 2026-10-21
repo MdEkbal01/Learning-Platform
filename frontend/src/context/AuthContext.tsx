@@ -43,7 +43,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : null;
   });
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    // If not logged in, or user already cached in localStorage, start with 0ms loading state
+    const t = localStorage.getItem('token');
+    const u = localStorage.getItem('user');
+    return Boolean(t && !u);
+  });
 
   const refreshUser = async () => {
     try {

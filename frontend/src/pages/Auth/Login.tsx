@@ -20,12 +20,6 @@ export const Login: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const isExpired = queryParams.get('reason') === 'inactivity';
 
-  // Preload dashboard chunks in idle time for instant transition
-  React.useEffect(() => {
-    import('../Student/StudentDashboard');
-    import('../Admin/AdminDashboard');
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);

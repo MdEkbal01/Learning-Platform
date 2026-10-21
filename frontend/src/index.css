@@ -40,11 +40,11 @@
   background: #3f3f46;
 }
 
-/* Page entrance animations */
+/* Ultra-fast 60fps page entrance */
 @keyframes pageFadeEnter {
   0% {
-    opacity: 0;
-    transform: translateY(6px);
+    opacity: 0.85;
+    transform: translateY(2px);
   }
   100% {
     opacity: 1;
@@ -53,7 +53,7 @@
 }
 
 .page-fade-enter {
-  animation: pageFadeEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: pageFadeEnter 0.1s ease-out forwards;
 }
 
 /* Entrance Splash animations */
