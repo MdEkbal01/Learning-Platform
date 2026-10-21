@@ -20,6 +20,12 @@ export const Login: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const isExpired = queryParams.get('reason') === 'inactivity';
 
+  // Preload dashboard chunks in idle time for instant transition
+  React.useEffect(() => {
+    import('../Student/StudentDashboard');
+    import('../Admin/AdminDashboard');
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -32,14 +38,14 @@ export const Login: React.FC = () => {
       setIsVerifyingState(true);
 
       setTimeout(() => {
-        // Smart redirection based on role
-        if (role === 'SUPER_ADMIN') navigate('/admin/dashboard');
-        else if (role === 'MENTOR') navigate('/mentor/dashboard');
-        else if (role === 'CONTENT_MANAGER') navigate('/content/courses');
-        else if (role === 'FINANCE_SUPPORT') navigate('/finance/dashboard');
-        else if (role === 'MODERATOR') navigate('/moderator/queue');
-        else navigate('/student/dashboard');
-      }, 1100);
+        // Smart instantaneous redirection based on role
+        if (role === 'SUPER_ADMIN') navigate('/admin/dashboard', { replace: true });
+        else if (role === 'MENTOR') navigate('/mentor/dashboard', { replace: true });
+        else if (role === 'CONTENT_MANAGER') navigate('/content/courses', { replace: true });
+        else if (role === 'FINANCE_SUPPORT') navigate('/finance/dashboard', { replace: true });
+        else if (role === 'MODERATOR') navigate('/moderator/queue', { replace: true });
+        else navigate('/student/dashboard', { replace: true });
+      }, 250);
     } catch (err: any) {
       setIsLoading(false);
       setError(err.response?.data?.error || err.response?.data?.reason || 'Invalid email/mobile or password.');
@@ -71,12 +77,12 @@ export const Login: React.FC = () => {
         {/* Card Container */}
         <div className="bg-white dark:bg-black py-8 px-5 shadow-xl rounded-3xl sm:px-10 border border-zinc-200 dark:border-zinc-800 transition-all duration-300">
           {isVerifyingState ? (
-            /* CodeByGaurav signature circular verification state */
+            /* Fast, snappy circular verification state */
             <VerificationSpinner
               title="Signing In..."
               subtitle="Establishing cryptographically secure session."
               targetPercent={100}
-              durationMs={1000}
+              durationMs={250}
             />
           ) : (
             <>

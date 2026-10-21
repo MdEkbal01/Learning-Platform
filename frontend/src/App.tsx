@@ -8,6 +8,7 @@ import { MaintenanceBanner } from './components/MaintenanceBanner';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { EntranceSplash } from './components/EntranceSplash';
 import { PageTransition } from './components/PageTransition';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Lazy-loaded routes for ultra-fast initial bundle loading
 const Home = lazy(() => import('./pages/Home').then((m) => ({ default: m.Home })));
@@ -106,7 +107,8 @@ export const App: React.FC = () => {
             <Navbar />
 
             <main className="flex-1 flex flex-col">
-              <Suspense fallback={<PageLoadingFallback />}>
+              <ErrorBoundary>
+                <Suspense fallback={<PageLoadingFallback />}>
                 <PageTransition>
                   <Routes>
                   {/* Public & Core Platform Routes */}
@@ -297,7 +299,8 @@ export const App: React.FC = () => {
                 </Routes>
               </PageTransition>
             </Suspense>
-          </main>
+          </ErrorBoundary>
+        </main>
 
             <Footer />
           </div>

@@ -116,7 +116,8 @@ export const StudentDashboard: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Academic_Transcript_${user?.name?.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+    const studentName = user?.name || 'Student';
+    a.download = `Academic_Transcript_${studentName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -152,7 +153,7 @@ export const StudentDashboard: React.FC = () => {
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
-              Welcome back, {user?.name.split(' ')[0]}!
+              Welcome back, {user?.name ? user.name.split(' ')[0] : 'Learner'}!
             </h1>
             <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
               {user?.profile?.college
@@ -330,31 +331,45 @@ export const StudentDashboard: React.FC = () => {
                 {enrolments.map((enr) => {
                   const progress = enr.progress;
                   const percent = progress?.completionPercentage || 0;
+                  const courseTitle = enr.course?.title || enr.title || 'Course Curriculum';
+                  const courseThumbnail =
+                    enr.course?.thumbnail ||
+                    enr.thumbnail ||
+                    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80';
+                  const categoryName =
+                    typeof enr.course?.category === 'object'
+                      ? enr.course?.category?.name
+                      : typeof enr.category === 'object'
+                      ? enr.category?.name
+                      : enr.course?.category || enr.category || 'Curriculum';
+                  const instructorName =
+                    enr.course?.instructor?.name ||
+                    enr.course?.instructorName ||
+                    (typeof enr.course?.instructor === 'string' ? enr.course?.instructor : 'Ken Classes Faculty');
+                  const courseId = enr.course?.id || enr.courseId || enr.id || '';
+
                   return (
                     <div
-                      key={enr.enrolmentId}
+                      key={enr.enrolmentId || enr.id || courseId}
                       className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 p-5 space-y-4"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         {/* Left: Thumbnail and Course Info */}
                         <div className="flex items-start space-x-4">
                           <img
-                            src={
-                              enr.course.thumbnail ||
-                              'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'
-                            }
-                            alt={enr.course.title}
+                            src={courseThumbnail}
+                            alt={courseTitle}
                             className="w-16 h-16 rounded-xl object-cover shrink-0 border border-zinc-200 dark:border-zinc-800 shadow-xs"
                           />
                           <div>
                             <span className="text-[10px] font-bold tracking-wider text-zinc-900 dark:text-white uppercase bg-zinc-100 dark:bg-zinc-900 px-2.5 py-0.5 rounded-full border border-zinc-300 dark:border-zinc-700">
-                              {enr.course.category}
+                              {categoryName}
                             </span>
                             <h3 className="font-bold text-zinc-900 dark:text-white text-base mt-1 line-clamp-1">
-                              {enr.course.title}
+                              {courseTitle}
                             </h3>
                             <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 flex items-center space-x-3">
-                              <span>Instructor: {enr.course.instructorName}</span>
+                              <span>Instructor: {instructorName}</span>
                               <span>•</span>
                               <span>
                                 {progress?.completedLessons || 0} / {progress?.totalLessons || 0} Lessons
@@ -397,7 +412,7 @@ export const StudentDashboard: React.FC = () => {
                           </div>
 
                           <Link
-                            to={`/student/classroom/${enr.course.id}`}
+                            to={`/student/classroom/${courseId}`}
                             className="px-4 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 shrink-0"
                           >
                             <span>Continue</span>
@@ -478,33 +493,41 @@ export const StudentDashboard: React.FC = () => {
                 </div>
 
                 <div className="space-y-3">
-                  {liveClasses.slice(0, 3).map((cls) => (
-                    <div
-                      key={cls.id}
-                      className="p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 space-y-2"
-                    >
-                      <div className="text-[10px] font-bold text-zinc-900 dark:text-white uppercase">
-                        {cls.course?.title || 'Live Cohort'}
+                  {liveClasses.slice(0, 3).map((cls) => {
+                    const cTitle =
+                      cls.courseTitle ||
+                      (typeof cls.course === 'object' ? cls.course?.title : cls.course) ||
+                      'Live Masterclass Cohort';
+                    return (
+                      <div
+                        key={cls.id || 'live_' + Math.random()}
+                        className="p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 space-y-2"
+                      >
+                        <div className="text-[10px] font-bold text-zinc-900 dark:text-white uppercase truncate">
+                          {cTitle}
+                        </div>
+                        <div className="text-xs font-bold text-zinc-800 dark:text-white">
+                          {cls.title}
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
+                          <span className="flex items-center space-x-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>
+                              {cls.scheduledAt ? new Date(cls.scheduledAt).toLocaleDateString() : 'Scheduled'}
+                            </span>
+                          </span>
+                          <a
+                            href={cls.meetingUrl || '#'}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg transition"
+                          >
+                            Join Room
+                          </a>
+                        </div>
                       </div>
-                      <div className="text-xs font-bold text-zinc-800 dark:text-white">
-                        {cls.title}
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 pt-1">
-                        <span className="flex items-center space-x-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{new Date(cls.scheduledAt).toLocaleDateString()}</span>
-                        </span>
-                        <a
-                          href={cls.meetingUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg transition"
-                        >
-                          Join Room
-                        </a>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
