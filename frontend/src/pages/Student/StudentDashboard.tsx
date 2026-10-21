@@ -32,19 +32,25 @@ export const StudentDashboard: React.FC = () => {
       api.get('/student/live-classes'),
     ])
       .then(([coursesRes, liveRes]) => {
-        setEnrolments(coursesRes.data);
-        setLiveClasses(liveRes.data);
+        setEnrolments(Array.isArray(coursesRes?.data) ? coursesRes.data : []);
+        setLiveClasses(Array.isArray(liveRes?.data) ? liveRes.data : []);
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err);
+        setEnrolments([]);
+        setLiveClasses([]);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
-  const totalCompletedLessons = enrolments.reduce(
+  const safeEnrolments = Array.isArray(enrolments) ? enrolments : [];
+
+  const totalCompletedLessons = safeEnrolments.reduce(
     (acc, curr) => acc + (curr.progress?.completedLessons || 0),
     0
   );
 
-  const totalPossibleLessons = enrolments.reduce(
+  const totalPossibleLessons = safeEnrolments.reduce(
     (acc, curr) => acc + (curr.progress?.totalLessons || 0),
     0
   );

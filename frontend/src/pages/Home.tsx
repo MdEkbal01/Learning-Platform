@@ -17,8 +17,8 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     api.get('/courses')
-      .then((res) => setFeaturedCourses(res.data.slice(0, 3)))
-      .catch(() => {});
+      .then((res) => setFeaturedCourses(Array.isArray(res.data) ? res.data.slice(0, 3) : []))
+      .catch(() => setFeaturedCourses([]));
   }, []);
 
   return (
@@ -111,6 +111,8 @@ export const Home: React.FC = () => {
                 <img
                   src={c.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'}
                   alt={c.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition transform hover:scale-105 duration-300"
                 />
                 <div className="absolute top-3 left-3 bg-white/90 dark:bg-black/90 backdrop-blur-xs px-2.5 py-1 rounded-full text-[11px] font-bold text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 shadow-xs">

@@ -16,7 +16,7 @@ export const MaintenanceBanner: React.FC = () => {
     const fetchFlags = async () => {
       try {
         const res = await api.get('/maintenance/status');
-        const active = (res.data || []).filter((f: Flag) => f.isEnabled);
+        const active = (Array.isArray(res.data) ? res.data : []).filter((f: Flag) => f.isEnabled);
         setActiveFlags(active);
       } catch {
         // ignore
