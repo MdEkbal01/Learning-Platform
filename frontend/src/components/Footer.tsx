@@ -12,11 +12,18 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Col 1: Brand & Overview */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
-                <GraduationCap className="w-5 h-5" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-amber-600 shadow-xs flex items-center justify-center overflow-hidden shrink-0">
+                <img
+                  src="/logo.png"
+                  alt="Ken Classes Logo"
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
-              <span className="text-zinc-900 dark:text-white text-lg font-bold">Ken Classes</span>
+              <div>
+                <span className="text-zinc-900 dark:text-white text-lg font-bold block leading-none">Ken Classes</span>
+                <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">Learning Without Limits</span>
+              </div>
             </div>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
               High-performance, ISO & UGC-DEB recognized online education platform. Delivering masterclasses,

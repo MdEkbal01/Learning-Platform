@@ -110,6 +110,13 @@ export const VerifyCertificate: React.FC = () => {
           </div>
 
           <div className="p-8 text-center space-y-6">
+            <div className="w-16 h-16 mx-auto rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-amber-600 shadow-md overflow-hidden">
+              <img
+                src="/logo.png"
+                alt="Ken Classes Seal"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
             <div className="space-y-1.5">
               <span className="text-xs uppercase tracking-widest text-zinc-400 font-extrabold">
                 This certifies that

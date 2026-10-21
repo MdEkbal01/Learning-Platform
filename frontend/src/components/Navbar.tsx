@@ -53,16 +53,20 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           {/* Left: Brand & Main Navigation */}
           <div className="flex items-center space-x-6">
-            <Link to="/" className="flex items-center space-x-2.5">
-              <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs">
-                <GraduationCap className="w-6 h-6" />
+            <Link to="/" className="flex items-center space-x-2.5 group">
+              <div className="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-amber-400/80 to-amber-600/80 border border-zinc-200 dark:border-zinc-800 shadow-xs flex items-center justify-center overflow-hidden shrink-0 transition transform group-hover:scale-105 duration-200">
+                <img
+                  src="/logo.png"
+                  alt="Ken Classes Logo"
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight text-black dark:text-white">
                   Ken Classes
                 </span>
                 <span className="hidden sm:inline-block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 ml-1.5 border-l border-zinc-300 dark:border-zinc-700 pl-1.5">
-                  {t('tagline')}
+                  Learning Without Limits
                 </span>
               </div>
             </Link>

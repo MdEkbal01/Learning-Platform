@@ -6,6 +6,8 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MaintenanceBanner } from './components/MaintenanceBanner';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { EntranceSplash } from './components/EntranceSplash';
+import { PageTransition } from './components/PageTransition';
 
 // Lazy-loaded routes for ultra-fast initial bundle loading
 const Home = lazy(() => import('./pages/Home').then((m) => ({ default: m.Home })));
@@ -53,9 +55,25 @@ const MaintenanceSettings = lazy(() => import('./pages/Admin/MaintenanceSettings
 const WebhookSimulator = lazy(() => import('./pages/Admin/WebhookSimulator').then((m) => ({ default: m.WebhookSimulator })));
 
 const PageLoadingFallback: React.FC = () => (
-  <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3 animate-in fade-in duration-200">
-    <div className="w-7 h-7 border-2 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-    <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 tracking-wider uppercase">Loading</span>
+  <div className="min-h-[55vh] flex flex-col items-center justify-center space-y-4 animate-in fade-in duration-200">
+    <div className="relative">
+      <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-amber-600 animate-pulse shadow-md">
+        <img
+          src="/logo.png"
+          alt="Ken Classes"
+          className="w-full h-full object-cover rounded-full"
+        />
+      </div>
+      <div className="absolute -inset-1.5 rounded-full border border-amber-400/40 animate-ping opacity-30 pointer-events-none" />
+    </div>
+    <div className="flex flex-col items-center space-y-1.5">
+      <span className="text-xs font-bold tracking-widest text-zinc-900 dark:text-white uppercase">
+        Ken Classes
+      </span>
+      <div className="w-24 h-0.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 w-1/2 rounded-full animate-route-progress" />
+      </div>
+    </div>
   </div>
 );
 
@@ -79,13 +97,15 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <ThemeLanguageProvider>
+          <EntranceSplash />
           <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors duration-200 selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
             <MaintenanceBanner />
             <Navbar />
 
-            <main className="flex-1">
+            <main className="flex-1 flex flex-col">
               <Suspense fallback={<PageLoadingFallback />}>
-                <Routes>
+                <PageTransition>
+                  <Routes>
                   {/* Public & Core Platform Routes */}
                   <Route path="/" element={<Home />} />
                   <Route path="/courses" element={<Catalogue />} />
@@ -272,8 +292,9 @@ export const App: React.FC = () => {
                   {/* Fallback */}
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-              </Suspense>
-            </main>
+              </PageTransition>
+            </Suspense>
+          </main>
 
             <Footer />
           </div>

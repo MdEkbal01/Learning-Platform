@@ -26,9 +26,18 @@ export const Home: React.FC = () => {
       {/* Hero Section (Monochrome White / Black) */}
       <section className="relative overflow-hidden bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 sm:px-6 lg:px-8 border-b border-zinc-200 dark:border-zinc-800">
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-zinc-200/80 dark:bg-zinc-800/80 border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Next-Generation Online Learning & Course Commerce</span>
+          <div className="flex flex-col items-center">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 mb-4 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-600 shadow-xl overflow-hidden transform transition hover:scale-105 duration-300">
+              <img
+                src="/logo.png"
+                alt="Ken Classes Emblem"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-zinc-200/80 dark:bg-zinc-800/80 border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+              <span>Next-Generation Online Learning & Course Commerce</span>
+            </div>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-black dark:text-white">

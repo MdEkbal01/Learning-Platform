@@ -51,7 +51,14 @@ export const Login: React.FC = () => {
       {/* CodeByGaurav signature ambient pointer light */}
       <PointerLight intensity="vibrant" />
 
-      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <div className="w-16 h-16 mx-auto mb-3 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-amber-600 shadow-lg overflow-hidden transform transition hover:scale-105 duration-200">
+          <img
+            src="/logo.png"
+            alt="Ken Classes Logo"
+            className="w-full h-full object-cover rounded-full"
+          />
+        </div>
         <h2 className="text-center text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
           Welcome back
         </h2>

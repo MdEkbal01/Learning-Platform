@@ -7,6 +7,7 @@ export const EMAILJS_CONFIG = {
   templateWelcome: import.meta.env.VITE_EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
   companyName: 'Ken Classes',
   supportEmail: 'kenclasses95@gmail.com',
+  logoUrl: 'https://auralms-platform.pages.dev/logo.png',
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || localStorage.getItem('emailjs_public_key') || 'e8iQcLkwbSNDb6a5h',
   privateKey: import.meta.env.VITE_EMAILJS_PRIVATE_KEY || '',
 };
@@ -41,6 +42,9 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
     purpose: params.purpose === 'PASSWORD_RESET' ? 'Password Reset' : 'Account Verification',
     company_name: EMAILJS_CONFIG.companyName,
     support_email: EMAILJS_CONFIG.supportEmail,
+    company_logo: EMAILJS_CONFIG.logoUrl,
+    logo_url: EMAILJS_CONFIG.logoUrl,
+    logo: EMAILJS_CONFIG.logoUrl,
     message: `Your Ken Classes verification code is: ${params.otpCode}. It expires in 15 minutes.`,
   };
 
@@ -86,6 +90,9 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
     email: params.toEmail,
     company_name: EMAILJS_CONFIG.companyName,
     support_email: EMAILJS_CONFIG.supportEmail,
+    company_logo: EMAILJS_CONFIG.logoUrl,
+    logo_url: EMAILJS_CONFIG.logoUrl,
+    logo: EMAILJS_CONFIG.logoUrl,
     login_url: params.loginUrl || window.location.origin + '/login',
     message: `Welcome to ${EMAILJS_CONFIG.companyName}! Your account has been verified successfully.`,
   };
