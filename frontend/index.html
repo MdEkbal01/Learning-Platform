@@ -2,14 +2,215 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000000'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ken Classes | Accredited Online Learning &amp; Course Platform</title>
+
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="Ken Classes is an accredited online learning and course management platform offering verified curriculum, live masterclasses, and authenticated certificates." />
+    <meta name="keywords" content="Ken Classes, online learning platform, course catalogue, computer science courses, web development, certified courses, live masterclasses, verified certificates, LMS, least-privilege rbac, course commerce" />
+    <meta name="author" content="Ken Classes" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://auralms-platform.pages.dev/" />
+
+    <!-- Bilingual Hreflang Usage -->
+    <link rel="alternate" hreflang="en" href="https://auralms-platform.pages.dev/" />
+    <link rel="alternate" hreflang="hi" href="https://auralms-platform.pages.dev/?lang=hi" />
+    <link rel="alternate" hreflang="x-default" href="https://auralms-platform.pages.dev/" />
+
+    <!-- Open Graph / Facebook / LinkedIn Structured Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://auralms-platform.pages.dev/" />
+    <meta property="og:title" content="Ken Classes | Accredited Online Learning &amp; Course Platform" />
+    <meta property="og:description" content="Explore industry-aligned courses, live interactive masterclasses, and cryptographically verified certificates on Ken Classes." />
+    <meta property="og:image" content="https://auralms-platform.pages.dev/og-image.svg" />
+    <meta property="og:site_name" content="Ken Classes" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="hi_IN" />
+
+    <!-- Twitter / X Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://auralms-platform.pages.dev/" />
+    <meta name="twitter:title" content="Ken Classes | Accredited Online Learning &amp; Course Platform" />
+    <meta name="twitter:description" content="Explore industry-aligned courses, live interactive masterclasses, and cryptographically verified certificates on Ken Classes." />
+    <meta name="twitter:image" content="https://auralms-platform.pages.dev/og-image.svg" />
+    <meta name="twitter:site" content="@kenclasses" />
+    <meta name="twitter:creator" content="@kenclasses" />
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Preconnect & DNS Prefetch to Defer Render-Blocking Resource Bottlenecks -->
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
     <link rel="dns-prefetch" href="https://images.unsplash.com" />
-    <title>Ken Classes | Online Learning Platform</title>
+
+    <!-- Schema.org JSON-LD Structured Data: EducationalOrganization, LocalBusiness & WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "EducationalOrganization",
+          "@id": "https://auralms-platform.pages.dev/#organization",
+          "name": "Ken Classes",
+          "url": "https://auralms-platform.pages.dev",
+          "logo": "https://auralms-platform.pages.dev/favicon.svg",
+          "description": "Accredited online learning and technical course platform offering industry-aligned computer science, full-stack development, and cloud computing curriculums.",
+          "email": "kenclasses95@gmail.com",
+          "telephone": "+91 98765 43210",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Ken Classes EduTower, Sector 62, Knowledge Corridor",
+            "addressLocality": "Noida",
+            "addressRegion": "Uttar Pradesh",
+            "postalCode": "201309",
+            "addressCountry": "IN"
+          },
+          "sameAs": [
+            "https://facebook.com/kenclasses",
+            "https://x.com/kenclasses",
+            "https://instagram.com/kenclasses",
+            "https://linkedin.com/company/kenclasses",
+            "https://youtube.com/@kenclasses"
+          ]
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://auralms-platform.pages.dev/#localbusiness",
+          "name": "Ken Classes Learning Technologies",
+          "url": "https://auralms-platform.pages.dev",
+          "telephone": "+91 98765 43210",
+          "priceRange": "$$",
+          "image": "https://auralms-platform.pages.dev/og-image.svg",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Ken Classes EduTower, Sector 62, Knowledge Corridor",
+            "addressLocality": "Noida",
+            "addressRegion": "Uttar Pradesh",
+            "postalCode": "201309",
+            "addressCountry": "IN"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://auralms-platform.pages.dev/#website",
+          "url": "https://auralms-platform.pages.dev",
+          "name": "Ken Classes",
+          "description": "Accredited Online Learning & Course Platform",
+          "publisher": {
+            "@id": "https://auralms-platform.pages.dev/#organization"
+          },
+          "inLanguage": ["en-US", "hi-IN"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://auralms-platform.pages.dev/courses?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Course",
+          "@id": "https://auralms-platform.pages.dev/courses/modern-fullstack-typescript-microservices",
+          "name": "Modern Full-Stack TypeScript & Microservices",
+          "description": "Production-ready React 19, Node.js, Prisma, Kafka and Docker architecture.",
+          "provider": {
+            "@id": "https://auralms-platform.pages.dev/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "49.99",
+            "priceCurrency": "USD",
+            "category": "Paid"
+          }
+        },
+        {
+          "@type": "Course",
+          "@id": "https://auralms-platform.pages.dev/courses/cloud-native-kubernetes-devops",
+          "name": "Cloud-Native Kubernetes & DevOps Engineering",
+          "description": "Enterprise container orchestration, Helm deployments, GitOps with ArgoCD, and zero-downtime infrastructure.",
+          "provider": {
+            "@id": "https://auralms-platform.pages.dev/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "69.99",
+            "priceCurrency": "USD",
+            "category": "Paid"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 font-sans antialiased">
+    <!-- Root Mounting Point for React SPA with SEO & Crawler Semantic Pre-Render Content -->
+    <div id="root">
+      <header style="padding: 24px; border-bottom: 1px solid #e4e4e7;">
+        <nav>
+          <strong>Ken Classes</strong> | <a href="/courses">Course Catalogue</a> | <a href="/verify-certificate">Verify Certificate</a> | <a href="/help">Help &amp; Support</a> | <a href="/login">Sign In</a> | <a href="/register">Get Started</a>
+        </nav>
+      </header>
+
+      <main style="max-width: 1200px; margin: 0 auto; padding: 40px 24px;">
+        <article>
+          <h1>Ken Classes — Premier Accredited Online Learning &amp; Technical Course Platform</h1>
+          <p>
+            Welcome to Ken Classes, an enterprise-scale online learning and course commerce delivery system.
+            We empower developers, engineers, and digital innovators with production-grade engineering courses,
+            interactive classroom learning, real-time 1-on-1 mentor doubt resolution, scheduled live streaming masterclasses,
+            and cryptographically signed digital certificates.
+          </p>
+
+          <section>
+            <h2>Featured Online Engineering &amp; Computer Science Curriculums</h2>
+            <ul>
+              <li>
+                <h3><a href="/courses/modern-fullstack-typescript-microservices">Modern Full-Stack TypeScript &amp; Microservices</a></h3>
+                <p>Master React 19, Express 5, Node.js, Prisma ORM, Kafka, and Docker microservices with production-grade authentication and idempotent payment reconciliation.</p>
+              </li>
+              <li>
+                <h3><a href="/courses/cloud-native-kubernetes-devops">Cloud-Native Kubernetes &amp; DevOps Engineering</a></h3>
+                <p>Architect robust multi-region infrastructure, Helm packages, CI/CD pipelines, and zero-downtime deployment workflows.</p>
+              </li>
+              <li>
+                <h3><a href="/courses/distributed-systems-golang">High-Throughput Distributed Systems in Go</a></h3>
+                <p>Build fault-tolerant distributed consensus protocols, Raft implementations, and low-latency gRPC services.</p>
+              </li>
+              <li>
+                <h3><a href="/courses/ai-mlops-generative-ai-production">Production Generative AI &amp; MLOps Architectures</a></h3>
+                <p>Deploy RAG agents, LLM vector search pipelines, fine-tuned transformer models, and real-time inference gateways.</p>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Academic Governance, Cryptographic Verification &amp; Security Standards</h2>
+            <p>
+              Ken Classes enforces least-privilege Role-Based Access Control (RBAC) separating Students, Mentors, Content Managers,
+              Finance Support, Moderators, and Super Administrators. Every course completion award is backed by an immutable
+              SHA-256 cryptographic signature registered in our public certificate verification registry at
+              <a href="/verify-certificate">auralms-platform.pages.dev/verify-certificate</a>.
+            </p>
+          </section>
+
+          <section>
+            <h2>Official Contact Information &amp; Campus Location</h2>
+            <p>
+              <strong>Organization:</strong> Ken Classes Learning Technologies<br />
+              <strong>Official Email:</strong> <a href="mailto:kenclasses95@gmail.com">kenclasses95@gmail.com</a><br />
+              <strong>Official Phone:</strong> <a href="tel:+919876543210">+91 98765 43210</a><br />
+              <strong>Campus Address:</strong> Ken Classes EduTower, Sector 62, Knowledge Corridor, Noida / Bangalore, India
+            </p>
+          </section>
+        </article>
+      </main>
+
+      <footer style="padding: 24px; border-top: 1px solid #e4e4e7; font-size: 12px; color: #71717a;">
+        <p>&copy; 2026 Ken Classes. All rights reserved. Sitemaps available at <a href="/sitemap.xml">/sitemap.xml</a>.</p>
+      </footer>
+    </div>
+
+    <!-- Application Script Bundle -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

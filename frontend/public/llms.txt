@@ -1,0 +1,29 @@
+# Ken Classes — Accredited Online Learning & Course Management Platform
+
+> Ken Classes is an enterprise-scale online learning and course commerce delivery system providing industry-accredited curriculums, live interactive masterclasses, 1-on-1 mentor guidance, and cryptographically verified digital certificates.
+
+## Primary System Domains
+
+1. **Course Catalogue & Public Discovery** (`/courses`):
+   - Comprehensive technical curricula across Modern Full-Stack Development, Cloud Computing, Distributed Systems, and AI/MLOps.
+   - Interactive preview lessons, syllabus breakdowns, and prerequisite specifications.
+
+2. **Accredited Verification Registry** (`/verify-certificate`):
+   - Cryptographically verifiable credential lookups matching SHA-256 digital certificate hashes.
+   - Authoritative verification for employers and academic institutions.
+
+3. **Help & Support Center** (`/help`):
+   - Bilingual FAQ repository (English and Hindi).
+   - Direct support ticket submission with dedicated academic triage.
+
+4. **Multi-Role RBAC Governance**:
+   - Least-privilege role-based access for Students, Mentors, Content Managers, Finance Officers, Community Moderators, and Platform Administrators.
+
+## Official Contact & Verification
+
+- Organization: Ken Classes
+- Official Contact: kenclasses95@gmail.com
+- Support Phone: +91 98765 43210
+- Campus / HQ: Ken Classes EduTower, Sector 62, Knowledge Corridor, Noida / Bangalore, India
+- Website: https://auralms-platform.pages.dev
+- Sitemap: https://auralms-platform.pages.dev/sitemap.xml

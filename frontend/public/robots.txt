@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+Allow: /courses
+Allow: /verify-certificate
+Allow: /help
+Disallow: /admin/
+Disallow: /mentor/
+Disallow: /content/
+Disallow: /finance/
+Disallow: /moderator/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+Sitemap: https://auralms-platform.pages.dev/sitemap.xml

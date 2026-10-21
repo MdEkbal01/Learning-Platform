@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="#000000">
+  <rect width="1200" height="630" fill="#000000"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="#09090b" stroke="#27272a" stroke-width="2"/>
+  <circle cx="140" cy="140" r="48" fill="#ffffff"/>
+  <path d="M140 115 L170 130 L140 145 L110 130 Z M122 136 V154 C130 160 150 160 158 154 V136" fill="#000000"/>
+  <text x="210" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#ffffff" letter-spacing="-1">Ken Classes</text>
+  <text x="140" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="800" fill="#ffffff" letter-spacing="-1.5">Accredited Online Learning &amp; Course Platform</text>
+  <text x="140" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="400" fill="#a1a1aa">High-performance curriculum, live interactive masterclasses, 1-on-1 mentor guidance, and verified certificates.</text>
+  <rect x="140" y="420" width="220" height="56" rx="14" fill="#ffffff"/>
+  <text x="180" y="456" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#000000">Explore Courses →</text>
+  <text x="140" y="540" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#71717a">auralms-platform.pages.dev • TLS 1.3 Secure • Cryptographically Verified</text>
+</svg>
