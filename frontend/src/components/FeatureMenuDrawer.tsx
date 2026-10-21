@@ -310,8 +310,8 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md sm:max-w-lg bg-white dark:bg-zinc-950 border-l border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col h-full overflow-hidden transition-transform duration-300">
+      <div className="fixed inset-y-0 left-0 max-w-full flex pr-8 sm:pr-14">
+        <div className="w-screen max-w-md sm:max-w-lg bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col h-full overflow-hidden animate-slide-in-left">
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/70 dark:bg-zinc-900/50">
             <div className="flex items-center space-x-3">
