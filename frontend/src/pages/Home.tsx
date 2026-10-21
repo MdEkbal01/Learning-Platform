@@ -109,7 +109,7 @@ export const Home: React.FC = () => {
             >
               <div className="relative h-48 bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
                 <img
-                  src={c.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'}
+                  src={c.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'}
                   alt={c.title}
                   loading="lazy"
                   decoding="async"

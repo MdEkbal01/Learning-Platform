@@ -233,7 +233,7 @@ export const StudentDashboard: React.FC = () => {
                       {/* Left: Thumbnail and Course Info */}
                       <div className="flex items-start space-x-4">
                         <img
-                          src={enr.course.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'}
+                          src={enr.course.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'}
                           alt={enr.course.title}
                           className="w-16 h-16 rounded-xl object-cover shrink-0 border border-zinc-200 dark:border-zinc-800 shadow-xs"
                         />

@@ -292,6 +292,108 @@ export const MOCK_FINANCE_DATA = {
   ],
 };
 
+export const MOCK_STUDENT_ORDERS = [
+  {
+    id: 'ord_101',
+    orderNumber: 'KEN-ORD-8812',
+    amount: 49.99,
+    currency: 'USD',
+    status: 'COMPLETED',
+    createdAt: '2026-03-15T10:00:00Z',
+    course: MOCK_COURSES[0],
+  },
+];
+
+export const MOCK_DOUBTS = [
+  {
+    id: 'dbt_01',
+    title: 'Understanding Idempotency Keys in Stripe Webhooks',
+    question: 'How do we guarantee that retried webhook deliveries do not double-credit course access?',
+    status: 'RESOLVED',
+    createdAt: '2026-03-24T12:00:00Z',
+    updatedAt: '2026-03-24T12:30:00Z',
+    student: { name: 'Aarav Sharma' },
+    course: { title: 'Modern Full-Stack TypeScript & Microservices' },
+    messages: [
+      {
+        id: 'msg_01',
+        authorRole: 'STUDENT',
+        authorName: 'Aarav Sharma',
+        message: 'How do we guarantee that retried webhook deliveries do not double-credit course access?',
+        createdAt: '2026-03-24T12:00:00Z',
+      },
+      {
+        id: 'msg_02',
+        authorRole: 'MENTOR',
+        authorName: 'Dr. Alex Vance',
+        message: 'Store each incoming event ID inside a Redis set or DB unique table with a 24-hour TTL.',
+        createdAt: '2026-03-24T12:30:00Z',
+      },
+    ],
+    replies: [
+      {
+        id: 'rep_01',
+        authorRole: 'MENTOR',
+        authorName: 'Dr. Alex Vance',
+        message: 'Store each incoming event ID inside a Redis set or DB unique table with a 24-hour TTL.',
+        createdAt: '2026-03-24T12:30:00Z',
+      },
+    ],
+  },
+];
+
+export const MOCK_TICKETS = [
+  {
+    id: 'tkt_01',
+    ticketNumber: 'TKT-2026-0041',
+    subject: 'Question on Cloudflare Pages Deployment',
+    category: 'TECHNICAL',
+    status: 'RESOLVED',
+    priority: 'MEDIUM',
+    createdAt: '2026-03-25T10:00:00Z',
+    messages: [
+      {
+        id: 'msg_01',
+        senderRole: 'SUPPORT',
+        sender: { name: 'Sarah Jenkins' },
+        message: 'Your deployment has been verified and cached at the global edge.',
+        createdAt: '2026-03-25T11:00:00Z',
+      },
+    ],
+  },
+];
+
+export const MOCK_MAINTENANCE_FLAGS = [
+  {
+    id: 'flag_forum',
+    featureKey: 'COMMUNITY_FORUM',
+    isEnabled: false,
+    message: 'The community discussion forum is operating normally.',
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'flag_checkout',
+    featureKey: 'PAYMENT_CHECKOUT',
+    isEnabled: false,
+    message: 'Payment rails and instant checkout are fully operational.',
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'flag_live',
+    featureKey: 'LIVE_CLASSES',
+    isEnabled: false,
+    message: 'Live interactive masterclass streams are online.',
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'flag_global',
+    featureKey: 'PLATFORM_GLOBAL',
+    isEnabled: false,
+    message: 'Platform systems operational. No scheduled maintenance active.',
+    updatedAt: new Date().toISOString(),
+  },
+];
+
 export const MOCK_FAQS = [
   {
     id: 'faq_1',
@@ -492,9 +594,9 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return { status: 200, data: { message: 'Logged out successfully.' } };
   }
 
-  // Maintenance Status (empty array = healthy, no interruptions)
+  // Maintenance Status (returns active feature notices if any)
   if (cleanUrl === '/maintenance/status') {
-    return { status: 200, data: [] };
+    return { status: 200, data: MOCK_MAINTENANCE_FLAGS.filter((f) => f.isEnabled) };
   }
 
   // Categories
@@ -502,16 +604,40 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return { status: 200, data: MOCK_CATEGORIES };
   }
 
+  // Courses List with dynamic filtering
+  if (cleanUrl === '/courses') {
+    let list = [...MOCK_COURSES];
+    try {
+      const searchParams = new URL(url, 'http://localhost').searchParams;
+      const cat = searchParams.get('category');
+      if (cat && cat !== 'all') {
+        list = list.filter((c) => c.category?.id === cat || c.category?.slug === cat);
+      }
+      const lvl = searchParams.get('level');
+      if (lvl && lvl !== 'all') {
+        list = list.filter((c) => c.level === lvl);
+      }
+      const pt = searchParams.get('priceType');
+      if (pt === 'free') list = list.filter((c) => c.isFree);
+      if (pt === 'paid') list = list.filter((c) => !c.isFree);
+      const q = searchParams.get('search')?.toLowerCase().trim();
+      if (q) {
+        list = list.filter(
+          (c) =>
+            c.title.toLowerCase().includes(q) ||
+            c.subtitle?.toLowerCase().includes(q) ||
+            c.instructor?.name?.toLowerCase().includes(q)
+        );
+      }
+    } catch {}
+    return { status: 200, data: list };
+  }
+
   // Course Details
   if (cleanUrl.startsWith('/courses/') && !cleanUrl.endsWith('/courses')) {
     const slugOrId = cleanUrl.replace('/courses/', '');
     const found = MOCK_COURSES.find((c) => c.id === slugOrId || c.slug === slugOrId) || MOCK_COURSES[0];
     return { status: 200, data: found };
-  }
-
-  // Courses List
-  if (cleanUrl === '/courses') {
-    return { status: 200, data: MOCK_COURSES };
   }
 
   // Student Courses & Dashboard
@@ -526,47 +652,154 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
 
   // Student Orders
   if (cleanUrl === '/student/orders') {
+    return { status: 200, data: MOCK_STUDENT_ORDERS };
+  }
+
+  // Checkout: Create Order
+  if (cleanUrl === '/payment/create-order') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const courseId = payload?.courseId;
+    const found = MOCK_COURSES.find((c) => c.id === courseId || c.slug === courseId) || MOCK_COURSES[0];
+    const orderId = 'KEN-ORD-' + Math.floor(1000 + Math.random() * 9000);
     return {
       status: 200,
-      data: [
-        {
-          id: 'ord_101',
-          orderNumber: 'KEN-ORD-8812',
-          amount: 49.99,
-          currency: 'USD',
-          status: 'COMPLETED',
-          createdAt: '2026-03-15T10:00:00Z',
-          course: MOCK_COURSES[0],
-        },
-      ],
+      data: {
+        orderId,
+        id: orderId,
+        amount: found.isFree ? 0 : found.price,
+        currency: 'USD',
+        isFree: Boolean(found.isFree),
+        course: found,
+      },
     };
   }
 
-  // Doubts
-  if (cleanUrl.includes('/doubts')) {
+  // Checkout: Verify Payment
+  if (cleanUrl === '/payment/verify') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const orderId = payload?.orderId || 'KEN-ORD-' + Math.floor(1000 + Math.random() * 9000);
+    const isSuccess = payload?.status !== 'FAILED';
+
+    if (isSuccess) {
+      // Auto-enrol user
+      const course = MOCK_COURSES[0];
+      const alreadyEnrolled = MOCK_ENROLMENTS.some((e) => e.courseId === course.id);
+      if (!alreadyEnrolled) {
+        MOCK_ENROLMENTS.unshift({
+          id: 'enr_' + Date.now(),
+          courseId: course.id,
+          course,
+          progress: { completedLessons: 0, totalLessons: 4, percentage: 0 },
+          enrolledAt: new Date().toISOString(),
+        });
+      }
+      // Add to student orders
+      MOCK_STUDENT_ORDERS.unshift({
+        id: orderId,
+        orderNumber: orderId,
+        amount: 49.99,
+        currency: 'USD',
+        status: 'COMPLETED',
+        createdAt: new Date().toISOString(),
+        course,
+      });
+    }
+
     return {
       status: 200,
-      data: [
-        {
-          id: 'dbt_01',
-          title: 'Understanding Idempotency Keys in Stripe Webhooks',
-          question: 'How do we guarantee that retried webhook deliveries do not double-credit course access?',
-          status: 'RESOLVED',
-          createdAt: '2026-03-24T12:00:00Z',
-          student: { name: 'Aarav Sharma' },
-          course: { title: 'Modern Full-Stack TypeScript & Microservices' },
-          replies: [
-            {
-              id: 'rep_01',
-              authorRole: 'MENTOR',
-              authorName: 'Dr. Alex Vance',
-              message: 'Store each incoming event ID inside a Redis set or DB unique table with a 24-hour TTL.',
-              createdAt: '2026-03-24T12:30:00Z',
-            },
-          ],
+      data: {
+        success: isSuccess,
+        order: {
+          id: orderId,
+          orderNumber: orderId,
+          status: isSuccess ? 'PAID' : 'FAILED',
+          amount: 49.99,
+          currency: 'USD',
+          verifiedAt: new Date().toISOString(),
         },
-      ],
+      },
     };
+  }
+
+  // Doubts List & Submission
+  if (cleanUrl === '/doubts') {
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      const newDoubt = {
+        id: 'dbt_' + Date.now(),
+        title: payload?.title || 'Course Architecture Query',
+        question: payload?.description || payload?.question || 'Detailed question submitted by student.',
+        status: 'OPEN',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        student: { name: 'Aarav Sharma' },
+        course: { title: 'Modern Full-Stack TypeScript & Microservices' },
+        messages: [
+          {
+            id: 'msg_' + Date.now(),
+            authorRole: 'STUDENT',
+            authorName: 'Aarav Sharma',
+            message: payload?.description || payload?.question || 'Doubt explanation',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        replies: [],
+      };
+      MOCK_DOUBTS.unshift(newDoubt);
+      return { status: 201, data: newDoubt };
+    }
+    return { status: 200, data: MOCK_DOUBTS };
+  }
+
+  // Single Doubt Detail
+  if (cleanUrl.startsWith('/doubts/') && !cleanUrl.includes('/messages') && !cleanUrl.includes('/status')) {
+    const id = cleanUrl.replace('/doubts/', '');
+    const found = MOCK_DOUBTS.find((d) => d.id === id) || MOCK_DOUBTS[0];
+    return { status: 200, data: found };
+  }
+
+  // Doubt Reply
+  if (cleanUrl.startsWith('/doubts/') && cleanUrl.endsWith('/messages')) {
+    const doubtId = cleanUrl.split('/')[2];
+    const target = MOCK_DOUBTS.find((d) => d.id === doubtId) || MOCK_DOUBTS[0];
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const msgText = payload?.message || 'Thank you for your inquiry. The instructor has confirmed this pattern.';
+    const newMsg = {
+      id: 'rep_' + Date.now(),
+      authorRole: 'MENTOR',
+      authorName: 'Dr. Alex Vance',
+      message: msgText,
+      createdAt: new Date().toISOString(),
+    };
+    target.messages.push(newMsg);
+    target.replies.push(newMsg);
+    target.updatedAt = new Date().toISOString();
+    return { status: 200, data: newMsg };
+  }
+
+  // Doubt Status Update
+  if (cleanUrl.startsWith('/doubts/') && cleanUrl.endsWith('/status')) {
+    const doubtId = cleanUrl.split('/')[2];
+    const target = MOCK_DOUBTS.find((d) => d.id === doubtId) || MOCK_DOUBTS[0];
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    target.status = payload?.status || 'RESOLVED';
+    target.updatedAt = new Date().toISOString();
+    return { status: 200, data: { success: true, status: target.status } };
   }
 
   // Admin Analytics & Metrics
@@ -620,41 +853,23 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
 
   // Feature Maintenance Switches
   if (cleanUrl === '/admin/maintenance') {
-    return {
-      status: 200,
-      data: [
-        {
-          id: 'flag_forum',
-          featureKey: 'COMMUNITY_FORUM',
-          isEnabled: false,
-          message: 'The community discussion forum is operating normally.',
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: 'flag_checkout',
-          featureKey: 'PAYMENT_CHECKOUT',
-          isEnabled: false,
-          message: 'Payment rails and instant checkout are fully operational.',
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: 'flag_live',
-          featureKey: 'LIVE_CLASSES',
-          isEnabled: false,
-          message: 'Live interactive masterclass streams are online.',
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: 'flag_global',
-          featureKey: 'PLATFORM_GLOBAL',
-          isEnabled: false,
-          message: 'Platform systems operational. No scheduled maintenance active.',
-          updatedAt: new Date().toISOString(),
-        },
-      ],
-    };
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      const targetFlag = MOCK_MAINTENANCE_FLAGS.find((f) => f.featureKey === payload?.featureKey);
+      if (targetFlag) {
+        targetFlag.isEnabled = payload?.isEnabled ?? !targetFlag.isEnabled;
+        if (payload?.message) targetFlag.message = payload.message;
+        targetFlag.updatedAt = new Date().toISOString();
+      }
+      return { status: 200, data: { success: true, flags: MOCK_MAINTENANCE_FLAGS } };
+    }
+    return { status: 200, data: MOCK_MAINTENANCE_FLAGS };
   }
 
+  // Admin User Management
   if (cleanUrl === '/admin/users') {
     return {
       status: 200,
@@ -667,6 +882,27 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/role')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return { status: 200, data: { success: true, role: payload?.role || 'STUDENT' } };
+  }
+
+  if (cleanUrl.startsWith('/admin/users/') && cleanUrl.endsWith('/status')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return { status: 200, data: { success: true, status: payload?.status || 'ACTIVE' } };
+  }
+
+  if (cleanUrl === '/admin/enrolments/manual') {
+    return { status: 200, data: { success: true, message: 'Enrolment manually granted.' } };
+  }
+
+  // Admin Audit Logs
   if (cleanUrl === '/admin/audit-logs') {
     return {
       status: 200,
@@ -710,7 +946,95 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
 
   // Curriculum Management (Content Manager & Admin)
   if (cleanUrl === '/content/courses') {
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      const newCourse = {
+        id: 'course_' + Date.now(),
+        slug: (payload?.title || 'new-course').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: payload?.title || 'Untitled Course',
+        subtitle: payload?.subtitle || 'Course overview',
+        description: payload?.description || 'Curriculum details',
+        price: Number(payload?.price) || 0,
+        isFree: !payload?.price || Number(payload?.price) === 0,
+        level: payload?.level || 'BEGINNER',
+        status: 'DRAFT',
+        thumbnail: payload?.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
+        category: MOCK_CATEGORIES.find((cat) => cat.id === payload?.categoryId) || MOCK_CATEGORIES[0],
+        instructor: { name: 'Ken Classes Faculty', bio: 'Senior Instructor' },
+        enrolledCount: 0,
+        rating: 5.0,
+        modules: [],
+      };
+      MOCK_COURSES.push(newCourse);
+      return { status: 201, data: newCourse };
+    }
     return { status: 200, data: MOCK_COURSES };
+  }
+
+  if (cleanUrl.startsWith('/content/courses/') && cleanUrl.endsWith('/status')) {
+    const courseId = cleanUrl.split('/')[3];
+    const found = MOCK_COURSES.find((c) => c.id === courseId);
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    if (found) found.status = payload?.status || 'PUBLISHED';
+    return { status: 200, data: { success: true, status: payload?.status || 'PUBLISHED' } };
+  }
+
+  if (cleanUrl.startsWith('/content/courses/') && cleanUrl.endsWith('/modules')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const newModule = {
+      id: 'mod_' + Date.now(),
+      title: payload?.title || 'New Module',
+      order: payload?.orderIndex || 1,
+      lessons: [],
+    };
+    return { status: 200, data: { success: true, module: newModule } };
+  }
+
+  if (cleanUrl.startsWith('/content/modules/') && cleanUrl.endsWith('/lessons')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const newLesson = {
+      id: 'les_' + Date.now(),
+      title: payload?.title || 'New Lesson',
+      durationMinutes: Math.round((payload?.durationSeconds || 600) / 60),
+      videoUrl: payload?.videoUrl || '',
+      isPreview: Boolean(payload?.isPreview),
+    };
+    return { status: 200, data: { success: true, lesson: newLesson } };
+  }
+
+  if (cleanUrl.startsWith('/content/lessons/')) {
+    return { status: 200, data: { success: true, message: 'Lesson deleted.' } };
+  }
+
+  if (cleanUrl.startsWith('/content/modules/') && cleanUrl.endsWith('/quiz')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return {
+      status: 200,
+      data: {
+        success: true,
+        quiz: {
+          id: 'quiz_' + Date.now(),
+          title: payload?.title || 'Module Assessment',
+          passThresholdPercentage: payload?.passThresholdPercentage || 70,
+          questions: payload?.questions || [],
+        },
+      },
+    };
   }
 
   if (cleanUrl.startsWith('/content/courses/')) {
@@ -758,12 +1082,46 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
-  // Finance Dashboard
+  if (cleanUrl === '/finance/refund') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return {
+      status: 200,
+      data: {
+        success: true,
+        refundId: 'ref_' + Date.now(),
+        orderId: payload?.orderId,
+        message: 'Refund processed successfully. Funds will return in 3-5 banking days.',
+      },
+    };
+  }
+
+  // Finance Dashboard Overview
   if (cleanUrl.startsWith('/finance')) {
     return { status: 200, data: MOCK_FINANCE_DATA };
   }
 
-  // Mentor Stats
+  // Mentor Stats & Live Classes
+  if (cleanUrl === '/mentor/live-classes' && m === 'POST') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const newClass = {
+      id: 'live_' + Date.now(),
+      title: payload?.title || 'Live Masterclass Session',
+      mentorName: 'Dr. Alex Vance',
+      scheduledAt: payload?.scheduledAt || new Date(Date.now() + 86400000).toISOString(),
+      status: 'SCHEDULED',
+      meetingUrl: payload?.meetingUrl || 'https://meet.kenclasses.com/cohort',
+      courseTitle: 'Modern Full-Stack TypeScript & Microservices',
+    };
+    MOCK_LIVE_CLASSES.unshift(newClass);
+    return { status: 201, data: newClass };
+  }
+
   if (cleanUrl.startsWith('/mentor')) {
     return {
       status: 200,
@@ -777,6 +1135,10 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
   }
 
   // Moderator Queue
+  if (cleanUrl.startsWith('/moderator/reports/') && cleanUrl.endsWith('/action')) {
+    return { status: 200, data: { success: true, message: 'Moderation action applied.' } };
+  }
+
   if (cleanUrl.startsWith('/moderator')) {
     return {
       status: 200,
@@ -793,34 +1155,137 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
-  // Support & FAQs
+  // Support Tickets & FAQs
   if (cleanUrl === '/support/faqs') {
     return { status: 200, data: MOCK_FAQS };
   }
 
   if (cleanUrl === '/support/tickets') {
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      const ticketNum = 'TKT-2026-00' + Math.floor(10 + Math.random() * 90);
+      const newTicket = {
+        id: 'tkt_' + Date.now(),
+        ticketNumber: ticketNum,
+        subject: payload?.subject || 'Platform Support Request',
+        category: payload?.category || 'GENERAL',
+        priority: payload?.priority || 'NORMAL',
+        status: 'OPEN',
+        createdAt: new Date().toISOString(),
+        messages: [
+          {
+            id: 'msg_' + Date.now(),
+            senderRole: 'USER',
+            sender: { name: payload?.requesterName || 'Learner' },
+            message: payload?.description || payload?.message || '',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      };
+      MOCK_TICKETS.unshift(newTicket);
+      return { status: 201, data: newTicket };
+    }
+    return { status: 200, data: MOCK_TICKETS };
+  }
+
+  if (cleanUrl.startsWith('/support/tickets/') && cleanUrl.endsWith('/messages')) {
+    const tktId = cleanUrl.split('/')[3];
+    const target = MOCK_TICKETS.find((t) => t.id === tktId) || MOCK_TICKETS[0];
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const newMsg = {
+      id: 'msg_' + Date.now(),
+      senderRole: 'USER',
+      sender: { name: 'You' },
+      message: payload?.message || '',
+      createdAt: new Date().toISOString(),
+    };
+    target.messages.push(newMsg);
+    return { status: 200, data: newMsg };
+  }
+
+  if (cleanUrl.startsWith('/support/tickets/') && cleanUrl.endsWith('/feedback')) {
+    return { status: 200, data: { success: true, message: 'Feedback recorded.' } };
+  }
+
+  if (cleanUrl.startsWith('/support/tickets/')) {
+    const id = cleanUrl.replace('/support/tickets/', '');
+    const found = MOCK_TICKETS.find((t) => t.id === id) || MOCK_TICKETS[0];
+    return { status: 200, data: found };
+  }
+
+  if (cleanUrl === '/feedback') {
+    return { status: 200, data: { success: true, message: 'Thank you for your feedback!' } };
+  }
+
+  // Active Sessions & Profile Preferences
+  if (cleanUrl === '/auth/sessions') {
     return {
       status: 200,
       data: [
         {
-          id: 'tkt_01',
-          ticketNumber: 'TKT-2026-0041',
-          subject: 'Question on Cloudflare Pages Deployment',
-          status: 'RESOLVED',
-          priority: 'MEDIUM',
-          createdAt: '2026-03-25T10:00:00Z',
-          messages: [
-            {
-              id: 'msg_01',
-              senderRole: 'SUPPORT',
-              sender: { name: 'Sarah Jenkins' },
-              message: 'Your deployment has been verified and cached at the global edge.',
-              createdAt: '2026-03-25T11:00:00Z',
-            },
-          ],
+          id: 'sess_1',
+          browser: 'Chrome 122 (Current)',
+          ipAddress: '127.0.0.1 (This Device)',
+          isCurrent: true,
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: 'sess_2',
+          browser: 'Mobile Safari / iOS',
+          ipAddress: '192.168.1.14',
+          isCurrent: false,
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
         },
       ],
     };
+  }
+
+  if (cleanUrl.startsWith('/auth/sessions/')) {
+    return { status: 200, data: { success: true, message: 'Session revoked.' } };
+  }
+
+  if (cleanUrl === '/preferences') {
+    if (m === 'PUT') {
+      return { status: 200, data: { success: true, message: 'Preferences updated.' } };
+    }
+    return {
+      status: 200,
+      data: {
+        theme: localStorage.getItem('theme') || 'light',
+        language: localStorage.getItem('language') || 'en',
+      },
+    };
+  }
+
+  if (cleanUrl === '/auth/profile') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    const saved = localStorage.getItem('user');
+    let currentUser = saved ? JSON.parse(saved) : MOCK_USERS['student@auralms.io'];
+    currentUser = {
+      ...currentUser,
+      name: payload?.name || currentUser.name,
+      mobile: payload?.mobile || currentUser.mobile,
+      profile: {
+        ...currentUser.profile,
+        ...payload?.profile,
+        bio: payload?.bio || payload?.profile?.bio || currentUser.profile?.bio,
+      },
+    };
+    localStorage.setItem('user', JSON.stringify(currentUser));
+    return { status: 200, data: { success: true, user: currentUser } };
+  }
+
+  if (cleanUrl === '/auth/change-password') {
+    return { status: 200, data: { success: true, message: 'Password updated successfully.' } };
   }
 
   // Certificate Verification
@@ -856,8 +1321,44 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
+  // Lesson Progress
+  if (cleanUrl.includes('/progress')) {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return {
+      status: 200,
+      data: {
+        success: true,
+        progress: {
+          isCompleted: Boolean(payload?.isCompleted),
+          lastPlaybackPositionSeconds: payload?.playbackPositionSeconds || 0,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    };
+  }
+
   // Course Forum Topics
   if (cleanUrl.includes('/forum/courses/')) {
+    if (m === 'POST') {
+      let payload = body;
+      if (typeof body === 'string') {
+        try { payload = JSON.parse(body); } catch {}
+      }
+      return {
+        status: 201,
+        data: {
+          id: 'topic_' + Date.now(),
+          title: payload?.title || 'New Discussion Thread',
+          content: payload?.content || '',
+          createdAt: new Date().toISOString(),
+          user: { name: 'Aarav Sharma' },
+          repliesCount: 0,
+        },
+      };
+    }
     return {
       status: 200,
       data: [
@@ -881,13 +1382,28 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
-  // Quizzes
-  if (cleanUrl.startsWith('/student/quizzes/')) {
+  // Quizzes & Submissions
+  if (cleanUrl.includes('/quizzes') && cleanUrl.endsWith('/submit')) {
     return {
       status: 200,
       data: {
-        id: 'quiz_mod_1',
-        title: 'Module 1 Knowledge Assessment',
+        isPassed: true,
+        passed: true,
+        score: 100,
+        passThresholdPercentage: 70,
+        message: 'Assessment completed with distinction!',
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/student/quizzes/')) {
+    const modId = cleanUrl.replace('/student/quizzes/', '');
+    return {
+      status: 200,
+      data: {
+        id: 'quiz_' + modId,
+        moduleId: modId,
+        title: 'Module Knowledge Assessment',
         passThresholdPercentage: 70,
         questions: [
           {
@@ -908,6 +1424,25 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
             correctOptionIndex: 2,
           },
         ],
+      },
+    };
+  }
+
+  // Claim Certificate
+  if (cleanUrl.startsWith('/student/certificates/')) {
+    const courseId = cleanUrl.replace('/student/certificates/', '');
+    const found = MOCK_COURSES.find((c) => c.id === courseId || c.slug === courseId) || MOCK_COURSES[0];
+    return {
+      status: 200,
+      data: {
+        id: 'cert_' + Date.now(),
+        certificateCode: 'KEN-2026-CERT-' + Math.floor(1000 + Math.random() * 9000),
+        courseTitle: found.title,
+        studentName: 'Aarav Sharma',
+        issueDate: new Date().toISOString().split('T')[0],
+        grade: 'Distinction (100% Mastery)',
+        instructorName: found.instructor?.name || 'Dr. Alex Vance',
+        signatureHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
       },
     };
   }

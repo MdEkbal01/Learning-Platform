@@ -60,6 +60,21 @@ const PageLoadingFallback: React.FC = () => (
 );
 
 export const App: React.FC = () => {
+  // Idle-time chunk preloading for ultra-smooth instant navigation
+  React.useEffect(() => {
+    const scheduleIdle =
+      (window as any).requestIdleCallback || ((cb: () => void) => setTimeout(cb, 800));
+
+    scheduleIdle(() => {
+      import('./pages/Catalogue');
+      import('./pages/Auth/Login');
+      import('./pages/Student/StudentDashboard');
+      import('./pages/Admin/AdminDashboard');
+      import('./pages/VerifyCertificate');
+      import('./pages/Help/HelpCenter');
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <AuthProvider>

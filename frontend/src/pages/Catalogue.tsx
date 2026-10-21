@@ -4,6 +4,7 @@ import api from '../api/client';
 import { Search, BookOpen, Users } from 'lucide-react';
 
 export const Catalogue: React.FC = () => {
+  const [allCourses, setAllCourses] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,27 +15,64 @@ export const Catalogue: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
+    let isMounted = true;
     api.get('/categories')
-      .then((res) => setCategories(Array.isArray(res.data) ? res.data : []))
-      .catch(() => setCategories([]));
+      .then((res) => {
+        if (isMounted) setCategories(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch(() => {
+        if (isMounted) setCategories([]);
+      });
+
+    api.get('/courses')
+      .then((res) => {
+        if (!isMounted) return;
+        const data = Array.isArray(res.data) ? res.data : [];
+        setAllCourses(data);
+        setCourses(data);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setAllCourses([]);
+        setCourses([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    const params = new URLSearchParams();
-    if (selectedCategory !== 'all') params.append('category', selectedCategory);
-    if (selectedLevel !== 'all') params.append('level', selectedLevel);
-    if (priceType !== 'all') params.append('priceType', priceType);
-    if (searchTerm) params.append('search', searchTerm);
+    if (allCourses.length === 0) return;
 
-    api.get(`/courses?${params.toString()}`)
-      .then((res) => setCourses(Array.isArray(res.data) ? res.data : []))
-      .catch((err) => {
-        console.error(err);
-        setCourses([]);
-      })
-      .finally(() => setIsLoading(false));
-  }, [selectedCategory, selectedLevel, priceType, searchTerm]);
+    let filtered = [...allCourses];
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(
+        (c) => c.category?.id === selectedCategory || c.category?.slug === selectedCategory
+      );
+    }
+    if (selectedLevel !== 'all') {
+      filtered = filtered.filter((c) => c.level === selectedLevel);
+    }
+    if (priceType === 'free') {
+      filtered = filtered.filter((c) => c.isFree);
+    } else if (priceType === 'paid') {
+      filtered = filtered.filter((c) => !c.isFree);
+    }
+    const q = searchTerm.toLowerCase().trim();
+    if (q) {
+      filtered = filtered.filter(
+        (c) =>
+          c.title?.toLowerCase().includes(q) ||
+          c.subtitle?.toLowerCase().includes(q) ||
+          c.instructor?.name?.toLowerCase().includes(q)
+      );
+    }
+    setCourses(filtered);
+  }, [allCourses, selectedCategory, selectedLevel, priceType, searchTerm]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white dark:bg-black transition-colors duration-200">
@@ -152,7 +190,7 @@ export const Catalogue: React.FC = () => {
             >
               <div className="relative h-44 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
                 <img
-                  src={c.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'}
+                  src={c.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'}
                   alt={c.title}
                   loading="lazy"
                   decoding="async"

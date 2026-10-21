@@ -265,7 +265,7 @@ export const Checkout: React.FC = () => {
 
           <div className="flex space-x-3 pb-4 border-b border-zinc-100">
             <img
-              src={course?.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'}
+              src={course?.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'}
               alt={course?.title}
               className="w-16 h-16 rounded-xl object-cover shrink-0"
             />
