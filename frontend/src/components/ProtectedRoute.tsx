@@ -26,19 +26,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role) && user.role !== 'SUPER_ADMIN') {
+  if (allowedRoles && !allowedRoles.includes(user.role) && user.role !== 'SUPER_ADMIN' && (user.role as string) !== 'ADMIN') {
     return (
-      <div className="max-w-md mx-auto my-16 p-8 bg-white border border-rose-200 rounded-xl shadow-xs text-center">
-        <div className="w-12 h-12 mx-auto bg-rose-100 text-rose-600 rounded-full flex items-center justify-center font-bold text-xl mb-4">
+      <div className="max-w-md mx-auto my-16 p-8 bg-white dark:bg-zinc-950 border border-rose-200 dark:border-rose-900/50 rounded-2xl shadow-xs text-center">
+        <div className="w-12 h-12 mx-auto bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center font-bold text-xl mb-4">
           !
         </div>
-        <h2 className="text-lg font-bold text-zinc-800">Access Restricted</h2>
-        <p className="text-sm text-zinc-600 mt-2">
-          Your account role (<span className="font-semibold">{user.role}</span>) does not have permission to access this area.
+        <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Access Restricted</h2>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+          Your account role (<span className="font-semibold text-zinc-900 dark:text-zinc-200">{user.role}</span>) does not have permission to access this area.
         </p>
         <button
           onClick={() => window.history.back()}
-          className="mt-6 px-4 py-2 bg-zinc-800 text-white text-xs font-semibold rounded-lg hover:bg-zinc-700 transition"
+          className="mt-6 px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-semibold rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition"
         >
           Go Back
         </button>

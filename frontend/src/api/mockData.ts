@@ -569,9 +569,90 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
-  // Admin Metrics & Users
-  if (cleanUrl === '/admin/metrics' || cleanUrl === '/admin/overview') {
-    return { status: 200, data: MOCK_ADMIN_METRICS };
+  // Admin Analytics & Metrics
+  if (cleanUrl === '/admin/analytics' || cleanUrl === '/admin/metrics' || cleanUrl === '/admin/overview') {
+    return {
+      status: 200,
+      data: {
+        metrics: {
+          ...MOCK_ADMIN_METRICS,
+          studentsCount: 1340,
+          mentorsCount: 32,
+          totalCourses: MOCK_COURSES.length,
+          publishedCourses: MOCK_COURSES.filter((c) => c.status === 'PUBLISHED').length,
+          pendingReports: 1,
+        },
+        recentAuditLogs: [
+          {
+            id: 'log_1',
+            action: 'AUTH_LOGIN_SUCCESS',
+            entityType: 'UserSession',
+            entityId: 'usr_001',
+            actorEmail: 'admin@auralms.io',
+            ipAddress: '127.0.0.1',
+            createdAt: new Date().toISOString(),
+            actor: { name: 'Ken Classes Administrator', role: 'SUPER_ADMIN' },
+          },
+          {
+            id: 'log_2',
+            action: 'ROLE_POLICY_VERIFIED',
+            entityType: 'RBACMatrix',
+            entityId: 'rbac_002',
+            actorEmail: 'SYSTEM',
+            ipAddress: '127.0.0.1',
+            createdAt: new Date(Date.now() - 3600000).toISOString(),
+            actor: { name: 'Security Enforcer', role: 'SYSTEM' },
+          },
+          {
+            id: 'log_3',
+            action: 'COURSE_PUBLISHED',
+            entityType: 'Course',
+            entityId: 'course_fullstack_ts',
+            actorEmail: 'admin@auralms.io',
+            ipAddress: '127.0.0.1',
+            createdAt: new Date(Date.now() - 7200000).toISOString(),
+            actor: { name: 'Ken Classes Administrator', role: 'SUPER_ADMIN' },
+          },
+        ],
+      },
+    };
+  }
+
+  // Feature Maintenance Switches
+  if (cleanUrl === '/admin/maintenance') {
+    return {
+      status: 200,
+      data: [
+        {
+          id: 'flag_forum',
+          featureKey: 'COMMUNITY_FORUM',
+          isEnabled: false,
+          message: 'The community discussion forum is operating normally.',
+          updatedAt: new Date().toISOString(),
+        },
+        {
+          id: 'flag_checkout',
+          featureKey: 'PAYMENT_CHECKOUT',
+          isEnabled: false,
+          message: 'Payment rails and instant checkout are fully operational.',
+          updatedAt: new Date().toISOString(),
+        },
+        {
+          id: 'flag_live',
+          featureKey: 'LIVE_CLASSES',
+          isEnabled: false,
+          message: 'Live interactive masterclass streams are online.',
+          updatedAt: new Date().toISOString(),
+        },
+        {
+          id: 'flag_global',
+          featureKey: 'PLATFORM_GLOBAL',
+          isEnabled: false,
+          message: 'Platform systems operational. No scheduled maintenance active.',
+          updatedAt: new Date().toISOString(),
+        },
+      ],
+    };
   }
 
   if (cleanUrl === '/admin/users') {
@@ -581,6 +662,7 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
         ...u,
         createdAt: '2026-01-15T00:00:00Z',
         status: 'ACTIVE',
+        _count: { enrolments: 3 },
       })),
     };
   }
@@ -589,8 +671,89 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return {
       status: 200,
       data: [
-        { id: 'log_1', action: 'AUTH_LOGIN_SUCCESS', actor: 'admin@auralms.io', ip: '127.0.0.1', timestamp: new Date().toISOString() },
-        { id: 'log_2', action: 'ROLE_POLICY_VERIFIED', actor: 'SYSTEM', ip: '127.0.0.1', timestamp: new Date(Date.now() - 3600000).toISOString() },
+        {
+          id: 'log_1',
+          action: 'USER_LOGIN',
+          actorEmail: 'admin@auralms.io',
+          entityType: 'Session',
+          entityId: 'sess_admin_91',
+          ipAddress: '127.0.0.1',
+          createdAt: new Date().toISOString(),
+          actor: { name: 'Ken Classes Administrator', role: 'SUPER_ADMIN' },
+          detailsJson: JSON.stringify({ method: 'PASSWORD_HASH_VERIFIED', browser: 'Chrome' }),
+        },
+        {
+          id: 'log_2',
+          action: 'USER_ROLE_CHANGED',
+          actorEmail: 'admin@auralms.io',
+          entityType: 'User',
+          entityId: 'user_aarav_01',
+          ipAddress: '127.0.0.1',
+          createdAt: new Date(Date.now() - 3600000).toISOString(),
+          actor: { name: 'Ken Classes Administrator', role: 'SUPER_ADMIN' },
+          detailsJson: JSON.stringify({ oldRole: 'STUDENT', newRole: 'STUDENT', reason: 'Verified enrolment' }),
+        },
+        {
+          id: 'log_3',
+          action: 'MAINTENANCE_FLAG_TOGGLED',
+          actorEmail: 'admin@auralms.io',
+          entityType: 'MaintenanceFlag',
+          entityId: 'COMMUNITY_FORUM',
+          ipAddress: '127.0.0.1',
+          createdAt: new Date(Date.now() - 7200000).toISOString(),
+          actor: { name: 'Ken Classes Administrator', role: 'SUPER_ADMIN' },
+          detailsJson: JSON.stringify({ isEnabled: false }),
+        },
+      ],
+    };
+  }
+
+  // Curriculum Management (Content Manager & Admin)
+  if (cleanUrl === '/content/courses') {
+    return { status: 200, data: MOCK_COURSES };
+  }
+
+  if (cleanUrl.startsWith('/content/courses/')) {
+    const id = cleanUrl.replace('/content/courses/', '').split('/')[0];
+    const found = MOCK_COURSES.find((c) => c.id === id || c.slug === id) || MOCK_COURSES[0];
+    return { status: 200, data: found };
+  }
+
+  // Finance Orders & Overview
+  if (cleanUrl === '/finance/orders' || cleanUrl.startsWith('/finance/orders')) {
+    return {
+      status: 200,
+      data: [
+        {
+          id: 'ord_9921',
+          orderNumber: 'KEN-ORD-9921',
+          amount: 49.99,
+          currency: 'USD',
+          status: 'PAID',
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          user: { name: 'Aarav Sharma', email: 'aarav@kenclasses.com' },
+          course: { title: 'Modern Full-Stack TypeScript & Microservices' },
+        },
+        {
+          id: 'ord_9918',
+          orderNumber: 'KEN-ORD-9918',
+          amount: 69.99,
+          currency: 'USD',
+          status: 'PAID',
+          createdAt: new Date(Date.now() - 172800000).toISOString(),
+          user: { name: 'Maya Lin', email: 'maya@kenclasses.com' },
+          course: { title: 'Cloud-Native Kubernetes & DevOps' },
+        },
+        {
+          id: 'ord_9915',
+          orderNumber: 'KEN-ORD-9915',
+          amount: 39.99,
+          currency: 'USD',
+          status: 'PENDING',
+          createdAt: new Date().toISOString(),
+          user: { name: 'Dev Patel', email: 'dev@kenclasses.com' },
+          course: { title: 'Modern Full-Stack TypeScript & Microservices' },
+        },
       ],
     };
   }
@@ -673,6 +836,94 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
         grade: 'Distinction (100% Mastery)',
         instructorName: 'Dr. Alex Vance',
         signatureHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+      },
+    };
+  }
+
+  // Student Classroom View
+  if (cleanUrl.startsWith('/student/classroom/')) {
+    const courseId = cleanUrl.replace('/student/classroom/', '');
+    const found = MOCK_COURSES.find((c) => c.id === courseId || c.slug === courseId) || MOCK_COURSES[0];
+    return {
+      status: 200,
+      data: {
+        course: found,
+        progressLookup: {
+          les_1: { isCompleted: true, lastPlaybackPositionSeconds: 120 },
+        },
+        certificate: null,
+      },
+    };
+  }
+
+  // Course Forum Topics
+  if (cleanUrl.includes('/forum/courses/')) {
+    return {
+      status: 200,
+      data: [
+        {
+          id: 'topic_01',
+          title: 'Best practices for multi-tenant isolation in Prisma?',
+          content: 'When deploying shared-database schemas with row-level tenant keys, what are recommended indexing strategies?',
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          user: { name: 'Aarav Sharma' },
+          repliesCount: 3,
+        },
+        {
+          id: 'topic_02',
+          title: 'Setting up Cloudflare Pages Functions with custom domain',
+          content: 'Here is how to configure DNS records with 0ms downtime during deployment transitions.',
+          createdAt: new Date(Date.now() - 172800000).toISOString(),
+          user: { name: 'Dr. Alex Vance' },
+          repliesCount: 5,
+        },
+      ],
+    };
+  }
+
+  // Quizzes
+  if (cleanUrl.startsWith('/student/quizzes/')) {
+    return {
+      status: 200,
+      data: {
+        id: 'quiz_mod_1',
+        title: 'Module 1 Knowledge Assessment',
+        passThresholdPercentage: 70,
+        questions: [
+          {
+            id: 'q_01',
+            questionText: 'Which property ensures idempotent webhook processing?',
+            options: [
+              'Timestamp only',
+              'Unique Event ID / Idempotency Key',
+              'Random nonce without persistence',
+              'Client IP address',
+            ],
+            correctOptionIndex: 1,
+          },
+          {
+            id: 'q_02',
+            questionText: 'What HTTP status code represents unauthenticated requests?',
+            options: ['400 Bad Request', '403 Forbidden', '401 Unauthorized', '405 Method Not Allowed'],
+            correctOptionIndex: 2,
+          },
+        ],
+      },
+    };
+  }
+
+  // Webhook Simulator
+  if (cleanUrl === '/payment/simulate-webhook') {
+    return {
+      status: 200,
+      data: {
+        received: true,
+        event: body?.event || 'payment.captured',
+        orderId: body?.orderId || 'ord_9921',
+        idempotencyVerified: true,
+        timestamp: new Date().toISOString(),
+        status: 'SUCCESS',
+        message: 'Webhook processed idempotently. Enrolment verified and activated.',
       },
     };
   }

@@ -89,16 +89,16 @@ export const CourseList: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="text-xs uppercase font-bold text-amber-600 tracking-wider">Curriculum Operations</div>
-          <h1 className="text-2xl font-black text-zinc-900 mt-0.5">Course Authoring & Publishing Studio</h1>
-          <p className="text-xs text-zinc-500 mt-1">
+          <div className="text-xs uppercase font-bold text-zinc-900 dark:text-zinc-100 tracking-wider">Curriculum Operations</div>
+          <h1 className="text-2xl font-black text-zinc-900 dark:text-white mt-0.5">Course Authoring & Publishing Studio</h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             Build modules, organise lectures, define quizzes, and execute the Draft → Review → Published workflow.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
+          className="px-4 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>New Course</span>
@@ -106,13 +106,13 @@ export const CourseList: React.FC = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex bg-zinc-100 p-1 rounded-xl text-xs font-semibold w-fit">
+      <div className="flex bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl text-xs font-semibold w-fit border border-zinc-200 dark:border-zinc-800">
         {['ALL', 'DRAFT', 'IN_REVIEW', 'PUBLISHED', 'ARCHIVED'].map((st) => (
           <button
             key={st}
             onClick={() => setStatusFilter(st)}
             className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
-              statusFilter === st ? 'bg-white text-amber-800 shadow-xs' : 'text-zinc-600 hover:text-zinc-900'
+              statusFilter === st ? 'bg-white dark:bg-black text-black dark:text-white shadow-xs font-bold' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
             }`}
           >
             {st}
@@ -121,10 +121,10 @@ export const CourseList: React.FC = () => {
       </div>
 
       {/* Courses List Table */}
-      <div className="bg-white rounded-2xl border border-zinc-200 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
+            <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider font-semibold">
               <tr>
                 <th className="p-4">Course</th>
                 <th className="p-4">Discipline</th>
@@ -135,26 +135,26 @@ export const CourseList: React.FC = () => {
                 <th className="p-4 text-right">Workflow & Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {filtered.map((c) => (
-                <tr key={c.id} className="hover:bg-zinc-50/80 transition">
+                <tr key={c.id} className="hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition">
                   <td className="p-4">
-                    <div className="font-bold text-zinc-900 text-xs">{c.title}</div>
-                    <div className="text-[11px] text-zinc-400">Instructor: {c.instructorName}</div>
+                    <div className="font-bold text-zinc-900 dark:text-white text-xs">{c.title}</div>
+                    <div className="text-[11px] text-zinc-400 dark:text-zinc-500">Instructor: {c.instructorName}</div>
                   </td>
-                  <td className="p-4 text-zinc-600 font-medium">{c.category?.name}</td>
-                  <td className="p-4 font-bold text-zinc-900">{c.isFree ? 'Free' : `$${c.price}`}</td>
-                  <td className="p-4 text-zinc-600">{c._count?.modules || 0} Modules</td>
-                  <td className="p-4 text-zinc-600">{c._count?.enrolments || 0} Students</td>
+                  <td className="p-4 text-zinc-600 dark:text-zinc-300 font-medium">{c.category?.name}</td>
+                  <td className="p-4 font-bold text-zinc-900 dark:text-white">{c.isFree ? 'Free' : `$${c.price}`}</td>
+                  <td className="p-4 text-zinc-600 dark:text-zinc-300">{c._count?.modules || 0} Modules</td>
+                  <td className="p-4 text-zinc-600 dark:text-zinc-300">{c._count?.enrolments || 0} Students</td>
                   <td className="p-4">
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         c.status === 'PUBLISHED'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
                           : c.status === 'IN_REVIEW'
-                          ? 'bg-amber-100 text-amber-800'
+                          ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200'
                           : c.status === 'ARCHIVED'
-                          ? 'bg-zinc-200 text-zinc-800'
+                          ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400'
                           : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100'
                       }`}
                     >
@@ -165,7 +165,7 @@ export const CourseList: React.FC = () => {
                     <div className="flex items-center justify-end space-x-1.5">
                       <Link
                         to={`/content/courses/${c.id}`}
-                        className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold rounded-lg transition"
+                        className="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-bold rounded-lg transition"
                       >
                         Edit Syllabus
                       </Link>
@@ -173,7 +173,7 @@ export const CourseList: React.FC = () => {
                       {c.status === 'DRAFT' && (
                         <button
                           onClick={() => handleStatusChange(c.id, 'IN_REVIEW')}
-                          className="px-2.5 py-1 bg-zinc-100 hover:bg-amber-100 text-zinc-700 font-semibold rounded-lg transition"
+                          className="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-semibold rounded-lg transition"
                           title="Submit for Review"
                         >
                           Submit Review
@@ -193,7 +193,7 @@ export const CourseList: React.FC = () => {
                       {c.status === 'PUBLISHED' && (
                         <button
                           onClick={() => handleStatusChange(c.id, 'ARCHIVED')}
-                          className="px-2.5 py-1 bg-zinc-100 hover:bg-rose-100 text-zinc-600 hover:text-rose-700 rounded-lg transition"
+                          className="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-rose-100 dark:hover:bg-rose-950 text-zinc-600 dark:text-zinc-300 hover:text-rose-700 dark:hover:text-rose-300 rounded-lg transition"
                           title="Archive"
                         >
                           Archive
@@ -210,42 +210,42 @@ export const CourseList: React.FC = () => {
 
       {/* New Course Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-zinc-200 space-y-4">
-            <h3 className="font-bold text-base text-zinc-900">Create New Course</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-zinc-950 rounded-2xl max-w-lg w-full p-6 shadow-xl border border-zinc-200 dark:border-zinc-800 space-y-4">
+            <h3 className="font-bold text-base text-zinc-900 dark:text-white">Create New Course</h3>
 
             <form onSubmit={handleCreateCourse} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">Course Title</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Course Title</label>
                 <input
                   type="text"
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Distributed Systems & Microservices in Go"
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">Description</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Description</label>
                 <textarea
                   rows={3}
                   required
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
                   placeholder="Comprehensive curriculum syllabus summary..."
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Discipline</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Discipline</label>
                   <select
                     value={newCatId}
                     onChange={(e) => setNewCatId(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                   >
                     {categories.map((cat) => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -254,54 +254,54 @@ export const CourseList: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Instructor</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Instructor</label>
                   <input
                     type="text"
                     required
                     value={newInstructor}
                     onChange={(e) => setNewInstructor(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                   />
                 </div>
               </div>
 
               <div className="pt-2 flex items-center space-x-3 text-xs">
-                <label className="flex items-center space-x-2 font-medium text-zinc-700 cursor-pointer">
+                <label className="flex items-center space-x-2 font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={newIsFree}
                     onChange={(e) => setNewIsFree(e.target.checked)}
-                    className="rounded text-amber-600"
+                    className="rounded text-black dark:text-white accent-black dark:accent-white"
                   />
                   <span>100% Free Course</span>
                 </label>
 
                 {!newIsFree && (
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center space-x-1 text-zinc-700 dark:text-zinc-300">
                     <span>Price ($):</span>
                     <input
                       type="number"
                       step="0.01"
                       value={newPrice}
                       onChange={(e) => setNewPrice(e.target.value)}
-                      className="w-20 px-2 py-1 bg-zinc-50 border border-zinc-300 rounded text-xs"
+                      className="w-20 px-2 py-1 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded text-xs"
                     />
                   </div>
                 )}
               </div>
 
-              <div className="flex justify-end space-x-2 pt-3 border-t border-zinc-100">
+              <div className="flex justify-end space-x-2 pt-3 border-t border-zinc-100 dark:border-zinc-800">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-zinc-100 text-zinc-700 text-xs font-semibold rounded-xl"
+                  className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-semibold rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isCreating}
-                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition"
+                  className="px-4 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-bold rounded-xl transition"
                 >
                   {isCreating ? 'Creating...' : 'Create Course in Draft'}
                 </button>

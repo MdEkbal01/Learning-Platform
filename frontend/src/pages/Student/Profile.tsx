@@ -50,37 +50,37 @@ export const Profile: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-zinc-900 tracking-tight">Account & Academic Profile</h1>
-        <p className="text-xs text-zinc-500 mt-1">
+        <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">Account & Academic Profile</h1>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
           Manage your personal credentials, contact verification, and institutional affiliations.
         </p>
       </div>
 
-      <div className="bg-white p-8 rounded-2xl border border-zinc-200 shadow-xs space-y-6">
+      <div className="bg-white dark:bg-zinc-950 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-6">
         {message && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{message}</span>
           </div>
         )}
 
         {/* Verification & Role Status Pill */}
-        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black text-white flex items-center justify-center font-bold text-sm">
+            <div className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-sm">
               {user?.name?.charAt(0)}
             </div>
             <div>
-              <div className="font-bold text-zinc-900 text-sm">{user?.name}</div>
-              <div className="text-zinc-500">{user?.email}</div>
+              <div className="font-bold text-zinc-900 dark:text-white text-sm">{user?.name}</div>
+              <div className="text-zinc-500 dark:text-zinc-400">{user?.email}</div>
             </div>
           </div>
 
           <div className="flex items-center space-x-2">
-            <span className="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-[11px] font-bold">
+            <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-2.5 py-1 rounded-full text-[11px] font-bold">
               Email Verified ✓
             </span>
-            <span className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-2.5 py-1 rounded-full text-[11px] font-bold">
+            <span className="bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border border-zinc-300 dark:border-zinc-700 px-2.5 py-1 rounded-full text-[11px] font-bold">
               Role: {user?.role}
             </span>
           </div>
@@ -89,7 +89,7 @@ export const Profile: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
                 Full Legal Name
               </label>
               <input
@@ -97,46 +97,46 @@ export const Profile: React.FC = () => {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1">
                 Primary Email (Read-Only)
               </label>
               <input
                 type="text"
                 disabled
                 value={user?.email || ''}
-                className="w-full px-3 py-2 bg-zinc-100 border border-zinc-200 text-zinc-500 rounded-lg text-xs cursor-not-allowed"
+                className="w-full px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 rounded-lg text-xs cursor-not-allowed"
               />
             </div>
           </div>
 
           {/* Academic Info */}
-          <div className="pt-2 border-t border-zinc-100 space-y-4">
-            <span className="text-xs font-bold text-zinc-900 uppercase tracking-wider block">
+          <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-4">
+            <span className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider block">
               Academic Details
             </span>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[11px] font-medium text-zinc-700 mb-1">College / University</label>
+                <label className="block text-[11px] font-medium text-zinc-700 dark:text-zinc-300 mb-1">College / University</label>
                 <input
                   type="text"
                   value={college}
                   onChange={(e) => setCollege(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-zinc-700 mb-1">Academic Level</label>
+                <label className="block text-[11px] font-medium text-zinc-700 dark:text-zinc-300 mb-1">Academic Level</label>
                 <select
                   value={academicYear}
                   onChange={(e) => setAcademicYear(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 >
                   <option value="1st Year">1st Year (Freshman)</option>
                   <option value="2nd Year">2nd Year (Sophomore)</option>
@@ -148,28 +148,28 @@ export const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-zinc-700 mb-1">Degree / Specialization</label>
+                <label className="block text-[11px] font-medium text-zinc-700 dark:text-zinc-300 mb-1">Degree / Specialization</label>
                 <input
                   type="text"
                   value={academicCourse}
                   onChange={(e) => setAcademicCourse(e.target.value)}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-zinc-700 mb-1">Bio / Academic Interests</label>
+              <label className="block text-[11px] font-medium text-zinc-700 dark:text-zinc-300 mb-1">Bio / Academic Interests</label>
               <textarea
                 rows={3}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+                className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-zinc-100 flex justify-end">
+          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-end">
             <button
               type="submit"
               disabled={isLoading}

@@ -130,14 +130,29 @@ export const Navbar: React.FC = () => {
                 </Link>
               )}
 
-              {/* Super Admin Nav */}
-              {isAuthenticated && user?.role === 'SUPER_ADMIN' && (
+              {/* Super Admin / Admin Nav - Universal Access to All PRD Modules */}
+              {isAuthenticated && (user?.role === 'SUPER_ADMIN' || (user?.role as string) === 'ADMIN') && (
                 <>
                   <Link to="/admin/dashboard" className={navLinkClass('/admin/dashboard')}>
                     Console
                   </Link>
                   <Link to="/admin/users" className={navLinkClass('/admin/users')}>
                     Users
+                  </Link>
+                  <Link to="/content/courses" className={navLinkClass('/content/courses')}>
+                    Curriculum
+                  </Link>
+                  <Link to="/finance/dashboard" className={navLinkClass('/finance/dashboard')}>
+                    Finance
+                  </Link>
+                  <Link to="/moderator/queue" className={navLinkClass('/moderator/queue')}>
+                    Moderation
+                  </Link>
+                  <Link to="/mentor/doubts" className={navLinkClass('/mentor/doubts')}>
+                    Doubts
+                  </Link>
+                  <Link to="/student/live-classes" className={navLinkClass('/student/live-classes')}>
+                    Live Classes
                   </Link>
                   <Link to="/admin/audit-logs" className={navLinkClass('/admin/audit-logs')}>
                     Audit
@@ -344,6 +359,71 @@ export const Navbar: React.FC = () => {
                   Account ({user?.role})
                 </div>
               </div>
+
+              {(user?.role === 'SUPER_ADMIN' || (user?.role as string) === 'ADMIN') && (
+                <div className="space-y-1 py-1">
+                  <div className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider px-3">
+                    Admin Operations
+                  </div>
+                  <Link
+                    to="/admin/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Console Overview
+                  </Link>
+                  <Link
+                    to="/admin/users"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    User Governance & Roles
+                  </Link>
+                  <Link
+                    to="/content/courses"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Curriculum Studio
+                  </Link>
+                  <Link
+                    to="/finance/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Finance & Refunds
+                  </Link>
+                  <Link
+                    to="/moderator/queue"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Moderation Queue
+                  </Link>
+                  <Link
+                    to="/mentor/doubts"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Doubt Resolution
+                  </Link>
+                  <Link
+                    to="/student/live-classes"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Live Masterclasses
+                  </Link>
+                  <Link
+                    to="/admin/audit-logs"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-1.5 rounded-md text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Security Audit Trail
+                  </Link>
+                </div>
+              )}
+
               <Link
                 to="/student/profile"
                 onClick={() => setMobileMenuOpen(false)}

@@ -14,6 +14,12 @@ import {
   Activity,
   Layers,
   Sparkles,
+  Sliders,
+  Terminal,
+  Video,
+  HelpCircle,
+  Award,
+  CheckCircle,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -79,13 +85,13 @@ export const AdminDashboard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             to="/admin/users"
-            className="px-3.5 py-2.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:bg-zinc-900 font-bold text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700 transition shadow-xs"
+            className="px-3.5 py-2.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 font-bold text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 transition shadow-xs"
           >
             Users & Roles
           </Link>
           <Link
             to="/admin/maintenance"
-            className="px-3.5 py-2.5 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 hover:bg-amber-100 font-bold text-xs rounded-xl border border-amber-200 dark:border-amber-800 transition shadow-xs"
+            className="px-3.5 py-2.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 font-bold text-xs rounded-xl border border-zinc-300 dark:border-zinc-700 transition shadow-xs"
           >
             Maintenance Switches
           </Link>
@@ -295,6 +301,134 @@ export const AdminDashboard: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* PRD Multi-Domain Operations Suite (Universal Admin Access) */}
+      <div className="relative z-10 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs p-6 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-100 dark:border-zinc-800">
+          <div>
+            <div className="flex items-center space-x-2">
+              <Layers className="w-4 h-4 text-zinc-900 dark:text-white" />
+              <h2 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight">
+                PRD Multi-Domain Operational Governance Suite
+              </h2>
+            </div>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+              Super Admin universal access matrix per Section 2 of PRD v2.0. Full operational authority across every platform domain.
+            </p>
+          </div>
+          <span className="text-[11px] font-bold text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-300 dark:border-zinc-700 self-start sm:self-auto">
+            10 Functional Domains Operational
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            {
+              title: 'Curriculum & Authoring Studio',
+              path: '/content/courses',
+              icon: BookOpen,
+              desc: 'Author courses, organize multi-tiered syllabi, configure quizzes, and execute Draft → Publish workflow.',
+              spec: 'PRD CRS-01 - 04',
+            },
+            {
+              title: 'Financial Ledgers & Refunds',
+              path: '/finance/dashboard',
+              icon: DollarSign,
+              desc: 'Inspect gross revenue velocity, reconcile orders, process student refunds, and audit ledger balances.',
+              spec: 'PRD PAY-01 - 04',
+            },
+            {
+              title: 'Community Moderation Queue',
+              path: '/moderator/queue',
+              icon: ShieldAlert,
+              desc: 'Triage flagged forum posts, moderate academic discussions, and maintain community safety standards.',
+              spec: 'PRD ADM-04',
+            },
+            {
+              title: 'User & Identity Governance',
+              path: '/admin/users',
+              icon: Users,
+              desc: 'Manage multi-role RBAC permissions, process mandatory reason suspensions, and grant manual course access.',
+              spec: 'PRD AUTH-07 & ADM-02',
+            },
+            {
+              title: 'Doubt Ticket Queue & Support',
+              path: '/mentor/doubts',
+              icon: HelpCircle,
+              desc: 'Inspect student technical doubt inquiries, analyze attachments, and provide mentor architectural solutions.',
+              spec: 'PRD COM-01 - 03',
+            },
+            {
+              title: 'Live Masterclasses & Broadcasts',
+              path: '/student/live-classes',
+              icon: Video,
+              desc: 'Schedule and inspect live streaming masterclasses, interactive video rooms, and authenticated participant links.',
+              spec: 'PRD COM-04',
+            },
+            {
+              title: 'Student Learning & Classroom Hub',
+              path: '/student/dashboard',
+              icon: Layers,
+              desc: 'Experience the learner perspective, verify lesson progression, test quizzes, and inspect video streaming.',
+              spec: 'PRD STU-01 - 04',
+            },
+            {
+              title: 'Feature Maintenance Switches',
+              path: '/admin/maintenance',
+              icon: Sliders,
+              desc: 'Gracefully isolate specific features (checkout, forum, live streams) with friendly user banners without downtime.',
+              spec: 'PRD ADM-02',
+            },
+            {
+              title: 'Gateway Sandbox & Simulator',
+              path: '/admin/simulator',
+              icon: Terminal,
+              desc: 'Test asynchronous server-to-server webhook callbacks and verify duplicate callback idempotency defense.',
+              spec: 'PRD PAY-02',
+            },
+            {
+              title: 'Digital Certificate Registry',
+              path: '/verify-certificate',
+              icon: Award,
+              desc: 'Verify cryptographically signed student completion credentials, signature hashes, and public registry lookups.',
+              spec: 'PRD CERT-01',
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="group p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/40 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 transition duration-200 flex flex-col justify-between space-y-3"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white flex items-center justify-center group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-zinc-400 dark:text-zinc-500">
+                      {item.spec}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-zinc-900 dark:text-white group-hover:underline">
+                      {item.title}
+                    </h3>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center text-[11px] font-semibold text-zinc-900 dark:text-white group-hover:translate-x-0.5 transition-transform">
+                  <span>Open Domain</span>
+                  <ArrowRight className="w-3 h-3 ml-1" />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

@@ -58,23 +58,23 @@ export const WebhookSimulator: React.FC = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div>
         <div className="text-xs uppercase font-bold text-zinc-900 dark:text-zinc-100 tracking-wider">Gateway Sandbox</div>
-        <h1 className="text-2xl font-black text-zinc-900 mt-0.5">Payment Webhook & Idempotency Harness</h1>
-        <p className="text-xs text-zinc-500 mt-1">
+        <h1 className="text-2xl font-black text-zinc-900 dark:text-white mt-0.5">Payment Webhook & Idempotency Harness</h1>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
           PRD PAY-02, PAY-04 & PAY-07: Test asynchronous server-to-server webhook callbacks and verify duplicate callback idempotency.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Configuration Form */}
-        <div className="lg:col-span-6 bg-white p-6 rounded-2xl border border-zinc-200 shadow-xs space-y-4">
-          <h2 className="font-bold text-sm text-zinc-900">Configure Webhook Payload</h2>
+        <div className="lg:col-span-6 bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-4">
+          <h2 className="font-bold text-sm text-zinc-900 dark:text-white">Configure Webhook Payload</h2>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1">Target Order</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Target Order</label>
             <select
               value={selectedOrderId}
               onChange={(e) => setSelectedOrderId(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+              className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
             >
               {orders.map((o) => (
                 <option key={o.id} value={o.id}>
@@ -85,11 +85,11 @@ export const WebhookSimulator: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1">Webhook Event Type</label>
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Webhook Event Type</label>
             <select
               value={event}
               onChange={(e) => setEvent(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-300 rounded-lg text-xs"
+              className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
             >
               <option value="payment.captured">payment.captured (Simulate Successful Payment)</option>
               <option value="payment.failed">payment.failed (Simulate Failed Charge)</option>
@@ -98,7 +98,7 @@ export const WebhookSimulator: React.FC = () => {
           </div>
 
           {selectedOrder && (
-            <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-200 text-xs space-y-1">
+            <div className="p-3 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs space-y-1 text-zinc-800 dark:text-zinc-200">
               <div><strong>Order Number:</strong> {selectedOrder.orderNumber}</div>
               <div><strong>Current Status:</strong> <span className="font-bold text-zinc-900 dark:text-zinc-100">{selectedOrder.status}</span></div>
               <div><strong>Course:</strong> {selectedOrder.course?.title}</div>
@@ -112,7 +112,7 @@ export const WebhookSimulator: React.FC = () => {
             className="w-full py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
           >
             {isLoading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
                 <Send className="w-4 h-4" />
@@ -123,7 +123,7 @@ export const WebhookSimulator: React.FC = () => {
         </div>
 
         {/* Right: Terminal Response Output */}
-        <div className="lg:col-span-6 bg-zinc-900 rounded-2xl p-6 shadow-md text-emerald-400 font-mono text-xs flex flex-col h-[400px]">
+        <div className="lg:col-span-6 bg-zinc-900 dark:bg-black rounded-2xl p-6 shadow-md border border-zinc-800 text-emerald-400 font-mono text-xs flex flex-col h-[400px]">
           <div className="flex items-center justify-between pb-3 border-b border-zinc-800 text-zinc-400">
             <div className="flex items-center space-x-1.5">
               <Terminal className="w-4 h-4 text-emerald-400" />
