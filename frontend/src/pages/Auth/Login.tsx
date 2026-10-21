@@ -45,11 +45,6 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleFillDemo = (demoEmail: string) => {
-    setIdentifier(demoEmail);
-    setPassword('Password123!');
-  };
-
   return (
     <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* CodeByGaurav signature ambient pointer light */}
@@ -147,59 +142,7 @@ export const Login: React.FC = () => {
                 </button>
               </form>
 
-              {/* Quick Demo Pre-fill helper */}
-              <div className="mt-6 pt-5 border-t border-zinc-200 dark:border-zinc-800">
-                <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block mb-2 text-center">
-                  1-Click Demo Persona Credentials
-                </span>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('student@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    🎓 Student
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('mentor@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    👨‍🏫 Mentor
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('content@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    ✍️ Content Mgr
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('finance@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    💳 Finance
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('moderator@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    🛡️ Moderator
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('admin@lms.local')}
-                    className="px-2.5 py-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl text-left transition font-semibold"
-                  >
-                    👑 Super Admin
-                  </button>
-                </div>
-                <p className="text-[10px] text-zinc-500 text-center mt-2">Password: Password123!</p>
-              </div>
-
-              <div className="mt-5 text-center text-xs text-zinc-600 dark:text-zinc-400">
+              <div className="mt-6 text-center text-xs text-zinc-600 dark:text-zinc-400">
                 Don't have an account?{' '}
                 <Link to="/register" className="font-semibold text-black dark:text-white underline">
                   Create an account

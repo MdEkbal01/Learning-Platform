@@ -319,6 +319,64 @@ export const MOCK_FAQS = [
   },
 ];
 
+export function findUserByIdentifier(identifier: string): MockUser {
+  const clean = identifier.trim().toLowerCase();
+  const digits = identifier.replace(/[^0-9]/g, '');
+
+  // 1. Direct username / role match
+  if (clean === 'admin' || clean === 'administrator' || clean === 'super_admin' || clean === 'root') {
+    return MOCK_USERS['admin@auralms.io'];
+  }
+  if (clean === 'student' || clean === 'learner' || clean === 'aarav') {
+    return MOCK_USERS['student@auralms.io'];
+  }
+  if (clean === 'mentor' || clean === 'instructor' || clean === 'teacher' || clean === 'alex') {
+    return MOCK_USERS['mentor@auralms.io'];
+  }
+  if (clean === 'finance' || clean === 'billing' || clean === 'sarah') {
+    return MOCK_USERS['finance@auralms.io'];
+  }
+  if (clean === 'content' || clean === 'curriculum' || clean === 'david') {
+    return MOCK_USERS['content@auralms.io'];
+  }
+  if (clean === 'moderator' || clean === 'mod' || clean === 'elena') {
+    return MOCK_USERS['moderator@auralms.io'];
+  }
+
+  // 2. Exact email or alias match
+  if (MOCK_USERS[clean]) return MOCK_USERS[clean];
+  if (clean.includes('@')) {
+    const prefix = clean.split('@')[0];
+    for (const u of Object.values(MOCK_USERS)) {
+      if (u.email.toLowerCase() === clean || u.email.split('@')[0].toLowerCase() === prefix) {
+        return u;
+      }
+    }
+  }
+
+  // 3. Mobile match
+  if (digits.length >= 4) {
+    for (const u of Object.values(MOCK_USERS)) {
+      if (u.mobile) {
+        const userDigits = u.mobile.replace(/[^0-9]/g, '');
+        if (userDigits.includes(digits) || digits.includes(userDigits)) {
+          return u;
+        }
+      }
+    }
+  }
+
+  // 4. Fallback: dynamic valid user
+  return {
+    id: 'user_custom_' + Date.now(),
+    email: clean.includes('@') ? clean : `${clean}@auralms.io`,
+    name: clean.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' ').trim() || 'Aura Learner',
+    role: 'STUDENT',
+    mobile: digits.length >= 7 ? identifier : undefined,
+    isEmailVerified: true,
+  };
+}
+
 // Fallback resolver for any endpoint requested by the frontend
 export function getMockResponse(method: string = 'GET', url: string = '', body?: any): { status: number; data: any } | null {
   const cleanUrl = url.split('?')[0].replace(/^\/api/, '');
@@ -346,13 +404,7 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
       try { payload = JSON.parse(body); } catch {}
     }
     const identifier = payload?.identifier || payload?.email || '';
-    const user = MOCK_USERS[identifier] || {
-      id: 'user_custom_' + Date.now(),
-      email: identifier || 'user@auralms.io',
-      name: identifier.split('@')[0] || 'Aura Learner',
-      role: 'STUDENT',
-      isEmailVerified: true,
-    };
+    const user = findUserByIdentifier(identifier);
     return {
       status: 200,
       data: {

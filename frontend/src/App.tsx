@@ -5,7 +5,6 @@ import { ThemeLanguageProvider } from './context/ThemeLanguageContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MaintenanceBanner } from './components/MaintenanceBanner';
-import { QuickRoleSwitcher } from './components/QuickRoleSwitcher';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Lazy-loaded routes for ultra-fast initial bundle loading
@@ -66,7 +65,6 @@ export const App: React.FC = () => {
       <AuthProvider>
         <ThemeLanguageProvider>
           <div className="min-h-screen flex flex-col bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors duration-200 selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
-            <QuickRoleSwitcher />
             <MaintenanceBanner />
             <Navbar />
 
