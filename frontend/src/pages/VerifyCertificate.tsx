@@ -145,7 +145,7 @@ export const VerifyCertificate: React.FC = () => {
               <div>
                 <span className="text-zinc-400 block text-[11px]">Accredited Registry:</span>
                 <span className="font-bold text-zinc-800 dark:text-zinc-200">
-                  AuraLMS Academic Accreditation Board
+                  Ken Classes Academic Accreditation Board
                 </span>
               </div>
             </div>

@@ -20,12 +20,12 @@ export const MOCK_USERS: Record<string, MockUser> = {
   'admin@auralms.io': {
     id: 'user_admin_01',
     email: 'admin@auralms.io',
-    name: 'Aura Administrator',
+    name: 'Ken Classes Administrator',
     role: 'SUPER_ADMIN',
     mobile: '+1 (555) 019-2831',
     isEmailVerified: true,
     profile: {
-      college: 'Stanford Technology Institute',
+      college: 'Ken Classes Academic Board',
       bio: 'Platform Root Administrator & Security Architect.',
     },
   },
@@ -176,7 +176,7 @@ export const MOCK_COURSES = [
     status: 'PUBLISHED',
     thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80',
     category: MOCK_CATEGORIES[2],
-    instructor: { name: 'Aura AI Labs', bio: 'Open Research Team' },
+    instructor: { name: 'Ken Classes AI Labs', bio: 'Open Research Team' },
     enrolledCount: 890,
     rating: 4.8,
     modules: [
@@ -242,7 +242,7 @@ export const MOCK_LIVE_CLASSES = [
     mentorName: 'Dr. Alex Vance',
     scheduledAt: new Date(Date.now() + 86400000 * 2).toISOString(),
     status: 'SCHEDULED',
-    meetingUrl: 'https://meet.auralms.io/cohort-alpha-fault-tolerance',
+    meetingUrl: 'https://meet.kenclasses.com/cohort-alpha-fault-tolerance',
     courseTitle: 'Modern Full-Stack TypeScript & Microservices',
   },
   {
@@ -251,7 +251,7 @@ export const MOCK_LIVE_CLASSES = [
     mentorName: 'Dr. Alex Vance',
     scheduledAt: new Date(Date.now() + 86400000 * 4).toISOString(),
     status: 'SCHEDULED',
-    meetingUrl: 'https://meet.auralms.io/cohort-rust-concurrency',
+    meetingUrl: 'https://meet.kenclasses.com/cohort-rust-concurrency',
     courseTitle: 'High-Performance Systems Engineering in Rust',
   },
 ];
@@ -482,7 +482,7 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
       data: [
         {
           id: 'ord_101',
-          orderNumber: 'AURA-ORD-8812',
+          orderNumber: 'KEN-ORD-8812',
           amount: 49.99,
           currency: 'USD',
           status: 'COMPLETED',
@@ -617,7 +617,7 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
       status: 200,
       data: {
         isValid: true,
-        certificateCode: 'AURA-2026-REACT-8842',
+        certificateCode: 'KEN-2026-REACT-8842',
         studentName: 'Aarav Sharma',
         courseTitle: 'Modern Full-Stack TypeScript & Microservices',
         issueDate: '2026-03-20',

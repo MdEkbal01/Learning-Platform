@@ -110,7 +110,7 @@ export const StudentOrders: React.FC = () => {
             <div className="space-y-6">
               <div className="flex justify-between items-start border-b border-zinc-100 pb-4">
                 <div>
-                  <div className="text-xl font-black text-zinc-900">AuraLMS</div>
+                  <div className="text-xl font-black text-zinc-900">Ken Classes</div>
                   <div className="text-xs text-zinc-400">Accredited Online Learning Platform</div>
                 </div>
                 <div className="text-right">

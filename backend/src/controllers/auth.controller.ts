@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { prisma } from '../prisma';
 import { config } from '../config';
 import { logAuditEvent } from '../services/audit.service';
+import { sendOtpEmail, sendWelcomeEmail } from '../services/email.service';
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
@@ -79,6 +80,9 @@ export async function register(req: Request, res: Response): Promise<void> {
       details: { email: user.email, role: user.role },
       req,
     });
+
+    // Send One-Time Password via Ken Classes EmailJS
+    sendOtpEmail(user.email, verificationCode, user.name, 'Registration').catch(() => {});
 
     res.status(201).json({
       message: 'Registration successful. Please verify your email with the verification code.',
@@ -173,6 +177,9 @@ export async function verifyOtp(req: Request, res: Response): Promise<void> {
       entityId: updatedUser.id,
       req,
     });
+
+    // Send Welcome Email via Ken Classes EmailJS
+    sendWelcomeEmail(updatedUser.email, updatedUser.name).catch(() => {});
 
     res.json({
       message: 'Account verified successfully!',
@@ -335,6 +342,9 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
         entityId: user.id,
         req,
       });
+
+      // Send Password Reset OTP via Ken Classes EmailJS
+      sendOtpEmail(user.email, code, user.name, 'Password Reset').catch(() => {});
     }
 
     // Anti-enumeration: Return success message regardless of existence

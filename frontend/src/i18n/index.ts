@@ -3,7 +3,7 @@ export type Language = 'en' | 'hi';
 export const translations = {
   en: {
     // Navigation & Common
-    brandName: 'AuraLMS',
+    brandName: 'Ken Classes',
     tagline: 'Online Learning Platform',
     browseCatalogue: 'Browse Catalogue',
     verifyCertificate: 'Verify Certificate',
@@ -171,7 +171,7 @@ export const translations = {
 
   hi: {
     // Navigation & Common
-    brandName: 'ऑरा एलएमएस (AuraLMS)',
+    brandName: 'केन क्लासेस (Ken Classes)',
     tagline: 'ऑनलाइन शिक्षण मंच',
     browseCatalogue: 'पाठ्यक्रम सूची देखें',
     verifyCertificate: 'प्रमाणपत्र सत्यापित करें',

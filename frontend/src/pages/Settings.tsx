@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useThemeLanguage } from '../context/ThemeLanguageContext';
+import { sendOtpEmail } from '../services/emailService';
 import {
   Palette,
   Languages,
@@ -33,6 +34,7 @@ export const Settings: React.FC = () => {
   });
   const [notifLoading, setNotifLoading] = useState(false);
   const [notifSuccess, setNotifSuccess] = useState<string | null>(null);
+  const [emailJsKey, setEmailJsKey] = useState(() => localStorage.getItem('emailjs_public_key') || (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY || '');
 
   // Profile State
   const [name, setName] = useState(user?.name || '');
@@ -483,7 +485,7 @@ export const Settings: React.FC = () => {
                   <span>{t('notificationsTab')}</span>
                 </h2>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                  Choose how and when AuraLMS notifies you about academic milestones and discussions.
+                  Choose how and when Ken Classes notifies you about academic milestones and discussions.
                 </p>
               </div>
 
@@ -573,6 +575,71 @@ export const Settings: React.FC = () => {
                     }
                     className="w-4 h-4 text-zinc-900 dark:text-zinc-100 rounded-sm focus:ring-zinc-900 dark:focus:ring-white border-zinc-300 dark:border-zinc-700 cursor-pointer"
                   />
+                </div>
+              </div>
+
+              {/* EmailJS Delivery Gateway (Ken Classes) */}
+              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
+                      <span>EmailJS Gmail Service (Ken Classes)</span>
+                      <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                        Connected
+                      </span>
+                    </h4>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      Gmail Address: <strong>kenclasses95@gmail.com</strong> • Service ID: <code className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-[11px]">service_u2pq18q</code>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-zinc-50 dark:bg-zinc-900 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                  <div>
+                    <span className="text-zinc-500 dark:text-zinc-400 block text-[11px] font-semibold">One-Time Password Template:</span>
+                    <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">template_iils3yg</span>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 dark:text-zinc-400 block text-[11px] font-semibold">Welcome Template:</span>
+                    <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">template_ytk9w6q</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+                    EmailJS Public Key (Found in EmailJS → Account → API Keys)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={emailJsKey}
+                      onChange={(e) => {
+                        setEmailJsKey(e.target.value);
+                        localStorage.setItem('emailjs_public_key', e.target.value);
+                      }}
+                      placeholder="e.g. user_xxxxxxxxxxxx or public key"
+                      className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-xl text-xs font-mono text-zinc-900 dark:text-white outline-hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!emailJsKey) {
+                          alert('Please enter your EmailJS Public Key first.');
+                          return;
+                        }
+                        const res = await sendOtpEmail({
+                          toEmail: 'kenclasses95@gmail.com',
+                          toName: 'Ken Classes Admin',
+                          otpCode: '482910',
+                          purpose: 'VERIFICATION',
+                        });
+                        alert(res.message);
+                      }}
+                      className="px-3 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl text-xs font-semibold transition shrink-0"
+                    >
+                      Send Test Email
+                    </button>
+                  </div>
                 </div>
               </div>
 

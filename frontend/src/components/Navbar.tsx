@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight text-black dark:text-white">
-                  AuraLMS
+                  Ken Classes
                 </span>
                 <span className="hidden sm:inline-block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 ml-1.5 border-l border-zinc-300 dark:border-zinc-700 pl-1.5">
                   {t('tagline')}

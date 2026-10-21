@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { PointerLight } from '../../components/PointerLight';
 import { OtpInputBoxes } from '../../components/OtpInputBoxes';
 import { VerificationSpinner } from '../../components/VerificationSpinner';
+import { sendOtpEmail, sendWelcomeEmail } from '../../services/emailService';
 import { Lock, Mail, User, Phone, BookOpen, AlertCircle, ArrowRight, KeyRound, ShieldCheck } from 'lucide-react';
 
 export const Register: React.FC = () => {
@@ -44,8 +45,18 @@ export const Register: React.FC = () => {
 
     try {
       const data = await register(formData);
-      setDemoVerificationCode(data.demoVerificationCode || '');
-      setEnteredOtp(data.demoVerificationCode || '');
+      const generatedOtp = data.demoVerificationCode || Math.floor(100000 + Math.random() * 900000).toString();
+      setDemoVerificationCode(generatedOtp);
+      setEnteredOtp(generatedOtp);
+
+      // Dispatch One-Time Password via Ken Classes EmailJS
+      sendOtpEmail({
+        toEmail: formData.email,
+        toName: formData.name,
+        otpCode: generatedOtp,
+        purpose: 'REGISTRATION',
+      }).catch(() => {});
+
       setStep('VERIFY_OTP');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Registration failed. Please check inputs.');
@@ -67,6 +78,13 @@ export const Register: React.FC = () => {
 
     try {
       await verifyOtp(formData.email, enteredOtp);
+
+      // Dispatch Welcome Email via Ken Classes EmailJS
+      sendWelcomeEmail({
+        toEmail: formData.email,
+        toName: formData.name,
+      }).catch(() => {});
+
       // Wait briefly for the satisfying circular verification ring animation to complete
       setTimeout(() => {
         navigate('/student/dashboard');

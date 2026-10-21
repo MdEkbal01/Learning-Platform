@@ -4,6 +4,7 @@ import api from '../../api/client';
 import { PointerLight } from '../../components/PointerLight';
 import { OtpInputBoxes } from '../../components/OtpInputBoxes';
 import { VerificationSpinner } from '../../components/VerificationSpinner';
+import { sendOtpEmail } from '../../services/emailService';
 import { Lock, Mail, KeyRound, AlertCircle, CheckCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const ForgotPassword: React.FC = () => {
@@ -28,10 +29,17 @@ export const ForgotPassword: React.FC = () => {
     try {
       const res = await api.post('/auth/forgot-password', { identifier });
       setMessage(res.data.message);
-      if (res.data.demoResetCode) {
-        setDemoCode(res.data.demoResetCode);
-        setCode(res.data.demoResetCode);
-      }
+      const resetCode = res.data.demoResetCode || Math.floor(100000 + Math.random() * 900000).toString();
+      setDemoCode(resetCode);
+      setCode(resetCode);
+
+      // Dispatch One-Time Password via Ken Classes EmailJS
+      sendOtpEmail({
+        toEmail: identifier,
+        otpCode: resetCode,
+        purpose: 'PASSWORD_RESET',
+      }).catch(() => {});
+
       setStep('RESET');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to request password reset.');

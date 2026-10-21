@@ -16,10 +16,10 @@ export const Footer: React.FC = () => {
               <div className="w-8 h-8 rounded-lg bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
                 <GraduationCap className="w-5 h-5" />
               </div>
-              <span className="text-zinc-900 dark:text-white text-lg font-bold">AuraLMS</span>
+              <span className="text-zinc-900 dark:text-white text-lg font-bold">Ken Classes</span>
             </div>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              High-performance, secure online course commerce & learning delivery system.
+              High-performance, secure online course commerce & learning delivery system by Ken Classes.
               Compliant with least-privilege RBAC, cryptographic payment verification, and verified completion credentials.
             </p>
             <div className="flex items-center space-x-2 text-xs text-zinc-600 dark:text-zinc-400">
@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
               <div>Single Page Architecture • Node 20+</div>
               <div>SQLite & Prisma ORM • JWT Auth</div>
               <div className="pt-2 text-[11px] text-zinc-400 dark:text-zinc-500">
-                © {new Date().getFullYear()} AuraLMS Inc. All rights reserved.
+                © {new Date().getFullYear()} Ken Classes. All rights reserved.
               </div>
             </div>
           </div>
