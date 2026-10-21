@@ -12,6 +12,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import { FeatureMenuDrawer } from './FeatureMenuDrawer';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -19,6 +20,7 @@ export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [featureDrawerOpen, setFeatureDrawerOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -279,9 +281,21 @@ export const Navbar: React.FC = () => {
                 </Link>
               </div>
             )}
+
+            {/* Universal 3-Line Menu Option (Desktop / Laptop / Tablet) */}
+            <button
+              type="button"
+              onClick={() => setFeatureDrawerOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition shadow-2xs font-bold text-xs cursor-pointer ml-1"
+              title="All Platform Features (3-Line Menu)"
+              aria-label="Open 3-line features menu"
+            >
+              <Menu className="w-4 h-4 text-zinc-900 dark:text-white" />
+              <span className="hidden xl:inline font-bold">All Features</span>
+            </button>
           </div>
 
-          {/* Mobile hamburger button */}
+          {/* Mobile Top-Right Controls (3-Line Menu for Mobile & Small Tablets) */}
           <div className="flex items-center space-x-2 sm:hidden">
             <button
               type="button"
@@ -292,10 +306,12 @@ export const Navbar: React.FC = () => {
               {theme === 'light' ? <Moon className="w-4 h-4 text-zinc-900" /> : <Sun className="w-4 h-4 text-zinc-100" />}
             </button>
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              onClick={() => setFeatureDrawerOpen(true)}
+              className="p-2 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition cursor-pointer"
+              title="Open All Features Menu"
+              aria-label="Open 3-line all features menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Menu className="w-5 h-5 text-zinc-900 dark:text-white" />
             </button>
           </div>
         </div>
@@ -465,6 +481,11 @@ export const Navbar: React.FC = () => {
           )}
         </div>
       )}
+      {/* Universal 3-Line Feature Menu Drawer */}
+      <FeatureMenuDrawer
+        isOpen={featureDrawerOpen}
+        onClose={() => setFeatureDrawerOpen(false)}
+      />
     </nav>
   );
 };
