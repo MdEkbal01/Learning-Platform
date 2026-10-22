@@ -13,14 +13,20 @@ import {
   revokeSession,
 } from '../controllers/auth.controller';
 import { authenticate } from '../middlewares/auth.middleware';
+import {
+  loginLimiter,
+  registerLimiter,
+  otpLimiter,
+  passwordResetLimiter,
+} from '../middlewares/rateLimiter';
 
 const router = Router();
 
-router.post('/register', register);
-router.post('/verify-otp', verifyOtp);
-router.post('/login', login);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/register', registerLimiter, register);
+router.post('/verify-otp', otpLimiter, verifyOtp);
+router.post('/login', loginLimiter, login);
+router.post('/forgot-password', passwordResetLimiter, forgotPassword);
+router.post('/reset-password', passwordResetLimiter, resetPassword);
 
 // Protected auth endpoints
 router.get('/me', authenticate, getMe);

@@ -571,6 +571,13 @@ export function findUserByIdentifier(identifier: string): MockUser {
   };
 }
 
+// Enterprise In-Memory Rate Limiting Tracker (Edge & Client Anti-Brute-Force Protection)
+const EDGE_RATE_LIMITER = {
+  loginAttempts: {} as Record<string, { count: number; lockedUntil: number }>,
+  registrations: [] as number[],
+  otpAttempts: {} as Record<string, { count: number; lockedUntil: number }>,
+};
+
 // Fallback resolver for any endpoint requested by the frontend
 export function getMockResponse(method: string = 'GET', url: string = '', body?: any): { status: number; data: any } | null {
   const cleanUrl = url.split('?')[0].replace(/^\/api/, '');
@@ -591,13 +598,30 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return { status: 200, data: { user: MOCK_USERS['student@auralms.io'] } };
   }
 
-  // Authentication: Login
+  // Authentication: Login with Strict Anti-Brute-Force Rate Limiting
   if (cleanUrl === '/auth/login') {
     let payload = body;
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
     }
-    const identifier = payload?.identifier || payload?.email || '';
+    const identifier = (payload?.identifier || payload?.email || '').trim().toLowerCase();
+    const now = Date.now();
+    const clientKey = identifier || 'client_session';
+    const loginRec = EDGE_RATE_LIMITER.loginAttempts[clientKey];
+
+    // Check if client is locked out
+    if (loginRec && loginRec.lockedUntil > now) {
+      const waitSec = Math.ceil((loginRec.lockedUntil - now) / 1000);
+      return {
+        status: 429,
+        data: {
+          error: `Security Alert: Too many failed login attempts. Account access is temporarily locked to prevent unauthorized brute-force attacks. Please try again in ${Math.ceil(waitSec / 60)} minutes.`,
+          code: 'RATE_LIMIT_EXCEEDED',
+          retryAfterSeconds: waitSec,
+        },
+      };
+    }
+
     const user = findUserByIdentifier(identifier);
     return {
       status: 200,
@@ -608,12 +632,27 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     };
   }
 
-  // Authentication: Register
+  // Authentication: Register with Anti-Bot & Spam Rate Limiting
   if (cleanUrl === '/auth/register') {
     let payload = body;
     if (typeof body === 'string') {
       try { payload = JSON.parse(body); } catch {}
     }
+
+    const now = Date.now();
+    EDGE_RATE_LIMITER.registrations = EDGE_RATE_LIMITER.registrations.filter((t) => now - t < 3600000);
+    if (EDGE_RATE_LIMITER.registrations.length >= 5) {
+      return {
+        status: 429,
+        data: {
+          error: 'Security Alert: Registration rate limit reached. To prevent automated bot spam, new registrations are temporarily throttled. Please try again in an hour.',
+          code: 'REGISTRATION_RATE_LIMIT_EXCEEDED',
+          retryAfterSeconds: 3600,
+        },
+      };
+    }
+    EDGE_RATE_LIMITER.registrations.push(now);
+
     const email = (payload?.email || 'newuser@auralms.io').toLowerCase();
     const newUser: MockUser = {
       id: 'user_reg_' + Date.now(),

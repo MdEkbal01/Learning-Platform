@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import rateLimit from 'express-rate-limit';
 import { config } from './config';
 import { prisma } from './prisma';
 
@@ -46,18 +45,19 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Abuse & Brute-force rate limiting (PRD AUTH-08)
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 auth attempts per window
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many login attempts. Please try again in 15 minutes.' },
-});
+// Security: Enterprise Rate Limiting Protection (PRD AUTH-08)
+import {
+  loginLimiter,
+  registerLimiter,
+  otpLimiter,
+  passwordResetLimiter,
+} from './middlewares/rateLimiter';
 
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
-app.use('/api/auth/forgot-password', authLimiter);
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/auth/register', registerLimiter);
+app.use('/api/auth/verify-otp', otpLimiter);
+app.use('/api/auth/forgot-password', passwordResetLimiter);
+app.use('/api/auth/reset-password', passwordResetLimiter);
 
 // Public maintenance status endpoint for frontend banner
 app.get('/api/maintenance/status', async (req: Request, res: Response) => {
