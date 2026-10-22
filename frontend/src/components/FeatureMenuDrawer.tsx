@@ -31,6 +31,7 @@ import {
   ShieldCheck,
   ChevronRight,
   Sparkles,
+  Bot,
 } from 'lucide-react';
 
 interface FeatureMenuDrawerProps {
@@ -76,6 +77,16 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Interactive lecture playback and code sandbox',
     path: '/student/classroom/course_fullstack_ts',
     icon: PlayCircle,
+    category: 'LEARNING',
+    requiresAuth: true,
+  },
+  {
+    id: 'feat_ai_tutor',
+    title: 'Ken AI Study Companion',
+    description: 'Real-time AI concept breakdowns, code debugging & practice quizzes',
+    path: '/student/classroom/course_fullstack_ts',
+    icon: Bot,
+    badge: 'AI Powered',
     category: 'LEARNING',
     requiresAuth: true,
   },

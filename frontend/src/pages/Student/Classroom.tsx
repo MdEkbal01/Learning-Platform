@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../../api/client';
 import confetti from 'canvas-confetti';
+import { AiTutorDrawer } from '../../components/AiTutorDrawer';
 import {
   PlayCircle,
   CheckCircle2,
@@ -18,6 +19,7 @@ import {
   Flag,
   AlertCircle,
   Sparkles,
+  Bot,
 } from 'lucide-react';
 
 export const Classroom: React.FC = () => {
@@ -25,7 +27,8 @@ export const Classroom: React.FC = () => {
 
   const [course, setCourse] = useState<any>(null);
   const [activeLesson, setActiveLesson] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'NOTES' | 'RESOURCES' | 'QUIZ' | 'FORUM' | 'DOUBT'>('NOTES');
+  const [activeTab, setActiveTab] = useState<'NOTES' | 'RESOURCES' | 'QUIZ' | 'FORUM' | 'DOUBT' | 'AI_TUTOR'>('NOTES');
+  const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
   const [progressLookup, setProgressLookup] = useState<{ [id: string]: { isCompleted: boolean; lastPlaybackPositionSeconds: number } }>({});
   const [certificate, setCertificate] = useState<any>(null);
   const [expandedModules, setExpandedModules] = useState<{ [id: string]: boolean }>({});
@@ -325,17 +328,29 @@ export const Classroom: React.FC = () => {
                 <h2 className="text-base font-bold text-white mt-0.5">{activeLesson?.title}</h2>
               </div>
 
-              <button
-                onClick={() => toggleLessonComplete(activeLesson?.id, isLessonCompleted)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 cursor-pointer shrink-0 ${
-                  isLessonCompleted
-                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
-                }`}
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{isLessonCompleted ? 'Completed ✓' : 'Mark Lesson Complete'}</span>
-              </button>
+              <div className="flex items-center space-x-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsAiDrawerOpen(true)}
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black transition flex items-center space-x-1.5 cursor-pointer shadow-xs"
+                  title="Ask Ken AI about this lesson"
+                >
+                  <Bot className="w-4 h-4" />
+                  <span>Ask AI Tutor</span>
+                </button>
+
+                <button
+                  onClick={() => toggleLessonComplete(activeLesson?.id, isLessonCompleted)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 cursor-pointer shrink-0 ${
+                    isLessonCompleted
+                      ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{isLessonCompleted ? 'Completed ✓' : 'Mark Lesson Complete'}</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -352,6 +367,17 @@ export const Classroom: React.FC = () => {
               >
                 <FileText className="w-4 h-4" />
                 <span>Lecture Notes</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('AI_TUTOR')}
+                className={`px-4 py-3 border-b-2 transition flex items-center space-x-1.5 whitespace-nowrap cursor-pointer ${
+                  activeTab === 'AI_TUTOR'
+                    ? 'border-zinc-900 dark:border-white text-zinc-900 dark:text-zinc-100 bg-white font-bold'
+                    : 'border-transparent text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                <Bot className="w-4 h-4 text-amber-500" />
+                <span>AI Study Companion</span>
               </button>
               <button
                 onClick={() => setActiveTab('RESOURCES')}
@@ -401,6 +427,59 @@ export const Classroom: React.FC = () => {
                       No supplementary written notes for this specific lecture. Refer to video instruction above.
                     </p>
                   )}
+                </div>
+              )}
+
+              {/* TAB: AI STUDY COMPANION */}
+              {activeTab === 'AI_TUTOR' && (
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-tr from-amber-50 to-yellow-50 dark:from-zinc-900 dark:to-zinc-900 p-6 rounded-2xl border border-amber-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-400 text-black flex items-center justify-center font-bold shadow-sm shrink-0">
+                        <Bot className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-zinc-900 dark:text-white text-sm">
+                          Ken AI Study Companion
+                        </h3>
+                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">
+                          Instant concept breakdowns, code debugging, and quiz assessments for <strong>{activeLesson?.title || 'Current Lesson'}</strong>.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsAiDrawerOpen(true)}
+                      className="px-5 py-2.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-2 shrink-0 cursor-pointer"
+                    >
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>Launch AI Companion</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    {[
+                      { title: 'Explain with Code Examples', prompt: 'Explain the core logic of this lesson with a working TypeScript/Go snippet.' },
+                      { title: 'Generate 3 Practice Questions', prompt: 'Create 3 multiple-choice practice questions with detailed explanations.' },
+                      { title: 'Summarize 5 Bullet Points', prompt: 'Provide a crisp 5-point summary of key concepts covered in this lecture.' },
+                      { title: 'Debug Architecture Edge Cases', prompt: 'What are common failure modes and race conditions with this pattern?' },
+                    ].map((card) => (
+                      <button
+                        key={card.title}
+                        type="button"
+                        onClick={() => {
+                          setIsAiDrawerOpen(true);
+                        }}
+                        className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 hover:border-black dark:hover:border-white text-left transition space-y-1 cursor-pointer group"
+                      >
+                        <div className="text-xs font-bold text-zinc-900 dark:text-white flex items-center justify-between">
+                          <span>{card.title}</span>
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500 opacity-60 group-hover:opacity-100" />
+                        </div>
+                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400">{card.prompt}</p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -700,6 +779,26 @@ export const Classroom: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Ask Ken AI Button */}
+      <button
+        type="button"
+        onClick={() => setIsAiDrawerOpen(true)}
+        className="fixed bottom-6 right-6 z-40 px-4 py-3 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-2xl shadow-2xl flex items-center space-x-2 hover:scale-105 transition transform cursor-pointer border border-zinc-200 dark:border-zinc-800"
+        title="Open Ken AI Study Companion"
+      >
+        <div className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+        <Bot className="w-4 h-4 text-amber-400 dark:text-amber-600" />
+        <span>Ask AI Tutor</span>
+      </button>
+
+      {/* Real-Time AI Tutor Drawer */}
+      <AiTutorDrawer
+        isOpen={isAiDrawerOpen}
+        onClose={() => setIsAiDrawerOpen(false)}
+        currentCourseTitle={course?.title}
+        currentLessonTitle={activeLesson?.title}
+      />
     </div>
   );
 };

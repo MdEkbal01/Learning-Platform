@@ -4,6 +4,7 @@ import {
   createCourse,
   updateCourse,
   updateCourseStatus,
+  deleteCourse,
   addModule,
   addLesson,
   updateLesson,
@@ -20,6 +21,7 @@ router.use(authenticate, requireRoles('CONTENT_MANAGER', 'SUPER_ADMIN'));
 router.get('/courses', getAllCourses);
 router.post('/courses', createCourse);
 router.put('/courses/:id', updateCourse);
+router.delete('/courses/:id', deleteCourse);
 router.patch('/courses/:id/status', updateCourseStatus);
 
 router.post('/courses/:courseId/modules', addModule);

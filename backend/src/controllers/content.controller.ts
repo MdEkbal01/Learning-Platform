@@ -310,3 +310,31 @@ export async function createOrUpdateQuiz(req: Request, res: Response): Promise<v
     res.status(500).json({ error: 'Failed to save quiz.' });
   }
 }
+
+export async function deleteCourse(req: Request, res: Response): Promise<void> {
+  try {
+    const id = req.params.id as string;
+    const course = await prisma.course.findUnique({ where: { id } });
+    if (!course) {
+      res.status(404).json({ error: 'Course not found.' });
+      return;
+    }
+
+    await prisma.course.delete({ where: { id } });
+
+    await logAuditEvent({
+      actorId: req.user!.id,
+      actorEmail: req.user!.email,
+      action: 'COURSE_DELETED',
+      entityType: 'COURSE',
+      entityId: id,
+      details: { title: course.title },
+      req,
+    });
+
+    res.json({ success: true, message: 'Course permanently removed.' });
+  } catch (error) {
+    console.error('deleteCourse error:', error);
+    res.status(500).json({ error: 'Failed to delete course.' });
+  }
+}

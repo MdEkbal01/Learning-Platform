@@ -24,11 +24,17 @@ import {
   Filter,
   ShieldCheck,
   Search,
+  Trophy,
+  Zap,
+  Crown,
+  Medal,
+  Star,
+  Code,
 } from 'lucide-react';
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'COURSES' | 'PERFORMANCE' | 'LOGS'>('COURSES');
+  const [activeTab, setActiveTab] = useState<'COURSES' | 'PERFORMANCE' | 'GAMIFICATION' | 'LOGS'>('COURSES');
   const [enrolments, setEnrolments] = useState<any[]>(() => MOCK_ENROLMENTS || []);
   const [liveClasses, setLiveClasses] = useState<any[]>(() => MOCK_LIVE_CLASSES || []);
   const [activityLogs, setActivityLogs] = useState<any[]>(() => MOCK_USER_LOGS['user_student_01'] || []);
@@ -265,6 +271,21 @@ export const StudentDashboard: React.FC = () => {
         >
           <TrendingUp className="w-4 h-4" />
           <span>Academic Performance & Mastery</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('GAMIFICATION')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            activeTab === 'GAMIFICATION'
+              ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+              : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+          }`}
+        >
+          <Trophy className="w-4 h-4 text-amber-500" />
+          <span>Gamified Streaks & Leaderboard</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-bold">
+            2,850 XP
+          </span>
         </button>
 
         <button
@@ -631,6 +652,326 @@ export const StudentDashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: GAMIFIED STREAKS & COHORT LEADERBOARD (SkillForge Architecture) */}
+      {activeTab === 'GAMIFICATION' && (
+        <div className="space-y-6 animate-fadeIn">
+          {/* Header XP & Level Progression Card */}
+          <div className="bg-gradient-to-r from-zinc-900 via-black to-zinc-900 text-white rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-xl relative overflow-hidden">
+            <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+              <div className="space-y-2">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider">
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Level 4 • Systems Artisan</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                  2,850 XP <span className="text-sm font-semibold text-zinc-400">/ 3,000 XP</span>
+                </h2>
+                <p className="text-xs text-zinc-300 max-w-md">
+                  You are only <strong>150 XP away</strong> from unlocking <strong>Level 5: Cloud Architect</strong>. Complete your next lesson assessment to rank up!
+                </p>
+              </div>
+
+              {/* Daily Streak Counter */}
+              <div className="bg-white/10 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/15 flex items-center space-x-4 shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shrink-0">
+                  <Flame className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <div className="text-xl font-black font-mono text-amber-300">7-Day Streak!</div>
+                  <div className="text-[11px] text-zinc-300">+50 Daily Streak XP Active</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Level XP Progress Bar */}
+            <div className="mt-6 space-y-1.5 relative z-10">
+              <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                <span>Level 4 (2,000 XP)</span>
+                <span className="text-amber-300 font-bold">95% to Level 5</span>
+                <span>Level 5 (3,000 XP)</span>
+              </div>
+              <div className="w-full bg-zinc-800 rounded-full h-3 overflow-hidden p-0.5 border border-zinc-700">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 rounded-full transition-all duration-1000"
+                  style={{ width: '95%' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 7-Day Streak & Weekly Activity Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Flame className="w-5 h-5 text-amber-500" />
+                  <h3 className="font-bold text-zinc-900 dark:text-white text-base">Weekly Study Discipline</h3>
+                </div>
+                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  100% Adherence
+                </span>
+              </div>
+
+              <div className="grid grid-cols-7 gap-2 pt-2">
+                {[
+                  { day: 'Mon', completed: true, xp: '+120' },
+                  { day: 'Tue', completed: true, xp: '+150' },
+                  { day: 'Wed', completed: true, xp: '+200' },
+                  { day: 'Thu', completed: true, xp: '+80' },
+                  { day: 'Fri', completed: true, xp: '+160' },
+                  { day: 'Sat', completed: true, xp: '+250' },
+                  { day: 'Sun (Today)', completed: true, xp: '+110' },
+                ].map((item) => (
+                  <div
+                    key={item.day}
+                    className={`p-3 rounded-xl border text-center space-y-1 transition ${
+                      item.completed
+                        ? 'bg-amber-50/80 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800'
+                        : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'
+                    }`}
+                  >
+                    <div className="text-[10px] font-bold uppercase text-zinc-500 dark:text-zinc-400">
+                      {item.day.split(' ')[0]}
+                    </div>
+                    <div className="w-6 h-6 mx-auto rounded-full bg-amber-400 text-black flex items-center justify-center font-bold text-xs shadow-2xs">
+                      <Flame className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="text-[10px] font-mono font-bold text-zinc-900 dark:text-white">
+                      {item.xp}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* XP Multiplier & Bonus Box */}
+            <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 flex flex-col justify-between shadow-xs">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <h4 className="font-bold text-zinc-900 dark:text-white text-sm">
+                  Weekend Velocity Multiplier
+                </h4>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  Earn <strong>1.5x XP</strong> on all modular knowledge assessments and live WebRTC masterclass attendances until Sunday midnight.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs">
+                <span className="font-semibold text-zinc-700 dark:text-zinc-300">Boost Status:</span>
+                <span className="font-bold text-amber-600 dark:text-amber-400 font-mono">ACTIVE (1.5x)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Badges & Milestone Trophies Showcase */}
+          <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 space-y-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-base text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Medal className="w-5 h-5 text-amber-500" />
+                  <span>Earned Milestone Badges & Trophies</span>
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  5 of 6 achievements unlocked across foundational curricula and code labs.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                {
+                  id: 'badge_1',
+                  name: 'First Code Lab Execution',
+                  desc: 'Executed sandbox code and passed test suites successfully.',
+                  xp: '+100 XP',
+                  unlocked: true,
+                  icon: Code,
+                },
+                {
+                  id: 'badge_2',
+                  name: 'Assessment Perfectionist',
+                  desc: 'Scored 100% on a module examination on the first attempt.',
+                  xp: '+250 XP',
+                  unlocked: true,
+                  icon: Target,
+                },
+                {
+                  id: 'badge_3',
+                  name: '7-Day Hot Streak Titan',
+                  desc: 'Maintained 7 consecutive days of active module progression.',
+                  xp: '+500 XP',
+                  unlocked: true,
+                  icon: Flame,
+                },
+                {
+                  id: 'badge_4',
+                  name: 'Cryptographic Credential',
+                  desc: 'Earned an accredited, verifiable tamper-evident certificate.',
+                  xp: '+500 XP',
+                  unlocked: true,
+                  icon: Award,
+                },
+                {
+                  id: 'badge_5',
+                  name: 'Speed Demon',
+                  desc: 'Completed 3 curriculum lessons within a single 24-hour cycle.',
+                  xp: '+300 XP',
+                  unlocked: true,
+                  icon: Zap,
+                },
+                {
+                  id: 'badge_6',
+                  name: 'Microservices Sovereign',
+                  desc: 'Complete all full-stack and distributed architecture modules.',
+                  xp: '+1,000 XP',
+                  unlocked: false,
+                  icon: Crown,
+                  progress: '75% Complete',
+                },
+              ].map((b) => {
+                const Icon = b.icon;
+                return (
+                  <div
+                    key={b.id}
+                    className={`p-4 rounded-xl border flex items-start space-x-3.5 transition ${
+                      b.unlocked
+                        ? 'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800'
+                        : 'bg-zinc-100/40 dark:bg-zinc-900/20 border-dashed border-zinc-300 dark:border-zinc-800 opacity-60'
+                    }`}
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        b.unlocked
+                          ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-800 shadow-2xs'
+                          : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-bold text-zinc-900 dark:text-white text-xs truncate">
+                          {b.name}
+                        </h4>
+                        <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400">
+                          {b.xp}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
+                        {b.desc}
+                      </p>
+                      <div className="mt-2 text-[10px] font-bold">
+                        {b.unlocked ? (
+                          <span className="text-emerald-600 dark:text-emerald-400 flex items-center space-x-1">
+                            <CheckCircle2 className="w-3 h-3" />
+                            <span>Unlocked</span>
+                          </span>
+                        ) : (
+                          <span className="text-amber-600 dark:text-amber-400 font-mono">
+                            {b.progress}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Live Cohort Leaderboard */}
+          <div className="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs overflow-hidden">
+            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-base text-zinc-900 dark:text-white flex items-center space-x-2">
+                  <Trophy className="w-5 h-5 text-amber-500" />
+                  <span>Real-Time Cohort Leaderboard</span>
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  Rankings based on active study streaks, assessment test scores, and sandbox completion.
+                </p>
+              </div>
+              <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
+                Weekly Sprint • Ends in 3 Days
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 uppercase font-semibold">
+                  <tr>
+                    <th className="p-4 w-16">Rank</th>
+                    <th className="p-4">Learner</th>
+                    <th className="p-4">Tier / Level</th>
+                    <th className="p-4">Streak</th>
+                    <th className="p-4">Badges</th>
+                    <th className="p-4 text-right">Total XP</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 font-medium">
+                  {[
+                    { rank: 1, name: 'Elena Vance', title: 'Senior Cloud Fellow', level: 'Level 6 Master', streak: '14 Days', badges: 8, xp: '4,820 XP', medal: '🥇' },
+                    { rank: 2, name: 'Marcus Chen', title: 'IIT Delhi • Systems', level: 'Level 5 Architect', streak: '10 Days', badges: 7, xp: '4,190 XP', medal: '🥈' },
+                    { rank: 3, name: `${user?.name || 'Aarav Sharma'} (You)`, title: user?.profile?.college || 'IIT Computer Science', level: 'Level 4 Artisan', streak: '7 Days', badges: 5, xp: '2,850 XP', isCurrentUser: true, medal: '🥉' },
+                    { rank: 4, name: 'Priya Patel', title: 'BITS Pilani', level: 'Level 4 Artisan', streak: '5 Days', badges: 5, xp: '2,640 XP' },
+                    { rank: 5, name: 'Liam Gallagher', title: 'Stanford Online Scholar', level: 'Level 3 Craftsman', streak: '4 Days', badges: 4, xp: '2,110 XP' },
+                  ].map((row) => (
+                    <tr
+                      key={row.rank}
+                      className={`transition ${
+                        row.isCurrentUser
+                          ? 'bg-amber-50/70 dark:bg-amber-950/20 font-bold border-l-4 border-l-amber-500'
+                          : 'hover:bg-zinc-50/60 dark:hover:bg-zinc-900/40'
+                      }`}
+                    >
+                      <td className="p-4 text-center">
+                        {row.medal ? (
+                          <span className="text-base">{row.medal}</span>
+                        ) : (
+                          <span className="font-mono text-zinc-500 font-bold">#{row.rank}</span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <div className="font-bold text-zinc-900 dark:text-white flex items-center space-x-1.5">
+                          <span>{row.name}</span>
+                          {row.isCurrentUser && (
+                            <span className="text-[10px] bg-black text-white dark:bg-white dark:text-black px-1.5 py-0.2 rounded-md">
+                              YOU
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{row.title}</div>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                          {row.level}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="flex items-center space-x-1 text-amber-600 dark:text-amber-400 font-mono font-bold">
+                          <Flame className="w-3.5 h-3.5" />
+                          <span>{row.streak}</span>
+                        </span>
+                      </td>
+                      <td className="p-4 font-mono text-zinc-600 dark:text-zinc-400">
+                        {row.badges} Badges
+                      </td>
+                      <td className="p-4 text-right font-mono font-black text-zinc-900 dark:text-white text-sm">
+                        {row.xp}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
