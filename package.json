@@ -4,9 +4,9 @@
   "description": "Online Learning & Course Management Platform (AuraLMS)",
   "scripts": {
     "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "build": "cd backend && npm install && npm run build",
     "seed": "npm run seed --prefix backend",
-    "start": "node backend/dist/src/server.js"
+    "start": "cd backend && npm start"
   },
   "dependencies": {
     "concurrently": "^9.1.2"
