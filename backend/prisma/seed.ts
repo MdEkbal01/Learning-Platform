@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-const databaseUrl =
-  process.env.DATABASE_URL ||
-  'file:./dev.db';
+const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
 
 const prisma = new PrismaClient({
   datasources: {

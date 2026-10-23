@@ -7,8 +7,7 @@ const { execSync } = require('child_process');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const schemaPath = path.join(__dirname, '../prisma/schema.prisma');
-const NEON_DEFAULT_URL = 'file:./dev.db';
-const databaseUrl = process.env.DATABASE_URL || NEON_DEFAULT_URL;
+const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
 process.env.DATABASE_URL = databaseUrl;
 
 console.log('=======================================================');
