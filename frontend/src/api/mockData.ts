@@ -90,6 +90,34 @@ export const MOCK_USER_LOGS: Record<string, any[]> = {
 };
 
 export const MOCK_USERS: Record<string, MockUser> = {
+  'zainul7abideen@kenclasses.com': {
+    id: 'user_superadmin_zainul',
+    email: 'zainul7abideen@kenclasses.com',
+    name: 'Zainul Abideen (Super Admin)',
+    role: 'SUPER_ADMIN',
+    mobile: '+919999900001',
+    isEmailVerified: true,
+    profile: {
+      college: 'Ken Classes Technical Academy',
+      academicCourse: 'Platform Governance',
+      academicYear: 'Executive',
+      bio: 'Platform Super Administrator & Academic Director',
+    },
+  },
+  'hasnain2004@kenclasses.com': {
+    id: 'user_superadmin_hasnain',
+    email: 'hasnain2004@kenclasses.com',
+    name: 'Hasnain (Super Admin)',
+    role: 'SUPER_ADMIN',
+    mobile: '+919999900002',
+    isEmailVerified: true,
+    profile: {
+      college: 'Ken Classes Technical Academy',
+      academicCourse: 'Platform Governance',
+      academicYear: 'Executive',
+      bio: 'Platform Super Administrator & Academic Director',
+    },
+  },
   'admin@auralms.io': {
     id: 'user_admin_01',
     email: 'admin@auralms.io',
@@ -518,6 +546,12 @@ export function findUserByIdentifier(identifier: string): MockUser {
   const digits = identifier.replace(/[^0-9]/g, '');
 
   // 1. Direct username / role match
+  if (clean === 'zainul7abideen' || clean === 'zainul' || clean === 'zainul7abideen@kenclasses.com') {
+    return MOCK_USERS['zainul7abideen@kenclasses.com'];
+  }
+  if (clean === 'hasnain2004' || clean === 'hasnain' || clean === 'hasnain2004@kenclasses.com') {
+    return MOCK_USERS['hasnain2004@kenclasses.com'];
+  }
   if (clean === 'admin' || clean === 'administrator' || clean === 'super_admin' || clean === 'root') {
     return MOCK_USERS['admin@auralms.io'];
   }
