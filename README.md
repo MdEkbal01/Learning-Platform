@@ -176,3 +176,30 @@ flowchart TD
 - [x] Test opening a support ticket (`SUP-2026-XXXX`) and viewing message conversation thread.
 - [x] Test submitting platform feedback (`FDBK-2026-XXXX`) with 1-5 star rating and consent confirmation.
 - [x] Test session management and password change on `/settings`.
+
+---
+
+## 🚀 100% Free Cloud Production Deployment (₹0 / $0 Forever)
+
+The platform is designed to be hosted **100% free forever** with enterprise-grade edge caching and zero monthly bills:
+
+### 1. Frontend (Cloudflare Pages)
+* **Status**: Live at [`https://auralms-platform.pages.dev`](https://auralms-platform.pages.dev)
+* **Configuration**: Auto-builds from GitHub repo `Zainul9142/Online-Learning-Platform` (Branch: `main`).
+* **Build Command**: `cd frontend && npm install && npm run build`
+* **Output Directory**: `frontend/dist`
+* **Cost**: ₹0 forever with unlimited bandwidth, free global SSL, and 275+ edge nodes.
+
+### 2. Backend (Render.com)
+* **Configuration**: Ready with root [`render.yaml`](./render.yaml) blueprint and [`backend/Dockerfile`](./backend/Dockerfile).
+* Connect GitHub repository to [render.com](https://render.com), choose **Blueprint**, and it deploys the Node.js API with automated zero-config setup.
+* **Health Check**: `/api/health`
+
+### 3. Database (Neon / Supabase / SQLite)
+* Default: Embedded SQLite for instant zero-dependency execution (`DATABASE_URL="file:./dev.db"`).
+* Cloud Option: Plug in a free PostgreSQL connection string from [supabase.com](https://supabase.com) or [neon.tech](https://neon.tech) into Render environment variables.
+
+### 4. Emails & OTPs (EmailJS / Brevo)
+* Built-in EmailJS delivers OTPs and Welcome emails client-side and server-side without a dedicated mail server.
+* Supports connecting your custom domain SMTP via EmailJS or Brevo (300 free emails/day).
+

@@ -1,0 +1,39 @@
+# Render.com Blueprint specification for 100% Free Cloud Deployment
+# Connect your repository (https://github.com/Zainul9142/Online-Learning-Platform)
+# to Render.com and choose "Blueprint" to automatically deploy.
+
+services:
+  - type: web
+    name: kenclasses-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://auralms-platform.pages.dev
+      - key: EMAILJS_SERVICE_ID
+        value: service_u2pq18q
+      - key: EMAILJS_TEMPLATE_OTP
+        value: template_iils3yg
+      - key: EMAILJS_TEMPLATE_WELCOME
+        value: template_ytk9w6q
+      - key: EMAILJS_PUBLIC_KEY
+        value: e8iQcLkwbSNDb6a5h
+      - key: EMAILJS_PRIVATE_KEY
+        sync: false
+      - key: COMPANY_NAME
+        value: Ken Classes
+      - key: SUPPORT_EMAIL
+        value: kenclasses95@gmail.com

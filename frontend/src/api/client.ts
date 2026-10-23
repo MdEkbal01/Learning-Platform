@@ -2,14 +2,11 @@ import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from 'axio
 import { getMockResponse } from './mockData';
 
 // Determine if we should use instantaneous in-memory mock resolution
-// When no external backend API URL is configured (or on Cloudflare Pages static edge),
-// resolve all endpoints in 0ms to eliminate network timeouts and ensure ultra-responsive UX.
+// When no external backend API URL is configured, resolve all endpoints in 0ms to eliminate network timeouts and ensure ultra-responsive UX.
 const shouldUseMockResolution = (): boolean => {
   if (typeof window === 'undefined') return true;
-  // If no external backend API URL is configured, ALWAYS resolve with instant mock data
+  // If no external backend API URL is configured, resolve with instant mock data
   if (!import.meta.env.VITE_API_URL) return true;
-  const hostname = window.location.hostname;
-  if (hostname.endsWith('pages.dev') || hostname.endsWith('workers.dev')) return true;
   return false;
 };
 
