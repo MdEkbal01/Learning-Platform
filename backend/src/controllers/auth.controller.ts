@@ -214,7 +214,9 @@ export async function login(req: Request, res: Response): Promise<void> {
         OR: [
           { email: trimmedIdentifier.toLowerCase() },
           { mobile: trimmedIdentifier },
+          { username: trimmedIdentifier },
           { username: trimmedIdentifier.toLowerCase() },
+          { username: { equals: trimmedIdentifier, mode: 'insensitive' } },
         ],
       },
       include: { profile: true },
@@ -314,7 +316,13 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
     const trimmed = identifier.trim();
     const user = await prisma.user.findFirst({
       where: {
-        OR: [{ email: trimmed.toLowerCase() }, { mobile: trimmed }],
+        OR: [
+          { email: trimmed.toLowerCase() },
+          { mobile: trimmed },
+          { username: trimmed },
+          { username: trimmed.toLowerCase() },
+          { username: { equals: trimmed, mode: 'insensitive' } },
+        ],
       },
     });
 
