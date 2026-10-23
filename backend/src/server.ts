@@ -106,12 +106,29 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = config.port;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`=======================================================`);
   console.log(` LMS API Server running on http://localhost:${PORT}`);
   console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(` Session inactivity timeout: ${config.sessionInactivityTimeoutMinutes} minutes`);
   console.log(`=======================================================`);
+
+  // Auto-bootstrap check for fresh cloud deployments (e.g. Render / Neon / Supabase)
+  try {
+    const userCount = await prisma.user.count();
+    if (userCount === 0) {
+      console.log('⚡ [Bootstrap] Fresh database detected. Auto-seeding initial courses and roles...');
+      const { exec } = require('child_process');
+      exec('npx ts-node prisma/seed.ts', (err: any) => {
+        if (err) console.warn('⚡ [Bootstrap] Seed notice:', err.message);
+        else console.log('⚡ [Bootstrap] Auto-seeding completed.');
+      });
+    } else {
+      console.log(`⚡ [Bootstrap] Database operational (${userCount} users loaded).`);
+    }
+  } catch (err: any) {
+    console.warn('⚡ [Bootstrap] Notice:', err.message);
+  }
 });
 
 export default app;

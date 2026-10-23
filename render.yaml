@@ -9,7 +9,7 @@ services:
     plan: free
     region: oregon
     rootDir: backend
-    buildCommand: npm install && npx prisma generate && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
@@ -22,7 +22,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://auralms-platform.pages.dev
+        value: https://auralms-platform.pages.dev,http://localhost:5173
       - key: EMAILJS_SERVICE_ID
         value: service_u2pq18q
       - key: EMAILJS_TEMPLATE_OTP
@@ -37,3 +37,7 @@ services:
         value: Ken Classes
       - key: SUPPORT_EMAIL
         value: kenclasses95@gmail.com
+      - key: BREVO_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false

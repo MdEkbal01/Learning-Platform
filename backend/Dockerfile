@@ -8,11 +8,11 @@ WORKDIR /app
 # Copy package files and install dependencies
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY scripts ./scripts/
 RUN npm ci
 
 # Copy source code and build
 COPY . .
-RUN npx prisma generate
 RUN npm run build
 
 # Production Runner
@@ -25,8 +25,9 @@ ENV PORT=5000
 # Install production dependencies only
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY scripts ./scripts/
 RUN npm ci --only=production
-RUN npx prisma generate
+RUN node scripts/setup-db.js
 
 # Copy built assets from builder
 COPY --from=builder /app/dist ./dist
