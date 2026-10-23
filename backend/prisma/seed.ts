@@ -34,10 +34,14 @@ async function main() {
     console.warn('Truncate warning (continuing):', err);
   }
 
-  // 1. Password Hashes
-  const defaultPasswordHash = await bcrypt.hash('Password123!', 10);
-  const zainulPasswordHash = await bcrypt.hash(process.env.SUPERADMIN_ZAINUL_PASSWORD || 'Password123!', 10);
-  const hasnainPasswordHash = await bcrypt.hash(process.env.SUPERADMIN_HASNAIN_PASSWORD || 'Password123!', 10);
+  // 1. Password Hashes (Strictly loaded from environment variables for secret compliance)
+  const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Password123!';
+  const zainulPassword = process.env.SUPERADMIN_ZAINUL_PASSWORD || defaultPassword;
+  const hasnainPassword = process.env.SUPERADMIN_HASNAIN_PASSWORD || defaultPassword;
+
+  const defaultPasswordHash = await bcrypt.hash(defaultPassword, 10);
+  const zainulPasswordHash = await bcrypt.hash(zainulPassword, 10);
+  const hasnainPasswordHash = await bcrypt.hash(hasnainPassword, 10);
 
   // 2. Primary Super Admins
   const superAdminZainul = await prisma.user.create({
