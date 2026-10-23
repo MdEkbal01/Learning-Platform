@@ -54,6 +54,25 @@ export const Classroom: React.FC = () => {
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  const isEmbedVideo = (url?: string) => {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com');
+  };
+
+  const getNormalizedEmbedUrl = (url?: string) => {
+    if (!url) return '';
+    if (url.includes('youtube.com/embed/')) return url;
+    if (url.includes('youtube.com/watch?v=')) {
+      const videoId = url.split('v=')[1]?.split('&')[0];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+    }
+    if (url.includes('youtu.be/')) {
+      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+    }
+    return url;
+  };
+
   const fetchClassroom = async () => {
     try {
       const res = await api.get(`/student/classroom/${courseId}`);
@@ -304,16 +323,27 @@ export const Classroom: React.FC = () => {
           {/* Lecture Player */}
           <div className="bg-black rounded-2xl overflow-hidden shadow-md border border-zinc-900">
             {activeLesson?.videoUrl ? (
-              <video
-                ref={videoRef}
-                key={activeLesson.id}
-                controls
-                src={activeLesson.videoUrl}
-                onLoadedMetadata={handleLoadedMetadata}
-                onTimeUpdate={handleTimeUpdate}
-                className="w-full aspect-video bg-black"
-                poster={course.thumbnail}
-              />
+              isEmbedVideo(activeLesson.videoUrl) ? (
+                <iframe
+                  key={activeLesson.id}
+                  src={getNormalizedEmbedUrl(activeLesson.videoUrl)}
+                  title={activeLesson.title}
+                  className="w-full aspect-video bg-black border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <video
+                  ref={videoRef}
+                  key={activeLesson.id}
+                  controls
+                  src={activeLesson.videoUrl}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onTimeUpdate={handleTimeUpdate}
+                  className="w-full aspect-video bg-black"
+                  poster={course.thumbnail}
+                />
+              )
             ) : (
               <div className="w-full aspect-video bg-zinc-900 flex flex-col items-center justify-center text-zinc-400 text-xs p-6 text-center space-y-2">
                 <PlayCircle className="w-12 h-12 text-zinc-600" />

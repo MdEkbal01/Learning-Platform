@@ -15,7 +15,7 @@ const defaultAdapter = axios.getAdapter(axios.defaults.adapter || 'xhr');
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 1200, // Fast 1.2s timeout fallback instead of hanging 3.0s
+  timeout: 10000, // 10s timeout to allow live Render cloud backend & cold-starts to resolve reliably
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
