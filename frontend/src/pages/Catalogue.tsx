@@ -206,7 +206,7 @@ export const Catalogue: React.FC = () => {
                   </div>
                 ) : (
                   <div className="absolute top-3 right-3 bg-black text-white dark:bg-white dark:text-black px-2.5 py-1 rounded-full text-[11px] font-bold shadow-xs">
-                    ${c.price}
+                    ₹{c.price.toLocaleString('en-IN')}
                   </div>
                 )}
               </div>

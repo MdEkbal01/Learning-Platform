@@ -87,7 +87,7 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
         userId,
         courseId: course.id,
         amount: course.price,
-        currency: 'USD',
+        currency: 'INR',
         status: 'PENDING',
         paymentGateway: 'SIMULATED_GATEWAY',
         gatewayOrderId,

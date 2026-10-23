@@ -24,13 +24,10 @@ import {
   Sun,
   Globe,
   LogOut,
-  LogIn,
-  UserPlus,
   Sliders,
   PlayCircle,
   ShieldCheck,
   ChevronRight,
-  Sparkles,
   Bot,
 } from 'lucide-react';
 
@@ -46,13 +43,13 @@ interface FeatureItem {
   path: string;
   icon: React.ElementType;
   badge?: string;
-  category: 'LEARNING' | 'STUDENT' | 'GOVERNANCE' | 'FACULTY' | 'SYSTEM';
+  category: 'LEARNING' | 'STUDENT' | 'GOVERNANCE' | 'FACULTY';
   requiresAuth?: boolean;
   requiredRole?: string[];
 }
 
 const ALL_FEATURES: FeatureItem[] = [
-  // 1. Learning & Academics
+  // 1. Learning & Academics (Student & All Users)
   {
     id: 'feat_courses',
     title: 'Course Catalogue',
@@ -70,12 +67,13 @@ const ALL_FEATURES: FeatureItem[] = [
     badge: 'Core',
     category: 'LEARNING',
     requiresAuth: true,
+    requiredRole: ['STUDENT', 'SUPER_ADMIN'],
   },
   {
     id: 'feat_classroom',
     title: 'Virtual Classroom & Lab',
     description: 'Interactive lecture playback and code sandbox',
-    path: '/student/classroom/course_fullstack_ts',
+    path: '/student/classroom/cloud-devops-engineering-mastery',
     icon: PlayCircle,
     category: 'LEARNING',
     requiresAuth: true,
@@ -84,7 +82,7 @@ const ALL_FEATURES: FeatureItem[] = [
     id: 'feat_ai_tutor',
     title: 'Ken AI Study Companion',
     description: 'Real-time AI concept breakdowns, code debugging & practice quizzes',
-    path: '/student/classroom/course_fullstack_ts',
+    path: '/student/classroom/cloud-devops-engineering-mastery',
     icon: Bot,
     badge: 'AI Powered',
     category: 'LEARNING',
@@ -93,7 +91,7 @@ const ALL_FEATURES: FeatureItem[] = [
   {
     id: 'feat_live',
     title: 'Live Masterclasses',
-    description: 'WebRTC video masterclasses & cohort streaming',
+    description: 'Interactive video masterclasses & cohort streaming',
     path: '/student/live-classes',
     icon: Video,
     badge: 'Live',
@@ -119,10 +117,10 @@ const ALL_FEATURES: FeatureItem[] = [
     category: 'LEARNING',
   },
 
-  // 2. Student Center & Account
+  // 2. Student Center & Personal Account (All Users)
   {
     id: 'feat_profile',
-    title: 'Student Profile & Bio',
+    title: 'Academic Profile & Bio',
     description: 'Academic standing, college & credential portfolio',
     path: '/student/profile',
     icon: Users,
@@ -132,11 +130,12 @@ const ALL_FEATURES: FeatureItem[] = [
   {
     id: 'feat_orders',
     title: 'Orders & Invoices',
-    description: 'Payment receipts, transaction history & refunds',
+    description: 'Payment receipts, UPI transaction history & invoices',
     path: '/student/orders',
     icon: DollarSign,
     category: 'STUDENT',
     requiresAuth: true,
+    requiredRole: ['STUDENT', 'SUPER_ADMIN'],
   },
   {
     id: 'feat_settings',
@@ -163,7 +162,7 @@ const ALL_FEATURES: FeatureItem[] = [
     category: 'STUDENT',
   },
 
-  // 3. Administrative Governance & PRD Compliance
+  // 3. Administrative Governance (SUPER_ADMIN ONLY)
   {
     id: 'feat_admin_dash',
     title: 'Admin Governance Console',
@@ -172,6 +171,8 @@ const ALL_FEATURES: FeatureItem[] = [
     icon: Activity,
     badge: 'Admin',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN'],
   },
   {
     id: 'feat_admin_users',
@@ -181,6 +182,8 @@ const ALL_FEATURES: FeatureItem[] = [
     icon: Users,
     badge: 'RBAC',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN'],
   },
   {
     id: 'feat_curriculum_studio',
@@ -188,7 +191,10 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Configure course attributes, pricing & lifecycle status',
     path: '/content/courses',
     icon: Sliders,
+    badge: 'Curriculum',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN', 'CONTENT_MANAGER'],
   },
   {
     id: 'feat_audit_logs',
@@ -196,7 +202,10 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Append-only ledger of authentication & security events',
     path: '/admin/audit-logs',
     icon: ShieldCheck,
+    badge: 'Security',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN'],
   },
   {
     id: 'feat_maintenance',
@@ -204,7 +213,10 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Manage downtime banners and emergency feature flags',
     path: '/admin/maintenance',
     icon: Wrench,
+    badge: 'DevOps',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN'],
   },
   {
     id: 'feat_webhooks',
@@ -212,17 +224,23 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Idempotent webhook testing and gateway diagnostics',
     path: '/admin/webhooks',
     icon: Laptop,
+    badge: 'Gateway',
     category: 'GOVERNANCE',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN'],
   },
 
-  // 4. Specialized Portals
+  // 4. Specialized Faculty / Staff Portals
   {
     id: 'feat_mentor_dash',
     title: 'Mentor Faculty Workspace',
     description: 'Live cohort hosting and curriculum oversight',
     path: '/mentor/dashboard',
     icon: GraduationCap,
+    badge: 'Mentor',
     category: 'FACULTY',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN', 'MENTOR'],
   },
   {
     id: 'feat_mentor_doubts',
@@ -230,7 +248,10 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Answer technical doubt tickets from learners',
     path: '/mentor/doubts',
     icon: MessageSquare,
+    badge: 'Faculty',
     category: 'FACULTY',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN', 'MENTOR'],
   },
   {
     id: 'feat_finance_dash',
@@ -238,7 +259,10 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Revenue recognition, ledger balance & dispute audits',
     path: '/finance/dashboard',
     icon: DollarSign,
+    badge: 'Finance',
     category: 'FACULTY',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN', 'FINANCE_SUPPORT'],
   },
   {
     id: 'feat_moderator_queue',
@@ -246,18 +270,69 @@ const ALL_FEATURES: FeatureItem[] = [
     description: 'Spam purge, DMCA standards & content reviews',
     path: '/moderator/queue',
     icon: Shield,
+    badge: 'Moderator',
     category: 'FACULTY',
+    requiresAuth: true,
+    requiredRole: ['SUPER_ADMIN', 'MODERATOR'],
   },
 ];
 
 export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, onClose }) => {
-  const { user, isAuthenticated, logout, switchDemoUser } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme, language, setLanguage, t } = useThemeLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+
+  const userRole = user?.role || 'GUEST';
+
+  // 1. Filter features allowed for current user role
+  const allowedFeatures = useMemo(() => {
+    return ALL_FEATURES.filter((f) => {
+      if (f.requiresAuth && !isAuthenticated) {
+        return false;
+      }
+      if (f.requiredRole && f.requiredRole.length > 0) {
+        if (!user || !f.requiredRole.includes(user.role)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }, [isAuthenticated, user]);
+
+  // 2. Generate visible category pills based on user role
+  const categoryPills = useMemo(() => {
+    const pills = [
+      { id: 'ALL', label: 'All Services' },
+      { id: 'LEARNING', label: 'Academics' },
+      { id: 'STUDENT', label: 'Student Center' },
+    ];
+
+    if (userRole === 'SUPER_ADMIN') {
+      pills.push({ id: 'GOVERNANCE', label: 'Admin Governance' });
+      pills.push({ id: 'FACULTY', label: 'Staff Portals' });
+    } else if (userRole === 'MENTOR') {
+      pills.push({ id: 'FACULTY', label: 'Faculty Studio' });
+    } else if (userRole === 'CONTENT_MANAGER') {
+      pills.push({ id: 'GOVERNANCE', label: 'Curriculum Studio' });
+    } else if (userRole === 'FINANCE_SUPPORT') {
+      pills.push({ id: 'FACULTY', label: 'Finance Portal' });
+    } else if (userRole === 'MODERATOR') {
+      pills.push({ id: 'FACULTY', label: 'Moderation Queue' });
+    }
+
+    return pills;
+  }, [userRole]);
+
+  // Reset category if selected category is not allowed for this role
+  useEffect(() => {
+    if (!categoryPills.some((p) => p.id === selectedCategory)) {
+      setSelectedCategory('ALL');
+    }
+  }, [categoryPills, selectedCategory]);
 
   // Close on Escape key
   useEffect(() => {
@@ -282,9 +357,9 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
     };
   }, [isOpen]);
 
-  // Filtered features
+  // Filtered features matching search & category
   const filteredFeatures = useMemo(() => {
-    return ALL_FEATURES.filter((f) => {
+    return allowedFeatures.filter((f) => {
       if (selectedCategory !== 'ALL' && f.category !== selectedCategory) {
         return false;
       }
@@ -297,7 +372,7 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
       }
       return true;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [allowedFeatures, selectedCategory, searchQuery]);
 
   const handleNavigate = (path: string) => {
     onClose();
@@ -337,18 +412,18 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
                 <h2 className="text-base font-black text-zinc-900 dark:text-white flex items-center space-x-2">
                   <span>Ken Classes</span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 uppercase">
-                    All Features
+                    {userRole === 'SUPER_ADMIN' ? 'Admin Portal' : userRole === 'STUDENT' ? 'Student Portal' : 'Navigation'}
                   </span>
                 </h2>
                 <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  Universal Navigation & Platform Services
+                  {userRole === 'SUPER_ADMIN' ? 'Universal Administration & Platform Services' : 'Academics & Learning Platform Services'}
                 </p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/60 dark:hover:bg-zinc-800 transition"
+              className="p-2 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/60 dark:hover:bg-zinc-800 transition cursor-pointer"
               aria-label="Close feature menu"
             >
               <X className="w-5 h-5" />
@@ -379,7 +454,7 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
 
                 <button
                   onClick={handleLogout}
-                  className="px-2.5 py-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition flex items-center space-x-1"
+                  className="px-2.5 py-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition flex items-center space-x-1 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out</span>
@@ -417,33 +492,31 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search features (e.g. users, classroom, live, audit)..."
+                placeholder={
+                  userRole === 'SUPER_ADMIN'
+                    ? 'Search features (e.g. users, classroom, live, audit)...'
+                    : 'Search courses, classroom, live classes, certificates...'
+                }
                 className="w-full pl-9 pr-8 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-xl text-xs focus:bg-white dark:focus:bg-black focus:outline-hidden"
               />
               <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                  className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
 
-            {/* Category Filter Pills */}
+            {/* Category Filter Pills (Dynamically restricted by user role) */}
             <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
-              {[
-                { id: 'ALL', label: 'All Services' },
-                { id: 'LEARNING', label: 'Academics' },
-                { id: 'STUDENT', label: 'Student Center' },
-                { id: 'GOVERNANCE', label: 'Admin Governance' },
-                { id: 'FACULTY', label: 'Portals' },
-              ].map((cat) => (
+              {categoryPills.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition ${
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition cursor-pointer ${
                     selectedCategory === cat.id
                       ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
                       : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
@@ -455,13 +528,11 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
             </div>
           </div>
 
-          {/* Features List (Scrollable) */}
+          {/* Features Scrollable List */}
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
             {filteredFeatures.length === 0 ? (
-              <div className="py-12 text-center text-zinc-400 text-xs space-y-1">
-                <Search className="w-6 h-6 mx-auto mb-2 opacity-40" />
-                <div className="font-semibold text-zinc-700 dark:text-zinc-300">No features found</div>
-                <div>Try a different search keyword like "course", "admin", or "cert".</div>
+              <div className="text-center py-12 text-zinc-400 dark:text-zinc-500 text-xs">
+                No matching features found for "{searchQuery}".
               </div>
             ) : (
               filteredFeatures.map((feat) => {
@@ -509,38 +580,6 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
                 );
               })
             )}
-
-            {/* Quick Demo Role Switcher Section */}
-            <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                  Quick Demo Role Switcher
-                </span>
-                <span className="text-[10px] text-zinc-400">1-Click Instant Login</span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                {[
-                  { role: 'Student', email: 'student@auralms.io' },
-                  { role: 'Mentor', email: 'mentor@auralms.io' },
-                  { role: 'Content QA', email: 'content@auralms.io' },
-                  { role: 'Finance', email: 'finance@auralms.io' },
-                  { role: 'Moderator', email: 'moderator@auralms.io' },
-                  { role: 'Admin', email: 'admin@auralms.io' },
-                ].map((r) => (
-                  <button
-                    key={r.role}
-                    onClick={() => {
-                      onClose();
-                      switchDemoUser(r.email);
-                    }}
-                    className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-[11px] font-bold text-zinc-800 dark:text-zinc-200 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition text-center"
-                  >
-                    {r.role}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Footer Controls: Language & Theme */}
@@ -550,7 +589,7 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
               <Globe className="w-3.5 h-3.5 text-zinc-400" />
               <button
                 onClick={() => setLanguage('en')}
-                className={`px-2 py-1 rounded text-xs font-bold transition ${
+                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer ${
                   language === 'en'
                     ? 'bg-black text-white dark:bg-white dark:text-black'
                     : 'text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white'
@@ -560,7 +599,7 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
               </button>
               <button
                 onClick={() => setLanguage('hi')}
-                className={`px-2 py-1 rounded text-xs font-bold transition ${
+                className={`px-2 py-1 rounded text-xs font-bold transition cursor-pointer ${
                   language === 'hi'
                     ? 'bg-black text-white dark:bg-white dark:text-black'
                     : 'text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white'
@@ -573,7 +612,7 @@ export const FeatureMenuDrawer: React.FC<FeatureMenuDrawerProps> = ({ isOpen, on
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 font-bold text-xs text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 font-bold text-xs text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition cursor-pointer"
             >
               {theme === 'light' ? (
                 <>

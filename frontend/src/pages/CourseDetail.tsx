@@ -130,7 +130,7 @@ export const CourseDetail: React.FC = () => {
                 {course.isFree ? (
                   <span className="text-emerald-600">Free Access</span>
                 ) : (
-                  <span>${course.price}</span>
+                  <span>₹{course.price?.toLocaleString('en-IN')}</span>
                 )}
               </div>
               <div className="text-xs text-zinc-500 mt-1">One-time payment • No subscription lock-in</div>
@@ -174,7 +174,7 @@ export const CourseDetail: React.FC = () => {
                 to={`/checkout/${course.id}`}
                 className="w-full py-3 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-sm rounded-xl text-center shadow-md transition block"
               >
-                Enroll Now • ${course.price}
+                Enroll Now • ₹{course.price?.toLocaleString('en-IN')}
               </Link>
             )}
           </div>

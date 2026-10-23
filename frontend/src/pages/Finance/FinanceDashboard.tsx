@@ -122,8 +122,8 @@ export const FinanceDashboard: React.FC = () => {
             <DollarSign className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">${grossRev}</div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">Gross Revenue (USD)</div>
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">₹{grossRev.toLocaleString('en-IN')}</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">Gross Revenue (INR)</div>
           </div>
         </div>
 
@@ -142,7 +142,7 @@ export const FinanceDashboard: React.FC = () => {
             <RotateCcw className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">${refundedAmt}</div>
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">₹{refundedAmt.toLocaleString('en-IN')}</div>
             <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">
               Refunded ({overview?.refundedCount || 0})
             </div>
@@ -154,8 +154,8 @@ export const FinanceDashboard: React.FC = () => {
             <TrendingUp className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">${netRev}</div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">Net Retained (USD)</div>
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">₹{netRev.toLocaleString('en-IN')}</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold">Net Retained (INR)</div>
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@ export const FinanceDashboard: React.FC = () => {
                       {ord.course?.title}
                     </td>
                     <td className="py-3.5 px-4 font-mono font-bold text-zinc-900 dark:text-white">
-                      ${ord.amount}
+                      ₹{ord.amount?.toLocaleString('en-IN')}
                     </td>
                     <td className="py-3.5 px-4">
                       <span
@@ -302,7 +302,7 @@ export const FinanceDashboard: React.FC = () => {
               <strong className="text-zinc-900 dark:text-white font-mono">
                 {refundOrderDetails?.id.substring(0, 14)}...
               </strong>{' '}
-              for <strong className="text-zinc-900 dark:text-white">${refundOrderDetails?.amount}</strong> will
+              for <strong className="text-zinc-900 dark:text-white">₹{refundOrderDetails?.amount?.toLocaleString('en-IN')}</strong> will
               immediately revoke student course access.
             </p>
 

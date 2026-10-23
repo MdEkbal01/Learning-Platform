@@ -128,7 +128,7 @@ export const Checkout: React.FC = () => {
 
   const upiPayLink = order
     ? `upi://pay?pa=kenclasses@okhdfcbank&pn=Ken+Classes&am=${order.amount}&tr=${order.orderNumber}&tn=Course+Access+${order.orderNumber}&cu=INR`
-    : `upi://pay?pa=kenclasses@okhdfcbank&pn=Ken+Classes&am=49.99&cu=INR`;
+    : `upi://pay?pa=kenclasses@okhdfcbank&pn=Ken+Classes&am=3999&cu=INR`;
 
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
     upiPayLink
@@ -386,7 +386,7 @@ export const Checkout: React.FC = () => {
                 ) : (
                   <>
                     <Lock className="w-4 h-4" />
-                    <span>Confirm & Pay ${order?.amount}</span>
+                    <span>Confirm & Pay ₹{order?.amount?.toLocaleString('en-IN')}</span>
                   </>
                 )}
               </button>
@@ -403,8 +403,8 @@ export const Checkout: React.FC = () => {
                   <option>State Bank of India (SBI)</option>
                   <option>ICICI Bank</option>
                   <option>Axis Bank</option>
-                  <option>Chase / J.P. Morgan</option>
-                  <option>Citigroup</option>
+                  <option>Punjab National Bank</option>
+                  <option>Bank of Baroda</option>
                 </select>
               </div>
 
@@ -461,19 +461,19 @@ export const Checkout: React.FC = () => {
           <div className="space-y-2 text-xs">
             <div className="flex justify-between text-zinc-600">
               <span>Course Subtotal</span>
-              <span className="font-semibold">${order?.amount}</span>
+              <span className="font-semibold">₹{order?.amount?.toLocaleString('en-IN')}</span>
             </div>
             <div className="flex justify-between text-zinc-600">
               <span>Platform & Access Fee</span>
-              <span className="text-emerald-600 font-semibold">FREE ($0.00)</span>
+              <span className="text-emerald-600 font-semibold">FREE (₹0)</span>
             </div>
             <div className="flex justify-between text-zinc-600">
               <span>Applicable Taxes (0%)</span>
-              <span>$0.00</span>
+              <span>₹0</span>
             </div>
             <div className="pt-3 border-t border-zinc-100 flex justify-between font-extrabold text-sm text-zinc-900">
               <span>Total Payable</span>
-              <span className="text-zinc-900 text-base font-black">${order?.amount}</span>
+              <span className="text-zinc-900 text-base font-black">₹{order?.amount?.toLocaleString('en-IN')}</span>
             </div>
           </div>
 

@@ -1205,7 +1205,7 @@ export const UserManagement: React.FC = () => {
                   className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                 >
                   {courses.map((c) => (
-                    <option key={c.id} value={c.id}>{c.title} (${c.price})</option>
+                    <option key={c.id} value={c.id}>{c.title} (₹{c.price?.toLocaleString('en-IN')})</option>
                   ))}
                 </select>
               </div>

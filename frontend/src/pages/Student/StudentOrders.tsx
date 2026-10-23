@@ -65,7 +65,7 @@ export const StudentOrders: React.FC = () => {
                     <td className="p-4 font-mono font-bold text-zinc-900 dark:text-white">{o.orderNumber}</td>
                     <td className="p-4 font-semibold text-zinc-800 dark:text-zinc-200">{o.course?.title}</td>
                     <td className="p-4 text-zinc-500 dark:text-zinc-400">{new Date(o.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">${o.amount} {o.currency}</td>
+                    <td className="p-4 font-bold text-zinc-900 dark:text-white">₹{o.amount?.toLocaleString('en-IN')}</td>
                     <td className="p-4">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -149,7 +149,7 @@ export const StudentOrders: React.FC = () => {
                         <div className="text-[10px] text-zinc-400 dark:text-zinc-500 font-normal">Full curriculum entitlement & certificate</div>
                       </td>
                       <td className="p-3 text-right font-bold text-zinc-900 dark:text-white">
-                        ${selectedInvoice.amount}
+                        ₹{selectedInvoice.amount?.toLocaleString('en-IN')}
                       </td>
                     </tr>
                   </tbody>
@@ -157,7 +157,7 @@ export const StudentOrders: React.FC = () => {
                     <tr>
                       <td className="p-3 text-zinc-700 dark:text-zinc-300">Total Paid</td>
                       <td className="p-3 text-right text-zinc-900 dark:text-zinc-100 font-extrabold text-sm">
-                        ${selectedInvoice.amount} {selectedInvoice.currency}
+                        ₹{selectedInvoice.amount?.toLocaleString('en-IN')}
                       </td>
                     </tr>
                   </tfoot>
@@ -166,7 +166,7 @@ export const StudentOrders: React.FC = () => {
 
               {selectedInvoice.refund && (
                 <div className="p-3 bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-xl text-xs text-zinc-800 dark:text-zinc-200">
-                  <strong>Refund Processed:</strong> ${selectedInvoice.refund.amount} refunded on{' '}
+                  <strong>Refund Processed:</strong> ₹{selectedInvoice.refund.amount?.toLocaleString('en-IN')} refunded on{' '}
                   {new Date(selectedInvoice.refund.createdAt).toLocaleDateString()} (Reason: {selectedInvoice.refund.reason})
                 </div>
               )}

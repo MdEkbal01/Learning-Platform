@@ -146,9 +146,9 @@ export const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="mt-4">
-            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">${m?.totalRevenue || 0}</div>
+            <div className="text-2xl font-black text-zinc-900 dark:text-white font-mono">₹{(m?.totalRevenue || 0).toLocaleString('en-IN')}</div>
             <div className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
-              Platform Gross Revenue (USD)
+              Platform Gross Revenue (INR)
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
             {activeChartPoint !== null && (
               <div className="text-xs font-mono font-bold text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-lg border border-zinc-300 dark:border-zinc-700 dark:border-zinc-300 dark:border-zinc-700">
-                {revenueHistory[activeChartPoint].month}: ${revenueHistory[activeChartPoint].rev.toLocaleString()} (
+                {revenueHistory[activeChartPoint].month}: ₹{revenueHistory[activeChartPoint].rev.toLocaleString('en-IN')} (
                 {revenueHistory[activeChartPoint].enrolments} enrollments)
               </div>
             )}
