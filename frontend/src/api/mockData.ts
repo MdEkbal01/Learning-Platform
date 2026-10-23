@@ -1546,14 +1546,39 @@ export function getMockResponse(method: string = 'GET', url: string = '', body?:
     return { status: 201, data: newClass };
   }
 
+  // Publish Recording to Curriculum
+  if (cleanUrl.includes('/publish-recording') && m === 'POST') {
+    let payload = body;
+    if (typeof body === 'string') {
+      try { payload = JSON.parse(body); } catch {}
+    }
+    return {
+      status: 201,
+      data: {
+        message: 'Live lecture successfully published to course curriculum!',
+        lesson: {
+          id: 'lesson_live_' + Date.now(),
+          title: payload?.lessonTitle || 'Recorded Live Masterclass',
+          videoUrl: payload?.recordingVideoUrl || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          durationMinutes: 60,
+        },
+      },
+    };
+  }
+
   if (cleanUrl.startsWith('/mentor')) {
     return {
       status: 200,
       data: {
         activeStudents: 142,
-        assignedCourses: MOCK_COURSES.slice(0, 2),
+        totalStudents: 142,
+        assignedCourses: MOCK_COURSES,
+        courses: MOCK_COURSES,
+        assignedCoursesCount: MOCK_COURSES.length,
         pendingDoubts: 1,
+        openDoubtsCount: 1,
         resolvedDoubts: 89,
+        upcomingLiveClasses: MOCK_LIVE_CLASSES,
       },
     };
   }

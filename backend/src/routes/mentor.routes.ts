@@ -4,6 +4,7 @@ import {
   getMentorCourses,
   scheduleLiveClass,
   updateLiveClass,
+  publishLiveClassRecording,
 } from '../controllers/mentor.controller';
 import { authenticate } from '../middlewares/auth.middleware';
 import { requireRoles } from '../middlewares/rbac.middleware';
@@ -16,5 +17,6 @@ router.get('/dashboard', getMentorDashboard);
 router.get('/courses', getMentorCourses);
 router.post('/live-classes', scheduleLiveClass);
 router.patch('/live-classes/:id', updateLiveClass);
+router.post('/live-classes/:id/publish-recording', publishLiveClassRecording);
 
 export default router;
