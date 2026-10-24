@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../../api/client';
 import {
@@ -14,6 +14,9 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronUp,
+  Sliders,
+  X,
+  Tag,
 } from 'lucide-react';
 
 export const CourseEditor: React.FC = () => {
@@ -45,14 +48,71 @@ export const CourseEditor: React.FC = () => {
   const [q1Opt2, setQ1Opt2] = useState('Allows all users to view administrative billing records');
   const [q1CorrectIdx, setQ1CorrectIdx] = useState('0');
 
+  // Edit Course Pricing & Attributes modal
+  const [showPriceModal, setShowPriceModal] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [editTitle, setEditTitle] = useState('');
+  const [editPrice, setEditPrice] = useState('999');
+  const [editIsFree, setEditIsFree] = useState(false);
+  const [editCatId, setEditCatId] = useState('');
+  const [editStatus, setEditStatus] = useState('DRAFT');
+  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
+
+  const groupedCategories = useMemo(() => {
+    const groups: Record<string, any[]> = {};
+    categories.forEach((cat) => {
+      const g = cat.group || 'All Academic Disciplines';
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(cat);
+    });
+    return groups;
+  }, [categories]);
+
   const fetchCourse = async () => {
     try {
-      const res = await api.get(`/courses/${id}`);
-      setCourse(res.data);
+      const [courseRes, catRes] = await Promise.all([
+        api.get(`/courses/${id}`),
+        api.get('/categories'),
+      ]);
+      setCourse(courseRes.data);
+      setCategories(catRes.data);
     } catch (e) {
       console.error(e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const openPriceModal = () => {
+    if (!course) return;
+    setEditTitle(course.title || '');
+    setEditCatId(course.category?.id || (categories[0]?.id || ''));
+    const isFreeCourse = Boolean(course.isFree) || Number(course.price || 0) === 0;
+    setEditIsFree(isFreeCourse);
+    setEditPrice(isFreeCourse ? '0' : String(course.price || 999));
+    setEditStatus(course.status || 'DRAFT');
+    setShowPriceModal(true);
+  };
+
+  const handleSavePriceAndAttributes = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUpdatingPrice(true);
+    const numericPrice = editIsFree ? 0 : parseFloat(editPrice || '0');
+    const finalIsFree = editIsFree || numericPrice === 0;
+    try {
+      await api.put(`/content/courses/${id}`, {
+        title: editTitle,
+        categoryId: editCatId,
+        price: numericPrice,
+        isFree: finalIsFree,
+        status: editStatus,
+      });
+      setShowPriceModal(false);
+      await fetchCourse();
+    } catch (e: any) {
+      alert(e.response?.data?.error || 'Failed to update course pricing.');
+    } finally {
+      setIsUpdatingPrice(false);
     }
   };
 
@@ -167,13 +227,23 @@ export const CourseEditor: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowModuleModal(true)}
-          className="px-4 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Module</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={openPriceModal}
+            className="px-4 py-2 border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-900 dark:text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
+            title="Edit Tuition Price & Course Attributes"
+          >
+            <Sliders className="w-4 h-4 text-amber-500" />
+            <span>Edit Price & Attributes</span>
+          </button>
+          <button
+            onClick={() => setShowModuleModal(true)}
+            className="px-4 py-2 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add New Module</span>
+          </button>
+        </div>
       </div>
 
       {/* Modules & Lessons Curriculum Tree */}
@@ -469,6 +539,171 @@ export const CourseEditor: React.FC = () => {
                   className="px-4 py-1.5 bg-black hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-bold rounded-lg transition"
                 >
                   Save Quiz Assessment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Course Attributes & Price Modal */}
+      {showPriceModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-zinc-950 rounded-2xl max-w-lg w-full p-6 shadow-xl border border-zinc-200 dark:border-zinc-800 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-base text-zinc-900 dark:text-white">Edit Course Pricing & Details</h3>
+                <p className="text-xs text-zinc-500">Configure tuition fee (₹ INR), academic category, and publication status.</p>
+              </div>
+              <button onClick={() => setShowPriceModal(false)} className="text-zinc-400 hover:text-black dark:hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePriceAndAttributes} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Course Title</label>
+                <input
+                  type="text"
+                  required
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Academic Category (Class 1 to PhD)</label>
+                <select
+                  value={editCatId}
+                  onChange={(e) => setEditCatId(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
+                >
+                  {Object.entries(groupedCategories).map(([groupName, cats]) => (
+                    <optgroup key={groupName} label={`── ${groupName} ──`}>
+                      {cats.map((cat: any) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+
+              {/* Course Pricing Section */}
+              <div className="p-3.5 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-1.5">
+                    <Tag className="w-3.5 h-3.5 text-zinc-500" />
+                    <span>Tuition Fee / Pricing (₹ INR)</span>
+                  </label>
+                  <div className="flex items-center bg-zinc-200 dark:bg-zinc-800 p-0.5 rounded-lg text-[11px] font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditIsFree(false);
+                        if (!editPrice || editPrice === '0') setEditPrice('999');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        !editIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      Paid (₹ INR)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditIsFree(true);
+                        setEditPrice('0');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        editIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      100% Free
+                    </button>
+                  </div>
+                </div>
+
+                {!editIsFree ? (
+                  <div className="space-y-2 pt-1">
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-600 dark:text-zinc-400 font-bold text-sm">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value={editPrice}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditPrice(val);
+                          if (Number(val) > 0) setEditIsFree(false);
+                        }}
+                        placeholder="e.g. 999"
+                        className="w-full pl-7 pr-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                      <span className="text-[10px] text-zinc-500 font-medium">Quick suggestions:</span>
+                      {['499', '799', '999', '1499', '2499', '3999'].map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => {
+                            setEditPrice(p);
+                            setEditIsFree(false);
+                          }}
+                          className="px-2 py-0.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded text-[10px] font-bold text-zinc-900 dark:text-zinc-100 transition cursor-pointer"
+                        >
+                          ₹{p}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 rounded-lg text-emerald-800 dark:text-emerald-300 text-xs flex items-center space-x-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                    <span>This course is marked as <strong>100% Free</strong>. Students can enroll directly without payment.</span>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Status</label>
+                <select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
+                >
+                  <option value="DRAFT">DRAFT</option>
+                  <option value="IN_REVIEW">IN_REVIEW</option>
+                  <option value="PUBLISHED">PUBLISHED</option>
+                  <option value="ARCHIVED">ARCHIVED</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => setShowPriceModal(false)}
+                  className="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdatingPrice}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-bold text-xs rounded-lg transition"
+                >
+                  {isUpdatingPrice ? 'Updating Price...' : 'Save Price & Details'}
                 </button>
               </div>
             </form>
