@@ -165,7 +165,7 @@ export const Catalogue: React.FC = () => {
                   : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800'
               }`}
             >
-              {cat.name} ({cat.courseCount})
+              {cat.name} {cat.courseCount !== undefined ? `(${cat.courseCount})` : ''}
             </button>
           ))}
         </div>

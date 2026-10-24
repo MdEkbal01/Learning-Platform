@@ -78,7 +78,7 @@ export const WebhookSimulator: React.FC = () => {
             >
               {orders.map((o) => (
                 <option key={o.id} value={o.id}>
-                  {o.orderNumber} • ${o.amount} • {o.status} ({o.user?.name})
+                  {o.orderNumber} • ₹{o.amount} • {o.status} ({o.user?.name})
                 </option>
               ))}
             </select>

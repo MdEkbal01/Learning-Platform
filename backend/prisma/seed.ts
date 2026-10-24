@@ -241,7 +241,115 @@ async function main() {
     },
   });
 
-  // 4. Categories
+  // 4. Categories covering Class 1 to PhD Spectrum
+  const catPrimary = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 1 to 5 (Primary Education)',
+      slug: 'class-1-5-primary',
+      description: 'Foundational numeracy, early science concepts, English reading, grammar, and environmental studies.',
+      icon: 'BookOpen',
+    },
+  });
+
+  const catMiddle = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 6 to 8 (Middle School)',
+      slug: 'class-6-8-middle',
+      description: 'Mathematics, General Science (Physics, Chemistry, Biology), Social Studies, English, and Early Coding.',
+      icon: 'Book',
+    },
+  });
+
+  const catSecondary = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 9 & 10 (Secondary Board Prep)',
+      slug: 'class-9-10-boards',
+      description: 'CBSE, ICSE, JAC, UP Board, BSEB & State Boards curriculum for Class 9 and 10 Mathematics, Science & Social Studies.',
+      icon: 'GraduationCap',
+    },
+  });
+
+  const catHScience = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 11 & 12 (Science - PCM / PCB)',
+      slug: 'class-11-12-science',
+      description: 'Higher secondary Physics, Chemistry, Mathematics & Biology for CBSE, JAC, ICSE and State Boards.',
+      icon: 'Atom',
+    },
+  });
+
+  const catHCommerce = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 11 & 12 (Commerce)',
+      slug: 'class-11-12-commerce',
+      description: 'Accountancy, Business Studies, Economics, Financial Markets and Applied Mathematics.',
+      icon: 'TrendingUp',
+    },
+  });
+
+  const catHArts = await prisma.courseCategory.create({
+    data: {
+      name: 'Class 11 & 12 (Arts & Humanities)',
+      slug: 'class-11-12-arts',
+      description: 'History, Political Science, Geography, Psychology, Sociology, and English Literature.',
+      icon: 'Globe',
+    },
+  });
+
+  const catJeeNeet = await prisma.courseCategory.create({
+    data: {
+      name: 'Competitive Entrance (JEE, NEET & CUET)',
+      slug: 'jee-neet-cuet',
+      description: 'Rigorous test series, problem solving, mock exams and rank booster cohorts for JEE Main, JEE Advanced, NEET-UG & CUET.',
+      icon: 'Award',
+    },
+  });
+
+  const catGovtExams = await prisma.courseCategory.create({
+    data: {
+      name: 'Government Exams (UPSC, SSC, Banking, Railways)',
+      slug: 'govt-exams-upsc-ssc',
+      description: 'Preparation cohorts for UPSC CSE, State PSC, SSC CGL/CHSL, IBPS/SBI PO & Clerk, RRB, NDA, and CDS.',
+      icon: 'Landmark',
+    },
+  });
+
+  const catUGTech = await prisma.courseCategory.create({
+    data: {
+      name: 'Undergraduate Tech (B.Tech / B.E / BCA)',
+      slug: 'btech-engineering-bca',
+      description: 'Core semester engineering courses in Computer Science, Mechanical, Civil, Electrical, Electronics & Information Technology.',
+      icon: 'Cpu',
+    },
+  });
+
+  const catUGNonTech = await prisma.courseCategory.create({
+    data: {
+      name: 'Undergraduate Non-Tech (B.Sc / B.Com / B.A / BBA)',
+      slug: 'bsc-bcom-ba-bba',
+      description: 'University degree curricula in Physics, Chemistry, Pure Maths, Financial Accounting, Macroeconomics, Management & Arts.',
+      icon: 'Layers',
+    },
+  });
+
+  const catPGMasters = await prisma.courseCategory.create({
+    data: {
+      name: 'Postgraduate Programs (M.Tech / MCA / MBA / M.Sc / M.A)',
+      slug: 'masters-mtech-mca-mba',
+      description: 'Advanced postgraduate master’s specializations in Data Analytics, Systems Engineering, Management, and Pure Sciences.',
+      icon: 'Library',
+    },
+  });
+
+  const catPhD = await prisma.courseCategory.create({
+    data: {
+      name: 'Doctoral Studies & Research (PhD & Post-Doc)',
+      slug: 'phd-doctoral-research',
+      description: 'Research methodology, statistical hypothesis testing, academic publishing, peer review, and doctoral thesis formulation.',
+      icon: 'Microscope',
+    },
+  });
+
   const catCloud = await prisma.courseCategory.create({
     data: {
       name: 'Cloud & DevOps',

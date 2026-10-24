@@ -211,8 +211,118 @@ export async function getCourseDetails(req: Request, res: Response): Promise<voi
   }
 }
 
+export const DEFAULT_PLATFORM_CATEGORIES = [
+  {
+    name: 'Class 1 to 5 (Primary Education)',
+    slug: 'class-1-5-primary',
+    description: 'Foundational numeracy, early science concepts, English reading, grammar, and environmental studies.',
+    icon: 'BookOpen',
+  },
+  {
+    name: 'Class 6 to 8 (Middle School)',
+    slug: 'class-6-8-middle',
+    description: 'Mathematics, General Science (Physics, Chemistry, Biology), Social Studies, English, and Early Coding.',
+    icon: 'Book',
+  },
+  {
+    name: 'Class 9 & 10 (Secondary Board Prep)',
+    slug: 'class-9-10-boards',
+    description: 'CBSE, ICSE, JAC, UP Board, BSEB & State Boards curriculum for Class 9 and 10 Mathematics, Science & Social Studies.',
+    icon: 'GraduationCap',
+  },
+  {
+    name: 'Class 11 & 12 (Science - PCM / PCB)',
+    slug: 'class-11-12-science',
+    description: 'Higher secondary Physics, Chemistry, Mathematics & Biology for CBSE, JAC, ICSE and State Boards.',
+    icon: 'Atom',
+  },
+  {
+    name: 'Class 11 & 12 (Commerce)',
+    slug: 'class-11-12-commerce',
+    description: 'Accountancy, Business Studies, Economics, Financial Markets and Applied Mathematics.',
+    icon: 'TrendingUp',
+  },
+  {
+    name: 'Class 11 & 12 (Arts & Humanities)',
+    slug: 'class-11-12-arts',
+    description: 'History, Political Science, Geography, Psychology, Sociology, and English Literature.',
+    icon: 'Globe',
+  },
+  {
+    name: 'Competitive Entrance (JEE, NEET & CUET)',
+    slug: 'jee-neet-cuet',
+    description: 'Rigorous test series, problem solving, mock exams and rank booster cohorts for JEE Main, JEE Advanced, NEET-UG & CUET.',
+    icon: 'Award',
+  },
+  {
+    name: 'Government Exams (UPSC, SSC, Banking, Railways)',
+    slug: 'govt-exams-upsc-ssc',
+    description: 'Preparation cohorts for UPSC CSE, State PSC, SSC CGL/CHSL, IBPS/SBI PO & Clerk, RRB, NDA, and CDS.',
+    icon: 'Landmark',
+  },
+  {
+    name: 'Undergraduate Tech (B.Tech / B.E / BCA)',
+    slug: 'btech-engineering-bca',
+    description: 'Core semester engineering courses in Computer Science, Mechanical, Civil, Electrical, Electronics & Information Technology.',
+    icon: 'Cpu',
+  },
+  {
+    name: 'Undergraduate Non-Tech (B.Sc / B.Com / B.A / BBA)',
+    slug: 'bsc-bcom-ba-bba',
+    description: 'University degree curricula in Physics, Chemistry, Pure Maths, Financial Accounting, Macroeconomics, Management & Arts.',
+    icon: 'Layers',
+  },
+  {
+    name: 'Postgraduate Programs (M.Tech / MCA / MBA / M.Sc / M.A)',
+    slug: 'masters-mtech-mca-mba',
+    description: 'Advanced postgraduate master’s specializations in Data Analytics, Systems Engineering, Management, and Pure Sciences.',
+    icon: 'Library',
+  },
+  {
+    name: 'Doctoral Studies & Research (PhD & Post-Doc)',
+    slug: 'phd-doctoral-research',
+    description: 'Research methodology, statistical hypothesis testing, academic publishing, peer review, and doctoral thesis formulation.',
+    icon: 'Microscope',
+  },
+  {
+    name: 'Full-Stack & Software Development',
+    slug: 'full-stack-software-development',
+    description: 'Industry-grade software engineering: React, Next.js, Node.js, Python, Go, Java, microservices, and system design.',
+    icon: 'Code',
+  },
+  {
+    name: 'AI, Machine Learning & Data Science',
+    slug: 'ai-machine-learning-data-science',
+    description: 'Deep learning, PyTorch, LLMs, computer vision, natural language processing, and big data engineering.',
+    icon: 'Brain',
+  },
+  {
+    name: 'Cloud Computing & DevOps Engineering',
+    slug: 'cloud-devops-infrastructure',
+    description: 'Docker, Kubernetes orchestration, AWS, Google Cloud, Terraform, CI/CD pipelines, and site reliability engineering.',
+    icon: 'Cloud',
+  },
+  {
+    name: 'Professional Skills, Finance & Languages',
+    slug: 'professional-skills-finance',
+    description: 'Communication mastery, public speaking, digital marketing, UI/UX design, financial modeling, and trading fundamentals.',
+    icon: 'Sparkles',
+  },
+];
+
 export async function getCategories(req: Request, res: Response): Promise<void> {
   try {
+    const existingCount = await prisma.courseCategory.count();
+    if (existingCount < 10) {
+      for (const cat of DEFAULT_PLATFORM_CATEGORIES) {
+        await prisma.courseCategory.upsert({
+          where: { slug: cat.slug },
+          update: { name: cat.name, description: cat.description, icon: cat.icon },
+          create: { name: cat.name, slug: cat.slug, description: cat.description, icon: cat.icon },
+        });
+      }
+    }
+
     const categories = await prisma.courseCategory.findMany({
       include: {
         _count: {
@@ -223,6 +333,7 @@ export async function getCategories(req: Request, res: Response): Promise<void> 
           },
         },
       },
+      orderBy: { createdAt: 'asc' },
     });
 
     res.json(

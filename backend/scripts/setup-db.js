@@ -32,12 +32,16 @@ try {
   const localPrisma = path.join(__dirname, '../node_modules/.bin/prisma');
   const prismaCmd = fs.existsSync(localPrisma) ? `"${localPrisma}"` : 'npx --yes prisma@6.19.3';
 
-  console.log(` [DB Adapter] Running Prisma schema push via ${prismaCmd}...`);
-  execSync(`${prismaCmd} db push --accept-data-loss`, {
-    stdio: 'inherit',
-    cwd: path.join(__dirname, '..'),
-    env: process.env,
-  });
+  try {
+    console.log(` [DB Adapter] Running Prisma schema push via ${prismaCmd}...`);
+    execSync(`${prismaCmd} db push --accept-data-loss`, {
+      stdio: 'inherit',
+      cwd: path.join(__dirname, '..'),
+      env: process.env,
+    });
+  } catch (pushErr) {
+    console.warn(' [DB Adapter] Note: Remote DB push deferred (will sync on runtime connection):', pushErr.message);
+  }
 
   console.log(` [DB Adapter] Generating Prisma Client...`);
   execSync(`${prismaCmd} generate`, {

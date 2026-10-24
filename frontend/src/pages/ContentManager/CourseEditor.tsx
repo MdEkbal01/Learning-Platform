@@ -163,7 +163,7 @@ export const CourseEditor: React.FC = () => {
           </span>
           <h1 className="text-2xl font-black text-zinc-900 dark:text-white mt-1">{course.title}</h1>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Category: {course.category?.name} • Tuition: {course.isFree ? 'Free' : `$${course.price}`}
+            Category: {course.category?.name} • Tuition: {course.isFree ? 'Free' : `₹${course.price}`}
           </p>
         </div>
 

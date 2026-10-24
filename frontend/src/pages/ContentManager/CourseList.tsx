@@ -28,9 +28,9 @@ export const CourseList: React.FC = () => {
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
   const [newCatId, setNewCatId] = useState('');
-  const [newPrice, setNewPrice] = useState('0');
-  const [newIsFree, setNewIsFree] = useState(true);
-  const [newInstructor, setNewInstructor] = useState('Prof. Alex Rivera');
+  const [newPrice, setNewPrice] = useState('999');
+  const [newIsFree, setNewIsFree] = useState(false);
+  const [newInstructor, setNewInstructor] = useState('Er. Zainul Abideen');
   const [isCreating, setIsCreating] = useState(false);
 
   // Edit Attributes Modal
@@ -40,11 +40,22 @@ export const CourseList: React.FC = () => {
   const [editDesc, setEditDesc] = useState('');
   const [editCatId, setEditCatId] = useState('');
   const [editLevel, setEditLevel] = useState('BEGINNER');
-  const [editPrice, setEditPrice] = useState('0');
-  const [editIsFree, setEditIsFree] = useState(true);
+  const [editPrice, setEditPrice] = useState('999');
+  const [editIsFree, setEditIsFree] = useState(false);
   const [editStatus, setEditStatus] = useState('DRAFT');
   const [editInstructor, setEditInstructor] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Group categories by stream/level
+  const groupedCategories = React.useMemo(() => {
+    const groups: Record<string, any[]> = {};
+    categories.forEach((cat) => {
+      const g = cat.group || 'All Academic Disciplines';
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(cat);
+    });
+    return groups;
+  }, [categories]);
 
   // Delete Course Confirmation Modal
   const [deleteCourse, setDeleteCourse] = useState<any | null>(null);
@@ -84,18 +95,22 @@ export const CourseList: React.FC = () => {
   const handleCreateCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsCreating(true);
+    const numericPrice = newIsFree ? 0 : parseFloat(newPrice || '0');
+    const finalIsFree = newIsFree || numericPrice === 0;
     try {
       await api.post('/content/courses', {
         title: newTitle,
         description: newDesc,
         categoryId: newCatId,
-        price: newPrice,
-        isFree: newIsFree,
+        price: numericPrice,
+        isFree: finalIsFree,
         instructorName: newInstructor,
       });
       setShowModal(false);
       setNewTitle('');
       setNewDesc('');
+      setNewPrice('999');
+      setNewIsFree(false);
       fetchCourses();
     } catch (e: any) {
       alert(e.response?.data?.error || 'Failed to create course.');
@@ -111,8 +126,9 @@ export const CourseList: React.FC = () => {
     setEditDesc(c.description || '');
     setEditCatId(c.category?.id || (categories[0]?.id || ''));
     setEditLevel(c.level || 'BEGINNER');
-    setEditPrice(String(c.price || 0));
-    setEditIsFree(Boolean(c.isFree));
+    const isActuallyFree = Boolean(c.isFree) || Number(c.price || 0) === 0;
+    setEditIsFree(isActuallyFree);
+    setEditPrice(isActuallyFree ? '0' : String(c.price || 999));
     setEditStatus(c.status || 'DRAFT');
     setEditInstructor(c.instructor?.name || 'Ken Classes Faculty');
   };
@@ -121,6 +137,8 @@ export const CourseList: React.FC = () => {
     e.preventDefault();
     if (!editCourse) return;
     setIsUpdating(true);
+    const numericPrice = editIsFree ? 0 : parseFloat(editPrice || '0');
+    const finalIsFree = editIsFree || numericPrice === 0;
     try {
       await api.put(`/content/courses/${editCourse.id}`, {
         title: editTitle,
@@ -128,8 +146,8 @@ export const CourseList: React.FC = () => {
         description: editDesc,
         categoryId: editCatId,
         level: editLevel,
-        price: Number(editPrice),
-        isFree: editIsFree,
+        price: numericPrice,
+        isFree: finalIsFree,
         status: editStatus,
         instructorName: editInstructor,
       });
@@ -229,7 +247,7 @@ export const CourseList: React.FC = () => {
                     {c.isFree ? (
                       <span className="text-emerald-600 dark:text-emerald-400">FREE</span>
                     ) : (
-                      `$${c.price}`
+                      `₹${(c.price || 0).toLocaleString('en-IN')}`
                     )}
                   </td>
                   <td className="p-4 font-mono text-zinc-600 dark:text-zinc-400">{c.enrolledCount || 0}</td>
@@ -340,43 +358,113 @@ export const CourseList: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Category</label>
-                  <select
-                    value={newCatId}
-                    onChange={(e) => setNewCatId(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
-                  >
-                    {categories.map((c) => (
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Academic Category & Level</label>
+                <select
+                  value={newCatId}
+                  onChange={(e) => setNewCatId(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
+                >
+                  {Object.entries(groupedCategories).length > 0 ? (
+                    Object.entries(groupedCategories).map(([group, cats]) => (
+                      <optgroup key={group} label={group} className="font-bold text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-950">
+                        {cats.map((c) => (
+                          <option key={c.id} value={c.id} className="font-normal text-zinc-800 dark:text-zinc-200">
+                            {c.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))
+                  ) : (
+                    categories.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Price ($ USD)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    disabled={newIsFree}
-                    value={newIsFree ? '0' : newPrice}
-                    onChange={(e) => setNewPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs disabled:opacity-50"
-                  />
-                </div>
+                    ))
+                  )}
+                </select>
               </div>
 
-              <div className="flex items-center space-x-2 pt-1">
-                <input
-                  type="checkbox"
-                  id="newIsFree"
-                  checked={newIsFree}
-                  onChange={(e) => setNewIsFree(e.target.checked)}
-                  className="rounded border-zinc-300 text-black dark:text-white"
-                />
-                <label htmlFor="newIsFree" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                  Mark as 100% Free Open Course
-                </label>
+              {/* Course Tuition Pricing */}
+              <div className="p-3.5 bg-zinc-50 dark:bg-zinc-900/60 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-zinc-900 dark:text-white">
+                    Course Pricing Model
+                  </label>
+                  <div className="flex items-center p-0.5 bg-zinc-200 dark:bg-zinc-800 rounded-lg text-xs font-bold">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewIsFree(false);
+                        if (!newPrice || newPrice === '0') setNewPrice('999');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        !newIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      Paid (₹ INR)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewIsFree(true);
+                        setNewPrice('0');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        newIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      100% Free
+                    </button>
+                  </div>
+                </div>
+
+                {!newIsFree ? (
+                  <div className="space-y-2 pt-1">
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-600 dark:text-zinc-400 font-bold text-sm">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value={newPrice}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setNewPrice(val);
+                          if (Number(val) > 0) setNewIsFree(false);
+                        }}
+                        placeholder="e.g. 999"
+                        className="w-full pl-7 pr-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                      <span className="text-[10px] text-zinc-500 font-medium">Quick suggestions:</span>
+                      {['499', '799', '999', '1499', '2499', '3999'].map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => {
+                            setNewPrice(p);
+                            setNewIsFree(false);
+                          }}
+                          className="px-2 py-0.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded text-[10px] font-bold text-zinc-900 dark:text-zinc-100 transition cursor-pointer"
+                        >
+                          ₹{p}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 rounded-lg text-emerald-800 dark:text-emerald-300 text-xs flex items-center space-x-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                    <span>This course is marked as <strong>100% Free</strong>. Students can enroll directly without payment.</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end space-x-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
@@ -450,15 +538,27 @@ export const CourseList: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Category</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Academic Category & Level</label>
                   <select
                     value={editCatId}
                     onChange={(e) => setEditCatId(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
                   >
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
+                    {Object.entries(groupedCategories).length > 0 ? (
+                      Object.entries(groupedCategories).map(([group, cats]) => (
+                        <optgroup key={group} label={group} className="font-bold text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-950">
+                          {cats.map((c) => (
+                            <option key={c.id} value={c.id} className="font-normal text-zinc-800 dark:text-zinc-200">
+                              {c.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))
+                    ) : (
+                      categories.map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))
+                    )}
                   </select>
                 </div>
                 <div>
@@ -475,44 +575,102 @@ export const CourseList: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Price ($ USD)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    disabled={editIsFree}
-                    value={editIsFree ? '0' : editPrice}
-                    onChange={(e) => setEditPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs disabled:opacity-50"
-                  />
+              {/* Edit Tuition Pricing Model */}
+              <div className="p-3.5 bg-zinc-50 dark:bg-zinc-900/60 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-zinc-900 dark:text-white">
+                    Course Pricing Model
+                  </label>
+                  <div className="flex items-center p-0.5 bg-zinc-200 dark:bg-zinc-800 rounded-lg text-xs font-bold">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditIsFree(false);
+                        if (!editPrice || editPrice === '0') setEditPrice('999');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        !editIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      Paid (₹ INR)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditIsFree(true);
+                        setEditPrice('0');
+                      }}
+                      className={`px-3 py-1 rounded-md transition cursor-pointer ${
+                        editIsFree
+                          ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
+                    >
+                      100% Free
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Status</label>
-                  <select
-                    value={editStatus}
-                    onChange={(e) => setEditStatus(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
-                  >
-                    <option value="DRAFT">DRAFT</option>
-                    <option value="IN_REVIEW">IN_REVIEW</option>
-                    <option value="PUBLISHED">PUBLISHED</option>
-                    <option value="ARCHIVED">ARCHIVED</option>
-                  </select>
-                </div>
+
+                {!editIsFree ? (
+                  <div className="space-y-2 pt-1">
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-600 dark:text-zinc-400 font-bold text-sm">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value={editPrice}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditPrice(val);
+                          if (Number(val) > 0) setEditIsFree(false);
+                        }}
+                        placeholder="e.g. 999"
+                        className="w-full pl-7 pr-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                      <span className="text-[10px] text-zinc-500 font-medium">Quick suggestions:</span>
+                      {['499', '799', '999', '1499', '2499', '3999'].map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => {
+                            setEditPrice(p);
+                            setEditIsFree(false);
+                          }}
+                          className="px-2 py-0.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded text-[10px] font-bold text-zinc-900 dark:text-zinc-100 transition cursor-pointer"
+                        >
+                          ₹{p}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 rounded-lg text-emerald-800 dark:text-emerald-300 text-xs flex items-center space-x-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                    <span>This course is marked as <strong>100% Free</strong>. Students can enroll directly without payment.</span>
+                  </div>
+                )}
               </div>
 
-              <div className="flex items-center space-x-2 pt-1">
-                <input
-                  type="checkbox"
-                  id="editIsFree"
-                  checked={editIsFree}
-                  onChange={(e) => setEditIsFree(e.target.checked)}
-                  className="rounded border-zinc-300 text-black dark:text-white"
-                />
-                <label htmlFor="editIsFree" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                  Mark as 100% Free Open Course
-                </label>
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Status</label>
+                <select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white rounded-lg text-xs"
+                >
+                  <option value="DRAFT">DRAFT</option>
+                  <option value="IN_REVIEW">IN_REVIEW</option>
+                  <option value="PUBLISHED">PUBLISHED</option>
+                  <option value="ARCHIVED">ARCHIVED</option>
+                </select>
               </div>
 
               <div>
