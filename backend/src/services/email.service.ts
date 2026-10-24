@@ -1,31 +1,37 @@
 // Ken Classes - Multi-Provider Prioritized Email Dispatch Engine
-// Priority Queue:
-// Tier 1: Mailjet Send API v3.1 (Primary)
-// Tier 2: Mailgun Messages API (Secondary Queue Provider)
-// Tier 3: Brevo (Sendinblue) Transactional REST API v3 (Tertiary Queue Provider)
-// Tier 4 / Final Option: EmailJS Automated Dispatch (Activated ONLY when all upstream providers exceed limits)
+// Priority Queue (Ranked by Daily Quota Volume & Template Capabilities):
+// Tier 1: Brevo (Sendinblue) Transactional REST API v3 (300 emails/day - Primary Queue Leader)
+// Tier 2: Mailjet Send API v3.1 (200 emails/day - Secondary Queue Provider)
+// Tier 3: Resend Messages API (100 emails/day - Tertiary Queue Provider)
+// Tier 4: Mailgun Messages API (Domain/Sandbox Fallback)
+// Tier 5 / Final Option: EmailJS Automated Dispatch (Activated ONLY when all upstream providers exceed limits)
 
 export const EMAIL_CONFIG = {
-  // Tier 1: Mailjet (Primary)
+  // Tier 1: Brevo (300 emails/day - Primary Queue Leader)
+  brevoApiKey: process.env.BREVO_API_KEY || '',
+  brevoSmtpKey: process.env.BREVO_SMTP_KEY || '',
+  brevoSenderEmail: process.env.BREVO_SENDER_EMAIL || 'zainulabideen01telo@gmail.com',
+  brevoSenderName: process.env.BREVO_SENDER_NAME || 'Ken Classes',
+
+  // Tier 2: Mailjet (200 emails/day - Secondary Queue Provider)
   mailjetApiKey: process.env.MAILJET_API_KEY || '',
   mailjetSecretKey: process.env.MAILJET_SECRET_KEY || '',
   mailjetSenderEmail: process.env.MAILJET_SENDER_EMAIL || 'zainul7abideen@gmail.com',
   mailjetSenderName: process.env.MAILJET_SENDER_NAME || 'Ken Classes',
 
-  // Tier 2: Mailgun (Secondary Queue Provider)
+  // Tier 3: Resend (100 emails/day - Tertiary Queue Provider)
+  resendApiKey: process.env.RESEND_API_KEY || '',
+  resendSenderEmail: process.env.RESEND_SENDER_EMAIL || 'onboarding@resend.dev',
+  resendSenderName: process.env.RESEND_SENDER_NAME || 'Ken Classes',
+
+  // Tier 4: Mailgun (Domain / Sandbox Provider)
   mailgunApiKey: process.env.MAILGUN_API_KEY || '',
   mailgunDomain: process.env.MAILGUN_DOMAIN || 'sandbox751939baa6a646dc97fe91e78993a6d7.mailgun.org',
   mailgunBaseUrl: process.env.MAILGUN_BASE_URL || 'https://api.mailgun.net',
   mailgunSenderEmail: process.env.MAILGUN_SENDER_EMAIL || 'postmaster@sandbox751939baa6a646dc97fe91e78993a6d7.mailgun.org',
   mailgunSenderName: process.env.MAILGUN_SENDER_NAME || 'Ken Classes',
 
-  // Tier 3: Brevo (Tertiary Queue Provider)
-  brevoApiKey: process.env.BREVO_API_KEY || '',
-  brevoSmtpKey: process.env.BREVO_SMTP_KEY || '',
-  brevoSenderEmail: process.env.BREVO_SENDER_EMAIL || 'zainulabideen01telo@gmail.com',
-  brevoSenderName: process.env.BREVO_SENDER_NAME || 'Ken Classes',
-
-  // Tier 4 / Last Option: EmailJS (Final Failover)
+  // Tier 5 / Final Option: EmailJS (Final Failover - Activated strictly when upstream limits are exceeded)
   emailjsServiceId: process.env.EMAILJS_SERVICE_ID || 'service_u2pq18q',
   emailjsTemplateOtp: process.env.EMAILJS_TEMPLATE_OTP || 'template_iils3yg',
   emailjsTemplateWelcome: process.env.EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
@@ -82,7 +88,7 @@ function renderEmailLayout(title: string, preheaderText: string, contentHtml: st
                       ${EMAIL_CONFIG.companyName}
                     </div>
                     <div style="color: #e2b342; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px;">
-                      Learning Without Limits
+                      Learning Without Limits • Class 1 to PhD
                     </div>
                   </td>
                   <td align="right" valign="middle">
@@ -127,7 +133,65 @@ function renderEmailLayout(title: string, preheaderText: string, contentHtml: st
 }
 
 /**
- * Tier 1: Send via Mailjet Send API v3.1 (Primary)
+ * Tier 1: Send via Brevo REST API v3 (300 emails/day capacity - Primary Queue Leader)
+ */
+async function sendViaBrevo(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlContent: string,
+  textContent?: string
+): Promise<boolean> {
+  if (!EMAIL_CONFIG.brevoApiKey) {
+    return false;
+  }
+
+  try {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': EMAIL_CONFIG.brevoApiKey,
+        accept: 'application/json',
+      },
+      body: JSON.stringify({
+        sender: {
+          name: EMAIL_CONFIG.brevoSenderName,
+          email: EMAIL_CONFIG.brevoSenderEmail,
+        },
+        to: [
+          {
+            email: toEmail,
+            name: toName || toEmail.split('@')[0],
+          },
+        ],
+        replyTo: {
+          name: `${EMAIL_CONFIG.companyName} Support`,
+          email: EMAIL_CONFIG.supportEmail,
+        },
+        subject,
+        htmlContent,
+        ...(textContent ? { textContent } : {}),
+      }),
+    });
+
+    if (response.ok) {
+      const data: any = await response.json();
+      console.log(`[Tier 1: Brevo] Delivered "${subject}" to ${toEmail} (ID: ${data.messageId})`);
+      return true;
+    }
+
+    const errorText = await response.text();
+    console.warn(`[Tier 1: Brevo Quota/Notice] HTTP ${response.status}: ${errorText}. Advancing to Tier 2 (Mailjet)...`);
+    return false;
+  } catch (err) {
+    console.warn('[Tier 1: Brevo Network/Exception]', err);
+    return false;
+  }
+}
+
+/**
+ * Tier 2: Send via Mailjet Send API v3.1 (200 emails/day capacity - Secondary Queue Provider)
  */
 async function sendViaMailjet(
   toEmail: string,
@@ -176,22 +240,72 @@ async function sendViaMailjet(
       const data: any = await response.json();
       const status = data?.Messages?.[0]?.Status;
       if (status === 'success') {
-        console.log(`[Tier 1: Mailjet] Delivered "${subject}" to ${toEmail}`);
+        console.log(`[Tier 2: Mailjet] Delivered "${subject}" to ${toEmail}`);
         return true;
       }
     }
 
     const errText = await response.text();
-    console.warn(`[Tier 1: Mailjet Limit/Error Notice] ${errText}. Advancing to Tier 2 (Mailgun)...`);
+    console.warn(`[Tier 2: Mailjet Limit/Notice] ${errText}. Advancing to Tier 3 (Resend)...`);
     return false;
   } catch (err) {
-    console.warn('[Tier 1: Mailjet Network/Exception]', err);
+    console.warn('[Tier 2: Mailjet Network/Exception]', err);
     return false;
   }
 }
 
 /**
- * Tier 2: Send via Mailgun Messages API (Secondary Queue Provider)
+ * Tier 3: Send via Resend REST API (100 emails/day capacity - Tertiary Queue Provider)
+ */
+async function sendViaResend(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlContent: string,
+  textContent?: string
+): Promise<boolean> {
+  if (!EMAIL_CONFIG.resendApiKey) {
+    return false;
+  }
+
+  try {
+    const fromAddress = EMAIL_CONFIG.resendSenderEmail.includes('<')
+      ? EMAIL_CONFIG.resendSenderEmail
+      : `${EMAIL_CONFIG.resendSenderName} <${EMAIL_CONFIG.resendSenderEmail}>`;
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${EMAIL_CONFIG.resendApiKey}`,
+      },
+      body: JSON.stringify({
+        from: fromAddress,
+        to: [toEmail],
+        subject,
+        html: htmlContent,
+        text: textContent || subject,
+        reply_to: EMAIL_CONFIG.supportEmail,
+      }),
+    });
+
+    if (response.ok) {
+      const data: any = await response.json();
+      console.log(`[Tier 3: Resend] Delivered "${subject}" to ${toEmail} (ID: ${data.id})`);
+      return true;
+    }
+
+    const errText = await response.text();
+    console.warn(`[Tier 3: Resend Limit/Notice] HTTP ${response.status}: ${errText}. Advancing to Tier 4 (Mailgun)...`);
+    return false;
+  } catch (err) {
+    console.warn('[Tier 3: Resend Network/Exception]', err);
+    return false;
+  }
+}
+
+/**
+ * Tier 4: Send via Mailgun Messages API (Domain / Sandbox Provider)
  */
 async function sendViaMailgun(
   toEmail: string,
@@ -231,79 +345,21 @@ async function sendViaMailgun(
 
     if (response.ok) {
       const data: any = await response.json();
-      console.log(`[Tier 2: Mailgun] Delivered "${subject}" to ${toEmail} (ID: ${data.id})`);
+      console.log(`[Tier 4: Mailgun] Delivered "${subject}" to ${toEmail} (ID: ${data.id})`);
       return true;
     }
 
     const errText = await response.text();
-    console.warn(`[Tier 2: Mailgun Limit/Error Notice] HTTP ${response.status}: ${errText}. Advancing to Tier 3 (Brevo)...`);
+    console.warn(`[Tier 4: Mailgun Limit/Notice] HTTP ${response.status}: ${errText}. Advancing to Final Option (EmailJS)...`);
     return false;
   } catch (err) {
-    console.warn('[Tier 2: Mailgun Network/Exception]', err);
+    console.warn('[Tier 4: Mailgun Network/Exception]', err);
     return false;
   }
 }
 
 /**
- * Tier 3: Send via Brevo REST API v3 (Tertiary Queue Provider)
- */
-async function sendViaBrevo(
-  toEmail: string,
-  toName: string,
-  subject: string,
-  htmlContent: string,
-  textContent?: string
-): Promise<boolean> {
-  if (!EMAIL_CONFIG.brevoApiKey) {
-    return false;
-  }
-
-  try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': EMAIL_CONFIG.brevoApiKey,
-        accept: 'application/json',
-      },
-      body: JSON.stringify({
-        sender: {
-          name: EMAIL_CONFIG.brevoSenderName,
-          email: EMAIL_CONFIG.brevoSenderEmail,
-        },
-        to: [
-          {
-            email: toEmail,
-            name: toName || toEmail.split('@')[0],
-          },
-        ],
-        replyTo: {
-          name: `${EMAIL_CONFIG.companyName} Support`,
-          email: EMAIL_CONFIG.supportEmail,
-        },
-        subject,
-        htmlContent,
-        ...(textContent ? { textContent } : {}),
-      }),
-    });
-
-    if (response.ok) {
-      const data: any = await response.json();
-      console.log(`[Tier 3: Brevo] Delivered "${subject}" to ${toEmail} (ID: ${data.messageId})`);
-      return true;
-    }
-
-    const errorText = await response.text();
-    console.warn(`[Tier 3: Brevo Quota Notice] HTTP ${response.status}: ${errorText}. Advancing to Final Option (EmailJS)...`);
-    return false;
-  } catch (err) {
-    console.warn('[Tier 3: Brevo Network/Exception]', err);
-    return false;
-  }
-}
-
-/**
- * Tier 4 / Final Option: Send via EmailJS (Activated ONLY when all upstream providers exceed limits)
+ * Tier 5 / Final Option: Send via EmailJS (Activated ONLY when all upstream providers exceed limits)
  */
 async function sendViaEmailJs(
   templateId: string,
@@ -328,22 +384,22 @@ async function sendViaEmailJs(
     });
 
     if (res.ok) {
-      console.log(`[Tier 4: EmailJS] Final failover delivered successfully.`);
+      console.log(`[Tier 5: EmailJS] Final failover delivered successfully.`);
       return true;
     } else {
       const err = await res.text();
-      console.error(`[Tier 4: EmailJS Service] Delivery failure:`, err);
+      console.error(`[Tier 5: EmailJS Service] Delivery failure:`, err);
       return false;
     }
   } catch (error) {
-    console.error(`[Tier 4: EmailJS Service Error]`, error);
+    console.error(`[Tier 5: EmailJS Service Error]`, error);
     return false;
   }
 }
 
 /**
  * Prioritized Cascade Dispatcher:
- * Mailjet (Tier 1) ➔ Mailgun (Tier 2) ➔ Brevo (Tier 3) ➔ EmailJS (Final Option)
+ * Tier 1: Brevo (300/day) ➔ Tier 2: Mailjet (200/day) ➔ Tier 3: Resend (100/day) ➔ Tier 4: Mailgun ➔ Tier 5 / Final Option: EmailJS
  */
 async function dispatchTieredEmail(
   toEmail: string,
@@ -354,19 +410,23 @@ async function dispatchTieredEmail(
   emailJsTemplateId: string,
   emailJsParams: Record<string, string>
 ): Promise<boolean> {
-  // 1. Tier 1: Mailjet (Primary)
-  const mailjetSuccess = await sendViaMailjet(toEmail, toName, subject, htmlContent, textContent);
-  if (mailjetSuccess) return true;
-
-  // 2. Tier 2: Mailgun (Secondary Queue Provider)
-  const mailgunSuccess = await sendViaMailgun(toEmail, toName, subject, htmlContent, textContent);
-  if (mailgunSuccess) return true;
-
-  // 3. Tier 3: Brevo (Tertiary Queue Provider)
+  // 1. Tier 1: Brevo (300 emails/day - Highest Capacity)
   const brevoSuccess = await sendViaBrevo(toEmail, toName, subject, htmlContent, textContent);
   if (brevoSuccess) return true;
 
-  // 4. Tier 4 / Final Option: EmailJS (Activated when all upstream free providers are exhausted)
+  // 2. Tier 2: Mailjet (200 emails/day)
+  const mailjetSuccess = await sendViaMailjet(toEmail, toName, subject, htmlContent, textContent);
+  if (mailjetSuccess) return true;
+
+  // 3. Tier 3: Resend (100 emails/day)
+  const resendSuccess = await sendViaResend(toEmail, toName, subject, htmlContent, textContent);
+  if (resendSuccess) return true;
+
+  // 4. Tier 4: Mailgun (Sandbox / Domain Fallback)
+  const mailgunSuccess = await sendViaMailgun(toEmail, toName, subject, htmlContent, textContent);
+  if (mailgunSuccess) return true;
+
+  // 5. Tier 5 / Final Option: EmailJS (Activated when all upstream free providers are exhausted)
   console.log(`[Final Option: EmailJS] Activating EmailJS fallback for ${toEmail}...`);
   return sendViaEmailJs(emailJsTemplateId, emailJsParams);
 }
@@ -409,7 +469,7 @@ export async function sendOtpEmail(
 
       <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 14px 16px; border-radius: 6px; margin: 24px 0;">
         <p style="margin: 0; font-size: 13px; color: #1e40af;">
-          <strong>Security Tip:</strong> Never share this code with anyone, including teachers or staff. Ken Classes representatives will never ask for your verification code.
+          <strong>Security Tip:</strong> Never share this code with anyone, including mentors or staff. Ken Classes representatives will never ask for your verification code.
         </p>
       </div>
 
@@ -569,7 +629,7 @@ export async function sendPasswordResetSuccessEmail(toEmail: string, toName?: st
 }
 
 /* ==========================================================================
-   4. Course Enrollment & Fee Receipt (Tax Invoice)
+   4. Course Enrollment & Fee Receipt (Tax Invoice in ₹ INR)
    ========================================================================== */
 export async function sendEnrollmentReceiptEmail(
   toEmail: string,
@@ -916,6 +976,262 @@ export async function sendCertificateEmail(
       company_name: EMAIL_CONFIG.companyName,
       support_email: EMAIL_CONFIG.supportEmail,
       message: `Congratulations! Your certificate of completion for "${details.courseTitle}" is ready. Certificate Code: ${details.certificateCode}. Verify & view: ${verifyUrl}`,
+    }
+  );
+}
+
+/* ==========================================================================
+   8. Assignment / Assessment Graded Email
+   ========================================================================== */
+export async function sendAssignmentGradedEmail(
+  toEmail: string,
+  details: {
+    studentName?: string;
+    courseTitle: string;
+    assignmentTitle: string;
+    marksObtained: number;
+    totalMarks: number;
+    feedback?: string;
+    reviewUrl?: string;
+  }
+): Promise<boolean> {
+  const recipientName = details.studentName || toEmail.split('@')[0];
+  const percentage = Math.round((details.marksObtained / (details.totalMarks || 100)) * 100);
+  const subject = `📝 Assignment Graded: ${details.assignmentTitle} (${details.courseTitle})`;
+  const preheader = `Your score: ${details.marksObtained}/${details.totalMarks} (${percentage}%). Feedback available.`;
+  const reviewLink = details.reviewUrl || `${EMAIL_CONFIG.appOrigin}/student/assignments`;
+
+  const html = renderEmailLayout(
+    subject,
+    preheader,
+    `
+      <div style="display: flex; align-items: center; margin-bottom: 12px;">
+        <span style="display: inline-block; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
+          Grading Complete 📝
+        </span>
+      </div>
+
+      <h2 style="margin: 0 0 12px; color: #09090b; font-size: 20px; font-weight: 700;">
+        Your Assignment Has Been Evaluated!
+      </h2>
+      <p style="margin: 0 0 20px; color: #52525b; font-size: 15px;">
+        Hello <strong>${recipientName}</strong>, your mentor has reviewed and graded your submission for <strong>${details.assignmentTitle}</strong> in <em>${details.courseTitle}</em>.
+      </p>
+
+      <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 22px; margin: 20px 0;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="8" style="font-size: 14px; color: #3f3f46;">
+          <tr>
+            <td style="color: #71717a;">Assignment:</td>
+            <td align="right" style="font-weight: 700; color: #09090b;">${details.assignmentTitle}</td>
+          </tr>
+          <tr>
+            <td style="color: #71717a;">Score Achieved:</td>
+            <td align="right" style="font-weight: 800; color: #059669; font-size: 16px;">
+              ${details.marksObtained} / ${details.totalMarks} (${percentage}%)
+            </td>
+          </tr>
+          ${
+            details.feedback
+              ? `
+          <tr style="border-top: 1px solid #e4e4e7;">
+            <td colspan="2" style="padding-top: 12px;">
+              <div style="color: #71717a; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">
+                Mentor Feedback & Notes:
+              </div>
+              <div style="background: #ffffff; border: 1px solid #e4e4e7; border-radius: 8px; padding: 12px; font-style: italic; color: #27272a;">
+                "${details.feedback}"
+              </div>
+            </td>
+          </tr>
+          `
+              : ''
+          }
+        </table>
+      </div>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="${reviewLink}" style="display: inline-block; background-color: #09090b; color: #ffffff; padding: 13px 32px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none;">
+          Review Graded Submission →
+        </a>
+      </div>
+
+      <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
+        Have questions regarding your score? You can open a doubt ticket or contact support at <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>.
+      </p>
+    `
+  );
+
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Assignment Graded: "${details.assignmentTitle}" - Score: ${details.marksObtained}/${details.totalMarks} (${percentage}%). Review at: ${reviewLink}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Your assignment "${details.assignmentTitle}" in course "${details.courseTitle}" was evaluated with score ${details.marksObtained}/${details.totalMarks}. Check results: ${reviewLink}`,
+    }
+  );
+}
+
+/* ==========================================================================
+   9. New Course / Workshop Launch Announcement Email
+   ========================================================================== */
+export async function sendNewCourseAnnouncementEmail(
+  toEmail: string,
+  details: {
+    studentName?: string;
+    courseTitle: string;
+    categoryName: string;
+    description: string;
+    priceFormatted: string;
+    courseUrl?: string;
+  }
+): Promise<boolean> {
+  const recipientName = details.studentName || toEmail.split('@')[0];
+  const subject = `🚀 New Course Launch: ${details.courseTitle} [${details.categoryName}]`;
+  const preheader = `Now available on Ken Classes: ${details.courseTitle}. Enroll today!`;
+  const viewUrl = details.courseUrl || `${EMAIL_CONFIG.appOrigin}/courses`;
+
+  const html = renderEmailLayout(
+    subject,
+    preheader,
+    `
+      <div style="display: flex; align-items: center; margin-bottom: 12px;">
+        <span style="display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
+          New Curriculum Launch 🚀
+        </span>
+      </div>
+
+      <h2 style="margin: 0 0 12px; color: #09090b; font-size: 20px; font-weight: 700;">
+        Explore Our Newest Course Offering!
+      </h2>
+      <p style="margin: 0 0 20px; color: #52525b; font-size: 15px;">
+        Hello <strong>${recipientName}</strong>, we have just published a brand new curriculum in <strong>${details.categoryName}</strong> designed to take your skills to the next academic level:
+      </p>
+
+      <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 22px; margin: 20px 0;">
+        <h3 style="margin: 0 0 8px; font-size: 17px; color: #09090b;">
+          ${details.courseTitle}
+        </h3>
+        <p style="margin: 0 0 14px; font-size: 14px; color: #52525b; line-height: 1.5;">
+          ${details.description.length > 250 ? details.description.slice(0, 250) + '...' : details.description}
+        </p>
+        <div style="font-size: 15px; font-weight: 800; color: #059669;">
+          Enrollment Fee: ${details.priceFormatted}
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="${viewUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 14px 34px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);">
+          View Syllabus & Enroll →
+        </a>
+      </div>
+
+      <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
+        Browse our full spectrum of courses spanning Class 1 to PhD at <a href="${EMAIL_CONFIG.appOrigin}/courses" style="color: #2563eb;">${EMAIL_CONFIG.appOrigin}</a>.
+      </p>
+    `
+  );
+
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `New Course Launch: ${details.courseTitle} (${details.categoryName}). Fee: ${details.priceFormatted}. Explore syllabus: ${viewUrl}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Exciting Announcement: "${details.courseTitle}" is now live on Ken Classes! Discover more at: ${viewUrl}`,
+    }
+  );
+}
+
+/* ==========================================================================
+   10. Account Role Upgrade / Elevation Notice
+   ========================================================================== */
+export async function sendAccountRoleChangeEmail(
+  toEmail: string,
+  details: {
+    userName?: string;
+    oldRole: string;
+    newRole: string;
+  }
+): Promise<boolean> {
+  const recipientName = details.userName || toEmail.split('@')[0];
+  const subject = `🛡️ Security Notice: Ken Classes Account Role Updated`;
+  const preheader = `Your account privileges have changed to ${details.newRole.toUpperCase()}.`;
+
+  const html = renderEmailLayout(
+    subject,
+    preheader,
+    `
+      <div style="display: flex; align-items: center; margin-bottom: 12px;">
+        <span style="display: inline-block; background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
+          Role Permission Update 🛡️
+        </span>
+      </div>
+
+      <h2 style="margin: 0 0 12px; color: #09090b; font-size: 20px; font-weight: 700;">
+        Your Account Role Has Changed
+      </h2>
+      <p style="margin: 0 0 20px; color: #52525b; font-size: 15px;">
+        Hello <strong>${recipientName}</strong>, an authorized Super Administrator has updated your platform permission level on Ken Classes:
+      </p>
+
+      <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="8" style="font-size: 14px;">
+          <tr>
+            <td style="color: #71717a;">Previous Role:</td>
+            <td align="right" style="font-weight: 600; color: #71717a;">${details.oldRole.toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="color: #71717a;">New Assigned Role:</td>
+            <td align="right" style="font-weight: 800; color: #2563eb; font-size: 15px;">${details.newRole.toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="color: #71717a;">Effective As Of:</td>
+            <td align="right" style="font-weight: 600; color: #09090b;">${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="${EMAIL_CONFIG.appOrigin}/login" style="display: inline-block; background-color: #09090b; color: #ffffff; padding: 13px 30px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none;">
+          Sign In to Access New Privileges →
+        </a>
+      </div>
+
+      <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
+        If you did not anticipate this change, please report immediately to our security desk at <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>.
+      </p>
+    `
+  );
+
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Account Role Updated: Your role has been changed from ${details.oldRole} to ${details.newRole}. Sign in at ${EMAIL_CONFIG.appOrigin}/login`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Your Ken Classes permission level has been changed from ${details.oldRole} to ${details.newRole}. Access dashboard: ${EMAIL_CONFIG.appOrigin}/login`,
     }
   );
 }
