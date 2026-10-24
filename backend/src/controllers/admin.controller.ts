@@ -107,10 +107,17 @@ export async function getUsers(req: Request, res: Response): Promise<void> {
   }
 }
 
+const ROOT_SUPERADMIN_EMAILS = [
+  'zainulabideen01telo@gmail.com',
+  'hasnain@kenclasses.com',
+  'admin@lms.local',
+];
+
 export async function updateUserRole(req: Request, res: Response): Promise<void> {
   try {
     const id = req.params.id as string;
     const { newRole, reason } = req.body;
+    const callerRole = req.user!.role;
     const adminId = req.user!.id;
 
     const validRoles = [
@@ -119,6 +126,7 @@ export async function updateUserRole(req: Request, res: Response): Promise<void>
       'CONTENT_MANAGER',
       'FINANCE_SUPPORT',
       'MODERATOR',
+      'ADMIN',
       'SUPER_ADMIN',
     ];
 
@@ -133,9 +141,37 @@ export async function updateUserRole(req: Request, res: Response): Promise<void>
       return;
     }
 
+    // Hierarchy Rule 1: Root Super Admins cannot be demoted or modified
+    if (ROOT_SUPERADMIN_EMAILS.includes(targetUser.email.toLowerCase()) && newRole !== 'SUPER_ADMIN') {
+      res.status(403).json({ error: 'Root Super Administrator accounts cannot be modified or demoted.' });
+      return;
+    }
+
+    // Hierarchy Rule 2: Only a SUPER_ADMIN can grant ADMIN or SUPER_ADMIN privileges
+    if (['ADMIN', 'SUPER_ADMIN'].includes(newRole) && callerRole !== 'SUPER_ADMIN') {
+      res.status(403).json({ error: 'Only a Super Administrator can grant Admin or Super Admin privileges.' });
+      return;
+    }
+
+    // Hierarchy Rule 3: Regular ADMIN cannot modify another ADMIN or SUPER_ADMIN
+    if (['ADMIN', 'SUPER_ADMIN'].includes(targetUser.role) && callerRole !== 'SUPER_ADMIN') {
+      res.status(403).json({ error: 'You do not have permission to modify an Admin or Super Admin account.' });
+      return;
+    }
+
     const updated = await prisma.user.update({
       where: { id },
       data: { role: newRole },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     await logAuditEvent({
@@ -163,6 +199,7 @@ export async function updateUserStatus(req: Request, res: Response): Promise<voi
   try {
     const id = req.params.id as string;
     const { status, reason } = req.body; // status: 'ACTIVE', 'SUSPENDED'
+    const callerRole = req.user!.role;
     const adminId = req.user!.id;
 
     if (!['ACTIVE', 'SUSPENDED'].includes(status)) {
@@ -181,11 +218,34 @@ export async function updateUserStatus(req: Request, res: Response): Promise<voi
       return;
     }
 
+    // Hierarchy Rule 1: Root Super Admins cannot be suspended
+    if (ROOT_SUPERADMIN_EMAILS.includes(targetUser.email.toLowerCase())) {
+      res.status(403).json({ error: 'Root Super Administrator accounts cannot be suspended.' });
+      return;
+    }
+
+    // Hierarchy Rule 2: Regular ADMIN cannot suspend an ADMIN or SUPER_ADMIN
+    if (['ADMIN', 'SUPER_ADMIN'].includes(targetUser.role) && callerRole !== 'SUPER_ADMIN') {
+      res.status(403).json({ error: 'You do not have permission to suspend an Admin or Super Admin.' });
+      return;
+    }
+
     const updated = await prisma.user.update({
       where: { id },
       data: {
         status,
         suspensionReason: status === 'SUSPENDED' ? reason.trim() : null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        role: true,
+        status: true,
+        suspensionReason: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 

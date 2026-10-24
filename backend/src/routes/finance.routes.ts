@@ -10,7 +10,7 @@ import { requireRoles } from '../middlewares/rbac.middleware';
 
 const router = Router();
 
-router.use(authenticate, requireRoles('FINANCE_SUPPORT', 'SUPER_ADMIN'));
+router.use(authenticate, requireRoles('FINANCE_SUPPORT', 'ADMIN', 'SUPER_ADMIN'));
 
 router.get('/overview', getFinanceOverview);
 router.get('/orders', getAllOrders);

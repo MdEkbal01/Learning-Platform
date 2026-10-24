@@ -17,6 +17,6 @@ router.post('/', optionalAuthenticate, upload.single('attachment'), submitFeedba
 router.get('/', authenticate, getFeedbacks);
 
 // Staff triage workflow
-router.patch('/:id/status', authenticate, requireRoles('SUPER_ADMIN', 'CONTENT_MANAGER', 'FINANCE_SUPPORT', 'MODERATOR'), updateFeedbackStatus);
+router.patch('/:id/status', authenticate, requireRoles('SUPER_ADMIN', 'ADMIN', 'CONTENT_MANAGER', 'FINANCE_SUPPORT', 'MODERATOR'), updateFeedbackStatus);
 
 export default router;

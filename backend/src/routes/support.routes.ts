@@ -27,6 +27,6 @@ router.post('/tickets/:id/messages', authenticate, upload.single('attachment'), 
 router.post('/tickets/:id/feedback', authenticate, submitTicketFeedback);
 
 // Staff ticket management
-router.patch('/tickets/:id/status', authenticate, requireRoles('SUPER_ADMIN', 'FINANCE_SUPPORT', 'MODERATOR'), updateTicketStatus);
+router.patch('/tickets/:id/status', authenticate, requireRoles('SUPER_ADMIN', 'ADMIN', 'FINANCE_SUPPORT', 'MODERATOR'), updateTicketStatus);
 
 export default router;

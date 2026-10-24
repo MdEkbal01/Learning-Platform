@@ -16,7 +16,7 @@ import { requireRoles } from '../middlewares/rbac.middleware';
 
 const router = Router();
 
-router.use(authenticate, requireRoles('CONTENT_MANAGER', 'SUPER_ADMIN'));
+router.use(authenticate, requireRoles('CONTENT_MANAGER', 'ADMIN', 'SUPER_ADMIN'));
 
 router.get('/courses', getAllCourses);
 router.post('/courses', createCourse);

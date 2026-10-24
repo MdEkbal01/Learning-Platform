@@ -9,7 +9,6 @@ export const EMAILJS_CONFIG = {
   supportEmail: 'kenclasses95@gmail.com',
   logoUrl: 'https://auralms-platform.pages.dev/logo.png',
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || localStorage.getItem('emailjs_public_key') || 'e8iQcLkwbSNDb6a5h',
-  privateKey: import.meta.env.VITE_EMAILJS_PRIVATE_KEY || '',
 };
 
 export interface SendOtpParams {
@@ -30,7 +29,6 @@ export interface SendWelcomeParams {
  */
 export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: boolean; message: string }> {
   const publicKey = EMAILJS_CONFIG.publicKey;
-  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const templateParams = {
     to_name: params.toName || params.toEmail.split('@')[0],
@@ -62,7 +60,6 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateOtp,
         user_id: publicKey,
-        accessToken: privateKey,
         template_params: templateParams,
       }),
     });
@@ -87,7 +84,6 @@ export async function sendOtpEmail(params: SendOtpParams): Promise<{ success: bo
  */
 export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ success: boolean; message: string }> {
   const publicKey = EMAILJS_CONFIG.publicKey;
-  const privateKey = EMAILJS_CONFIG.privateKey;
 
   const templateParams = {
     to_name: params.toName,
@@ -116,7 +112,6 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<{ suc
         service_id: EMAILJS_CONFIG.serviceId,
         template_id: EMAILJS_CONFIG.templateWelcome,
         user_id: publicKey,
-        accessToken: privateKey,
         template_params: templateParams,
       }),
     });

@@ -85,10 +85,9 @@ export async function register(req: Request, res: Response): Promise<void> {
     sendOtpEmail(user.email, verificationCode, user.name, 'Registration').catch(() => {});
 
     res.status(201).json({
-      message: 'Registration successful. Please verify your email with the verification code.',
+      message: 'Registration successful. A one-time verification code has been sent to your email address.',
       userId: user.id,
       email: user.email,
-      demoVerificationCode: verificationCode, // Returned for effortless demo/testing verification
     });
   } catch (error: any) {
     console.error('Register error:', error);
@@ -326,11 +325,8 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
       },
     });
 
-    let demoResetCode: string | undefined;
-
     if (user) {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      demoResetCode = code;
 
       await prisma.verificationChallenge.create({
         data: {
@@ -351,14 +347,13 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
         req,
       });
 
-      // Send Password Reset OTP via Ken Classes EmailJS
+      // Send Password Reset OTP via prioritized email cascade
       sendOtpEmail(user.email, code, user.name, 'Password Reset').catch(() => {});
     }
 
     // Anti-enumeration: Return success message regardless of existence
     res.json({
       message: 'If an account matches that contact, a password reset code has been sent.',
-      demoResetCode, // provided for testing
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to process request.' });
