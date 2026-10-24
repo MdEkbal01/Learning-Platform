@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { prisma } from '../prisma';
 import { config } from '../config';
 import { logAuditEvent } from '../services/audit.service';
-import { sendOtpEmail, sendWelcomeEmail } from '../services/email.service';
+import { sendOtpEmail, sendWelcomeEmail, sendPasswordResetSuccessEmail } from '../services/email.service';
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
@@ -420,6 +420,10 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
       entityType: 'USER',
       entityId: challenge.userId,
       req,
+    });
+
+    sendPasswordResetSuccessEmail(challenge.user.email, challenge.user.name).catch((err) => {
+      console.error('Password reset email alert error:', err);
     });
 
     res.json({ message: 'Password has been reset successfully. Please sign in with your new password.' });

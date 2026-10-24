@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import crypto from 'crypto';
 import { prisma } from '../prisma';
 import { logAuditEvent } from '../services/audit.service';
+import { sendEnrollmentReceiptEmail } from '../services/email.service';
 
 export async function createOrder(req: Request, res: Response): Promise<void> {
   try {
@@ -68,6 +69,15 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
         details: { courseId: course.id, courseTitle: course.title },
         req,
       });
+
+      sendEnrollmentReceiptEmail(req.user!.email, {
+        studentName: req.user!.name,
+        courseTitle: course.title,
+        orderNumber: `FREE-${enrolment.id.slice(0, 8).toUpperCase()}`,
+        amount: 0,
+        paymentMethod: '100% Free Scholarship',
+        courseId: course.id,
+      }).catch((err) => console.error('Free enrolment receipt error:', err));
 
       res.status(200).json({
         message: 'Successfully enrolled in free course!',
@@ -253,6 +263,15 @@ export async function verifyPayment(req: Request, res: Response): Promise<void> 
         type: 'ENROLMENT',
       },
     });
+
+    sendEnrollmentReceiptEmail(req.user!.email, {
+      studentName: req.user!.name,
+      courseTitle: order.course.title,
+      orderNumber: order.orderNumber,
+      amount: order.amount,
+      paymentMethod: 'UPI / QR Gateway',
+      courseId: order.course.id,
+    }).catch((err) => console.error('Paid enrolment receipt error:', err));
 
     await logAuditEvent({
       actorId: userId,

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import crypto from 'crypto';
 import { prisma } from '../prisma';
 import { logAuditEvent } from '../services/audit.service';
+import { sendCertificateEmail } from '../services/email.service';
 
 export async function getMyCourses(req: Request, res: Response): Promise<void> {
   try {
@@ -435,6 +436,14 @@ export async function getOrGenerateCertificate(req: Request, res: Response): Pro
       details: { certificateCode: code, courseTitle: course.title },
       req,
     });
+
+    if (user?.email) {
+      sendCertificateEmail(user.email, {
+        studentName: user.name || 'Verified Learner',
+        courseTitle: course.title,
+        certificateCode: code,
+      }).catch((err) => console.error('Certificate email notification error:', err));
+    }
 
     res.status(201).json(cert);
   } catch (error) {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../prisma';
 import { logAuditEvent } from '../services/audit.service';
+import { sendDoubtResponseEmail } from '../services/email.service';
 
 export async function createDoubt(req: Request, res: Response): Promise<void> {
   try {
@@ -183,7 +184,10 @@ export async function addDoubtMessage(req: Request, res: Response): Promise<void
 
     const doubt = await prisma.doubtTicket.findUnique({
       where: { id },
-      include: { course: true },
+      include: {
+        course: { select: { id: true, title: true } },
+        student: { select: { id: true, name: true, email: true } },
+      },
     });
 
     if (!doubt) {
@@ -239,6 +243,18 @@ export async function addDoubtMessage(req: Request, res: Response): Promise<void
           type: 'DOUBT',
         },
       });
+
+      // If mentor/admin is answering student, dispatch an email notification
+      if (userId !== doubt.studentId && doubt.student?.email) {
+        sendDoubtResponseEmail(doubt.student.email, {
+          studentName: doubt.student.name,
+          ticketId: doubt.id,
+          courseTitle: doubt.course.title,
+          questionTitle: doubt.title,
+          mentorName: req.user!.name,
+          answerSnippet: message.trim(),
+        }).catch((err) => console.error('Doubt response email notification error:', err));
+      }
     }
 
     res.status(201).json(doubtMessage);

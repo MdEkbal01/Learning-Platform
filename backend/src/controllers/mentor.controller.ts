@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../prisma';
 import { logAuditEvent } from '../services/audit.service';
+import { sendLiveLectureReminderEmail } from '../services/email.service';
 
 export async function getMentorDashboard(req: Request, res: Response): Promise<void> {
   try {
@@ -112,6 +113,30 @@ export async function scheduleLiveClass(req: Request, res: Response): Promise<vo
       details: { title, scheduledAt },
       req,
     });
+
+    // Notify enrolled active students via email
+    prisma.enrolment
+      .findMany({
+        where: { courseId, status: 'ACTIVE' },
+        include: { user: { select: { email: true, name: true } } },
+      })
+      .then((enrolments) => {
+        for (const enr of enrolments) {
+          if (enr.user?.email) {
+            sendLiveLectureReminderEmail(enr.user.email, {
+              studentName: enr.user.name,
+              lectureTitle: liveClass.title,
+              courseTitle: liveClass.course.title,
+              scheduledAt:
+                new Date(liveClass.scheduledAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST',
+              durationMinutes: liveClass.durationMinutes,
+              meetingUrl: liveClass.meetingUrl,
+              mentorName: req.user!.name,
+            }).catch(() => {});
+          }
+        }
+      })
+      .catch((err) => console.error('Live class email broadcast error:', err));
 
     res.status(201).json(liveClass);
   } catch (error) {
