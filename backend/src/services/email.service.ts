@@ -364,7 +364,18 @@ export async function sendPasswordResetSuccessEmail(toEmail: string, toName?: st
     `
   );
 
-  return sendViaBrevo(toEmail, recipientName, subject, html);
+  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
+  if (brevoSuccess) return true;
+
+  // Fallback to EmailJS
+  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
+    to_name: recipientName,
+    to_email: toEmail,
+    email: toEmail,
+    company_name: EMAIL_CONFIG.companyName,
+    support_email: EMAIL_CONFIG.supportEmail,
+    message: `Security Notice: The password for your Ken Classes account was successfully changed. If you did not make this change, please contact support immediately at ${EMAIL_CONFIG.supportEmail}`,
+  });
 }
 
 /* ==========================================================================
@@ -451,7 +462,18 @@ export async function sendEnrollmentReceiptEmail(
     `
   );
 
-  return sendViaBrevo(toEmail, recipientName, subject, html);
+  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
+  if (brevoSuccess) return true;
+
+  // Fallback to EmailJS
+  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
+    to_name: recipientName,
+    to_email: toEmail,
+    email: toEmail,
+    company_name: EMAIL_CONFIG.companyName,
+    support_email: EMAIL_CONFIG.supportEmail,
+    message: `Enrollment Confirmed! You are actively enrolled in "${details.courseTitle}". Receipt #: ${details.orderNumber}. Amount: ${formattedAmount}. Enter classroom: ${EMAIL_CONFIG.appOrigin}${details.courseId ? `/classroom/${details.courseId}` : '/student/courses'}`,
+  });
 }
 
 /* ==========================================================================
@@ -527,7 +549,18 @@ export async function sendLiveLectureReminderEmail(
     `
   );
 
-  return sendViaBrevo(toEmail, recipientName, subject, html);
+  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
+  if (brevoSuccess) return true;
+
+  // Fallback to EmailJS
+  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
+    to_name: recipientName,
+    to_email: toEmail,
+    email: toEmail,
+    company_name: EMAIL_CONFIG.companyName,
+    support_email: EMAIL_CONFIG.supportEmail,
+    message: `Live Lecture Alert: "${details.lectureTitle}" for course "${details.courseTitle}" starts at ${details.scheduledAt}. Join link: ${details.meetingUrl}`,
+  });
 }
 
 /* ==========================================================================
@@ -589,7 +622,18 @@ export async function sendDoubtResponseEmail(
     `
   );
 
-  return sendViaBrevo(toEmail, recipientName, subject, html);
+  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
+  if (brevoSuccess) return true;
+
+  // Fallback to EmailJS
+  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
+    to_name: recipientName,
+    to_email: toEmail,
+    email: toEmail,
+    company_name: EMAIL_CONFIG.companyName,
+    support_email: EMAIL_CONFIG.supportEmail,
+    message: `Doubt Resolved: Mentor ${details.mentorName} replied to "${details.questionTitle}" in course "${details.courseTitle}". Response excerpt: "${details.answerSnippet.slice(0, 150)}...". Open conversation: ${EMAIL_CONFIG.appOrigin}/student/doubts`,
+  });
 }
 
 /* ==========================================================================
@@ -652,5 +696,16 @@ export async function sendCertificateEmail(
     `
   );
 
-  return sendViaBrevo(toEmail, details.studentName, subject, html);
+  const brevoSuccess = await sendViaBrevo(toEmail, details.studentName, subject, html);
+  if (brevoSuccess) return true;
+
+  // Fallback to EmailJS
+  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
+    to_name: details.studentName,
+    to_email: toEmail,
+    email: toEmail,
+    company_name: EMAIL_CONFIG.companyName,
+    support_email: EMAIL_CONFIG.supportEmail,
+    message: `Congratulations! Your certificate of completion for "${details.courseTitle}" is ready. Certificate Code: ${details.certificateCode}. Verify & view: ${verifyUrl}`,
+  });
 }
