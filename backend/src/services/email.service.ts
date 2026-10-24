@@ -1,8 +1,9 @@
-// Ken Classes - 3-Tier Multi-Provider Email Service
-// Cascade Architecture:
+// Ken Classes - Multi-Provider Prioritized Email Dispatch Engine
+// Priority Queue:
 // Tier 1: Mailjet Send API v3.1 (Primary)
-// Tier 2: Brevo (Sendinblue) Transactional REST API v3 (Secondary Fallback)
-// Tier 3: EmailJS Transactional Dispatch (Tertiary Failover)
+// Tier 2: Mailgun Messages API (Secondary Queue Provider)
+// Tier 3: Brevo (Sendinblue) Transactional REST API v3 (Tertiary Queue Provider)
+// Tier 4 / Final Option: EmailJS Automated Dispatch (Activated ONLY when all upstream providers exceed limits)
 
 export const EMAIL_CONFIG = {
   // Tier 1: Mailjet (Primary)
@@ -11,29 +12,38 @@ export const EMAIL_CONFIG = {
   mailjetSenderEmail: process.env.MAILJET_SENDER_EMAIL || 'zainul7abideen@gmail.com',
   mailjetSenderName: process.env.MAILJET_SENDER_NAME || 'Ken Classes',
 
-  // Tier 2: Brevo (Secondary Fallback)
+  // Tier 2: Mailgun (Secondary Queue Provider)
+  mailgunApiKey: process.env.MAILGUN_API_KEY || '',
+  mailgunDomain: process.env.MAILGUN_DOMAIN || 'sandbox751939baa6a646dc97fe91e78993a6d7.mailgun.org',
+  mailgunBaseUrl: process.env.MAILGUN_BASE_URL || 'https://api.mailgun.net',
+  mailgunSenderEmail: process.env.MAILGUN_SENDER_EMAIL || 'postmaster@sandbox751939baa6a646dc97fe91e78993a6d7.mailgun.org',
+  mailgunSenderName: process.env.MAILGUN_SENDER_NAME || 'Ken Classes',
+
+  // Tier 3: Brevo (Tertiary Queue Provider)
   brevoApiKey: process.env.BREVO_API_KEY || '',
   brevoSmtpKey: process.env.BREVO_SMTP_KEY || '',
   brevoSenderEmail: process.env.BREVO_SENDER_EMAIL || 'zainulabideen01telo@gmail.com',
   brevoSenderName: process.env.BREVO_SENDER_NAME || 'Ken Classes',
 
-  // Tier 3: EmailJS (Tertiary Failover)
+  // Tier 4 / Last Option: EmailJS (Final Failover)
   emailjsServiceId: process.env.EMAILJS_SERVICE_ID || 'service_u2pq18q',
   emailjsTemplateOtp: process.env.EMAILJS_TEMPLATE_OTP || 'template_iils3yg',
   emailjsTemplateWelcome: process.env.EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
   emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY || 'e8iQcLkwbSNDb6a5h',
   emailjsPrivateKey: process.env.EMAILJS_PRIVATE_KEY || '',
 
-  // Platform & Support Metadata
+  // Platform & Official Contact Metadata
   companyName: process.env.COMPANY_NAME || 'Ken Classes',
   supportEmail: process.env.SUPPORT_EMAIL || 'kenclasses95@gmail.com',
   appOrigin: process.env.APP_ORIGIN || 'https://auralms-platform.pages.dev',
 };
 
 /**
- * Standard branded HTML email layout
+ * Standard branded HTML email layout with official Ken Classes circular emblem logo
  */
 function renderEmailLayout(title: string, preheaderText: string, contentHtml: string): string {
+  const logoUrl = `${EMAIL_CONFIG.appOrigin}/logo.png`;
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -48,26 +58,35 @@ function renderEmailLayout(title: string, preheaderText: string, contentHtml: st
     ${preheaderText}
   </div>
 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; padding: 30px 15px;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; padding: 32px 15px;">
     <tr>
       <td align="center">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01); border: 1px solid #e2e8f0;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.02); border: 1px solid #e2e8f0;">
           
-          <!-- Header Banner -->
+          <!-- Header Banner with Official Ken Classes Logo -->
           <tr>
-            <td style="background: linear-gradient(135deg, #09090b 0%, #18181b 100%); padding: 32px 36px; text-align: left; border-bottom: 3px solid #2563eb;">
+            <td style="background: linear-gradient(135deg, #091a2d 0%, #0e2238 100%); padding: 26px 36px; text-align: left; border-bottom: 3px solid #d4af37;">
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td>
-                    <div style="color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;">
-                      Ken Classes
+                  <td width="64" valign="middle">
+                    <img
+                      src="${logoUrl}"
+                      alt="Ken Classes"
+                      width="54"
+                      height="54"
+                      style="display: block; border-radius: 50%; border: 2px solid #d4af37; object-fit: cover;"
+                    />
+                  </td>
+                  <td style="padding-left: 16px;" valign="middle">
+                    <div style="color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; line-height: 1.2;">
+                      ${EMAIL_CONFIG.companyName}
                     </div>
-                    <div style="color: #a1a1aa; font-size: 13px; font-weight: 500; margin-top: 4px;">
-                      Class 1 to PhD Academic & Professional Learning Platform
+                    <div style="color: #e2b342; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px;">
+                      Learning Without Limits
                     </div>
                   </td>
-                  <td align="right">
-                    <span style="background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <td align="right" valign="middle">
+                    <span style="background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4); color: #fde047; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.8px;">
                       Official
                     </span>
                   </td>
@@ -83,17 +102,17 @@ function renderEmailLayout(title: string, preheaderText: string, contentHtml: st
             </td>
           </tr>
 
-          <!-- Footer -->
+          <!-- Footer with Official Contact Info -->
           <tr>
             <td style="background-color: #fafafa; border-top: 1px solid #e4e4e7; padding: 24px 36px; text-align: center; color: #71717a; font-size: 12px; line-height: 1.5;">
-              <p style="margin: 0 0 6px; font-weight: 600; color: #3f3f46;">
-                Ken Classes • Excellence in Primary, Secondary & Higher Education
+              <p style="margin: 0 0 6px; font-weight: 700; color: #18181b;">
+                ${EMAIL_CONFIG.companyName} • Class 1 to PhD Academic & Professional Learning Platform
               </p>
               <p style="margin: 0 0 10px;">
-                Direct inquiries or support: <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb; text-decoration: none; font-weight: 600;">${EMAIL_CONFIG.supportEmail}</a>
+                Official Contact & Support: <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb; text-decoration: none; font-weight: 700;">${EMAIL_CONFIG.supportEmail}</a>
               </p>
               <p style="margin: 0; color: #a1a1aa; font-size: 11px;">
-                You received this transactional email because of an active account or requested action on <a href="${EMAIL_CONFIG.appOrigin}" style="color: #71717a;">${EMAIL_CONFIG.appOrigin}</a>.
+                You received this transactional notice because of an account action on <a href="${EMAIL_CONFIG.appOrigin}" style="color: #71717a; text-decoration: underline;">${EMAIL_CONFIG.appOrigin}</a>.
               </p>
             </td>
           </tr>
@@ -163,7 +182,7 @@ async function sendViaMailjet(
     }
 
     const errText = await response.text();
-    console.warn(`[Tier 1: Mailjet Limit/Error Notice] ${errText}. Falling back to Tier 2 (Brevo)...`);
+    console.warn(`[Tier 1: Mailjet Limit/Error Notice] ${errText}. Advancing to Tier 2 (Mailgun)...`);
     return false;
   } catch (err) {
     console.warn('[Tier 1: Mailjet Network/Exception]', err);
@@ -172,7 +191,61 @@ async function sendViaMailjet(
 }
 
 /**
- * Tier 2: Send via Brevo REST API v3 (Secondary Fallback)
+ * Tier 2: Send via Mailgun Messages API (Secondary Queue Provider)
+ */
+async function sendViaMailgun(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlContent: string,
+  textContent?: string
+): Promise<boolean> {
+  if (!EMAIL_CONFIG.mailgunApiKey || !EMAIL_CONFIG.mailgunDomain) {
+    return false;
+  }
+
+  try {
+    const authHeader =
+      'Basic ' +
+      Buffer.from(`api:${EMAIL_CONFIG.mailgunApiKey}`).toString('base64');
+
+    const params = new URLSearchParams();
+    params.append('from', `${EMAIL_CONFIG.companyName} <${EMAIL_CONFIG.mailgunSenderEmail}>`);
+    params.append('to', toEmail);
+    params.append('subject', subject);
+    params.append('html', htmlContent);
+    params.append('text', textContent || subject);
+    params.append('h:Reply-To', EMAIL_CONFIG.supportEmail);
+
+    const baseUrl = (EMAIL_CONFIG.mailgunBaseUrl || 'https://api.mailgun.net').replace(/\/+$/, '');
+    const url = `${baseUrl}/v3/${EMAIL_CONFIG.mailgunDomain}/messages`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    });
+
+    if (response.ok) {
+      const data: any = await response.json();
+      console.log(`[Tier 2: Mailgun] Delivered "${subject}" to ${toEmail} (ID: ${data.id})`);
+      return true;
+    }
+
+    const errText = await response.text();
+    console.warn(`[Tier 2: Mailgun Limit/Error Notice] HTTP ${response.status}: ${errText}. Advancing to Tier 3 (Brevo)...`);
+    return false;
+  } catch (err) {
+    console.warn('[Tier 2: Mailgun Network/Exception]', err);
+    return false;
+  }
+}
+
+/**
+ * Tier 3: Send via Brevo REST API v3 (Tertiary Queue Provider)
  */
 async function sendViaBrevo(
   toEmail: string,
@@ -216,21 +289,21 @@ async function sendViaBrevo(
 
     if (response.ok) {
       const data: any = await response.json();
-      console.log(`[Tier 2: Brevo] Delivered "${subject}" to ${toEmail} (ID: ${data.messageId})`);
+      console.log(`[Tier 3: Brevo] Delivered "${subject}" to ${toEmail} (ID: ${data.messageId})`);
       return true;
     }
 
     const errorText = await response.text();
-    console.warn(`[Tier 2: Brevo Quota/Status Notice] ${errorText}. Falling back to Tier 3 (EmailJS)...`);
+    console.warn(`[Tier 3: Brevo Quota Notice] HTTP ${response.status}: ${errorText}. Advancing to Final Option (EmailJS)...`);
     return false;
   } catch (err) {
-    console.warn('[Tier 2: Brevo Network/Exception]', err);
+    console.warn('[Tier 3: Brevo Network/Exception]', err);
     return false;
   }
 }
 
 /**
- * Tier 3: Send via EmailJS (Tertiary Failover)
+ * Tier 4 / Final Option: Send via EmailJS (Activated ONLY when all upstream providers exceed limits)
  */
 async function sendViaEmailJs(
   templateId: string,
@@ -255,21 +328,22 @@ async function sendViaEmailJs(
     });
 
     if (res.ok) {
-      console.log(`[Tier 3: EmailJS] Tertiary fallback delivered successfully.`);
+      console.log(`[Tier 4: EmailJS] Final failover delivered successfully.`);
       return true;
     } else {
       const err = await res.text();
-      console.error(`[Tier 3: EmailJS Service] Delivery failure:`, err);
+      console.error(`[Tier 4: EmailJS Service] Delivery failure:`, err);
       return false;
     }
   } catch (error) {
-    console.error(`[Tier 3: EmailJS Service Error]`, error);
+    console.error(`[Tier 4: EmailJS Service Error]`, error);
     return false;
   }
 }
 
 /**
- * Master Tiered Dispatcher: Mailjet ➔ Brevo ➔ EmailJS
+ * Prioritized Cascade Dispatcher:
+ * Mailjet (Tier 1) ➔ Mailgun (Tier 2) ➔ Brevo (Tier 3) ➔ EmailJS (Final Option)
  */
 async function dispatchTieredEmail(
   toEmail: string,
@@ -284,12 +358,16 @@ async function dispatchTieredEmail(
   const mailjetSuccess = await sendViaMailjet(toEmail, toName, subject, htmlContent, textContent);
   if (mailjetSuccess) return true;
 
-  // 2. Tier 2: Brevo (If Mailjet limit exceeded or error)
+  // 2. Tier 2: Mailgun (Secondary Queue Provider)
+  const mailgunSuccess = await sendViaMailgun(toEmail, toName, subject, htmlContent, textContent);
+  if (mailgunSuccess) return true;
+
+  // 3. Tier 3: Brevo (Tertiary Queue Provider)
   const brevoSuccess = await sendViaBrevo(toEmail, toName, subject, htmlContent, textContent);
   if (brevoSuccess) return true;
 
-  // 3. Tier 3: EmailJS (If Brevo 300 daily limit exceeded or error)
-  console.log(`[Tier 3: EmailJS] Activating tertiary failover for ${toEmail}...`);
+  // 4. Tier 4 / Final Option: EmailJS (Activated when all upstream free providers are exhausted)
+  console.log(`[Final Option: EmailJS] Activating EmailJS fallback for ${toEmail}...`);
   return sendViaEmailJs(emailJsTemplateId, emailJsParams);
 }
 
@@ -336,7 +414,7 @@ export async function sendOtpEmail(
       </div>
 
       <p style="margin: 0; color: #71717a; font-size: 13px;">
-        If you did not request this verification, you can safely disregard this email or report suspicious activity to our support desk.
+        If you did not request this verification, you can safely disregard this email or report suspicious activity to our official desk at <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb; font-weight: bold;">${EMAIL_CONFIG.supportEmail}</a>.
       </p>
     `
   );
@@ -413,7 +491,7 @@ export async function sendWelcomeEmail(toEmail: string, toName: string): Promise
       </div>
 
       <p style="margin: 0; color: #71717a; font-size: 13px;">
-        If you have questions at any step, reply directly to this email or visit our Help Center. Happy learning!
+        If you have questions at any step, reply directly to this email or contact us at <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb; font-weight: bold;">${EMAIL_CONFIG.supportEmail}</a>. Happy learning!
       </p>
     `
   );
@@ -569,7 +647,7 @@ export async function sendEnrollmentReceiptEmail(
       </div>
 
       <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
-        A copy of this digital receipt is permanently saved in your student profile under <strong>My Orders</strong>.
+        A copy of this digital receipt is permanently saved in your student profile under <strong>My Orders</strong>. Questions? Contact <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>.
       </p>
     `
   );
@@ -660,7 +738,7 @@ export async function sendLiveLectureReminderEmail(
       </div>
 
       <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
-        Note: If you are unable to attend live, the high-definition recording will be automatically published into your course curriculum within 24 hours.
+        Note: If you are unable to attend live, the high-definition recording will be automatically published into your course curriculum within 24 hours. Contact: <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>
       </p>
     `
   );
@@ -739,6 +817,10 @@ export async function sendDoubtResponseEmail(
           View Full Discussion & Reply →
         </a>
       </div>
+
+      <p style="margin: 0; color: #71717a; font-size: 12px; text-align: center;">
+        Need more assistance? Reach our student support team anytime at <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>.
+      </p>
     `
   );
 
@@ -815,7 +897,7 @@ export async function sendCertificateEmail(
       </div>
 
       <p style="margin: 0; color: #94a3b8; font-size: 12px; text-align: center;">
-        Employers, universities, and institutions can independently verify the authenticity of your credential using the link above at any time.
+        Employers, universities, and institutions can independently verify the authenticity of your credential using the link above at any time. Inquiries: <a href="mailto:${EMAIL_CONFIG.supportEmail}" style="color: #2563eb;">${EMAIL_CONFIG.supportEmail}</a>
       </p>
     `
   );
