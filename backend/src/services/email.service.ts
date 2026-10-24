@@ -1,21 +1,33 @@
-// Ken Classes - Unified Multi-Provider Email Service
-// Primary Provider: Brevo (Sendinblue) Transactional REST API v3
-// Fallback: EmailJS Automated Dispatch
+// Ken Classes - 3-Tier Multi-Provider Email Service
+// Cascade Architecture:
+// Tier 1: Mailjet Send API v3.1 (Primary)
+// Tier 2: Brevo (Sendinblue) Transactional REST API v3 (Secondary Fallback)
+// Tier 3: EmailJS Transactional Dispatch (Tertiary Failover)
 
 export const EMAIL_CONFIG = {
+  // Tier 1: Mailjet (Primary)
+  mailjetApiKey: process.env.MAILJET_API_KEY || '',
+  mailjetSecretKey: process.env.MAILJET_SECRET_KEY || '',
+  mailjetSenderEmail: process.env.MAILJET_SENDER_EMAIL || 'zainul7abideen@gmail.com',
+  mailjetSenderName: process.env.MAILJET_SENDER_NAME || 'Ken Classes',
+
+  // Tier 2: Brevo (Secondary Fallback)
   brevoApiKey: process.env.BREVO_API_KEY || '',
   brevoSmtpKey: process.env.BREVO_SMTP_KEY || '',
   brevoSenderEmail: process.env.BREVO_SENDER_EMAIL || 'zainulabideen01telo@gmail.com',
   brevoSenderName: process.env.BREVO_SENDER_NAME || 'Ken Classes',
-  companyName: process.env.COMPANY_NAME || 'Ken Classes',
-  supportEmail: process.env.SUPPORT_EMAIL || 'kenclasses95@gmail.com',
-  appOrigin: process.env.APP_ORIGIN || 'https://auralms-platform.pages.dev',
-  // EmailJS Fallback
+
+  // Tier 3: EmailJS (Tertiary Failover)
   emailjsServiceId: process.env.EMAILJS_SERVICE_ID || 'service_u2pq18q',
   emailjsTemplateOtp: process.env.EMAILJS_TEMPLATE_OTP || 'template_iils3yg',
   emailjsTemplateWelcome: process.env.EMAILJS_TEMPLATE_WELCOME || 'template_ytk9w6q',
   emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY || 'e8iQcLkwbSNDb6a5h',
   emailjsPrivateKey: process.env.EMAILJS_PRIVATE_KEY || '',
+
+  // Platform & Support Metadata
+  companyName: process.env.COMPANY_NAME || 'Ken Classes',
+  supportEmail: process.env.SUPPORT_EMAIL || 'kenclasses95@gmail.com',
+  appOrigin: process.env.APP_ORIGIN || 'https://auralms-platform.pages.dev',
 };
 
 /**
@@ -96,7 +108,71 @@ function renderEmailLayout(title: string, preheaderText: string, contentHtml: st
 }
 
 /**
- * Core Brevo Transactional Email Dispatcher with Fallback
+ * Tier 1: Send via Mailjet Send API v3.1 (Primary)
+ */
+async function sendViaMailjet(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlContent: string,
+  textContent?: string
+): Promise<boolean> {
+  if (!EMAIL_CONFIG.mailjetApiKey || !EMAIL_CONFIG.mailjetSecretKey) {
+    return false;
+  }
+
+  try {
+    const authHeader =
+      'Basic ' +
+      Buffer.from(`${EMAIL_CONFIG.mailjetApiKey}:${EMAIL_CONFIG.mailjetSecretKey}`).toString('base64');
+
+    const response = await fetch('https://api.mailjet.com/v3.1/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authHeader,
+      },
+      body: JSON.stringify({
+        Messages: [
+          {
+            From: {
+              Email: EMAIL_CONFIG.mailjetSenderEmail,
+              Name: EMAIL_CONFIG.mailjetSenderName,
+            },
+            To: [
+              {
+                Email: toEmail,
+                Name: toName || toEmail.split('@')[0],
+              },
+            ],
+            Subject: subject,
+            HTMLPart: htmlContent,
+            TextPart: textContent || subject,
+          },
+        ],
+      }),
+    });
+
+    if (response.ok) {
+      const data: any = await response.json();
+      const status = data?.Messages?.[0]?.Status;
+      if (status === 'success') {
+        console.log(`[Tier 1: Mailjet] Delivered "${subject}" to ${toEmail}`);
+        return true;
+      }
+    }
+
+    const errText = await response.text();
+    console.warn(`[Tier 1: Mailjet Limit/Error Notice] ${errText}. Falling back to Tier 2 (Brevo)...`);
+    return false;
+  } catch (err) {
+    console.warn('[Tier 1: Mailjet Network/Exception]', err);
+    return false;
+  }
+}
+
+/**
+ * Tier 2: Send via Brevo REST API v3 (Secondary Fallback)
  */
 async function sendViaBrevo(
   toEmail: string,
@@ -106,7 +182,6 @@ async function sendViaBrevo(
   textContent?: string
 ): Promise<boolean> {
   if (!EMAIL_CONFIG.brevoApiKey) {
-    console.warn('[Brevo Service] BREVO_API_KEY is not configured.');
     return false;
   }
 
@@ -116,7 +191,7 @@ async function sendViaBrevo(
       headers: {
         'Content-Type': 'application/json',
         'api-key': EMAIL_CONFIG.brevoApiKey,
-        'accept': 'application/json',
+        accept: 'application/json',
       },
       body: JSON.stringify({
         sender: {
@@ -141,21 +216,21 @@ async function sendViaBrevo(
 
     if (response.ok) {
       const data: any = await response.json();
-      console.log(`[Brevo Email Service] Success: "${subject}" delivered to ${toEmail} (ID: ${data.messageId})`);
+      console.log(`[Tier 2: Brevo] Delivered "${subject}" to ${toEmail} (ID: ${data.messageId})`);
       return true;
-    } else {
-      const errorText = await response.text();
-      console.error(`[Brevo Email Service] HTTP ${response.status} Error:`, errorText);
-      return false;
     }
+
+    const errorText = await response.text();
+    console.warn(`[Tier 2: Brevo Quota/Status Notice] ${errorText}. Falling back to Tier 3 (EmailJS)...`);
+    return false;
   } catch (err) {
-    console.error('[Brevo Email Service] Network/API Exception:', err);
+    console.warn('[Tier 2: Brevo Network/Exception]', err);
     return false;
   }
 }
 
 /**
- * Fallback to EmailJS for OTP or Welcome emails
+ * Tier 3: Send via EmailJS (Tertiary Failover)
  */
 async function sendViaEmailJs(
   templateId: string,
@@ -174,23 +249,48 @@ async function sendViaEmailJs(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Origin': EMAIL_CONFIG.appOrigin,
+        Origin: EMAIL_CONFIG.appOrigin,
       },
       body: JSON.stringify(payload),
     });
 
     if (res.ok) {
-      console.log(`[EmailJS Service] Fallback delivered successfully.`);
+      console.log(`[Tier 3: EmailJS] Tertiary fallback delivered successfully.`);
       return true;
     } else {
       const err = await res.text();
-      console.error(`[EmailJS Service] Delivery failure:`, err);
+      console.error(`[Tier 3: EmailJS Service] Delivery failure:`, err);
       return false;
     }
   } catch (error) {
-    console.error(`[EmailJS Service] Error:`, error);
+    console.error(`[Tier 3: EmailJS Service Error]`, error);
     return false;
   }
+}
+
+/**
+ * Master Tiered Dispatcher: Mailjet ➔ Brevo ➔ EmailJS
+ */
+async function dispatchTieredEmail(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlContent: string,
+  textContent: string,
+  emailJsTemplateId: string,
+  emailJsParams: Record<string, string>
+): Promise<boolean> {
+  // 1. Tier 1: Mailjet (Primary)
+  const mailjetSuccess = await sendViaMailjet(toEmail, toName, subject, htmlContent, textContent);
+  if (mailjetSuccess) return true;
+
+  // 2. Tier 2: Brevo (If Mailjet limit exceeded or error)
+  const brevoSuccess = await sendViaBrevo(toEmail, toName, subject, htmlContent, textContent);
+  if (brevoSuccess) return true;
+
+  // 3. Tier 3: EmailJS (If Brevo 300 daily limit exceeded or error)
+  console.log(`[Tier 3: EmailJS] Activating tertiary failover for ${toEmail}...`);
+  return sendViaEmailJs(emailJsTemplateId, emailJsParams);
 }
 
 /* ==========================================================================
@@ -241,23 +341,26 @@ export async function sendOtpEmail(
     `
   );
 
-  // Try Brevo first
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html, `Your code is ${otpCode}`);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateOtp, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    otp_code: otpCode,
-    code: otpCode,
-    passcode: otpCode,
-    purpose,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Your Ken Classes security code is: ${otpCode}. It expires in 15 minutes.`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Your Ken Classes ${purpose} code is: ${otpCode}. It expires in 15 minutes.`,
+    EMAIL_CONFIG.emailjsTemplateOtp,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      otp_code: otpCode,
+      code: otpCode,
+      passcode: otpCode,
+      purpose,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Your Ken Classes security code is: ${otpCode}. It expires in 15 minutes.`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -315,17 +418,22 @@ export async function sendWelcomeEmail(toEmail: string, toName: string): Promise
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
-  if (brevoSuccess) return true;
-
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Welcome to ${EMAIL_CONFIG.companyName}! Your account has been activated.`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Welcome to Ken Classes! Your account is active. Access your workspace at: ${EMAIL_CONFIG.appOrigin}/student/dashboard`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Welcome to ${EMAIL_CONFIG.companyName}! Your account has been activated.`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -364,18 +472,22 @@ export async function sendPasswordResetSuccessEmail(toEmail: string, toName?: st
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Security Notice: The password for your Ken Classes account was successfully changed. If you did not make this change, please contact support immediately at ${EMAIL_CONFIG.supportEmail}`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Security Alert: The password for your Ken Classes account was successfully updated. If you did not make this change, please contact support at ${EMAIL_CONFIG.supportEmail}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Security Notice: The password for your Ken Classes account was successfully changed. If you did not make this change, please contact support immediately at ${EMAIL_CONFIG.supportEmail}`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -462,18 +574,22 @@ export async function sendEnrollmentReceiptEmail(
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Enrollment Confirmed! You are actively enrolled in "${details.courseTitle}". Receipt #: ${details.orderNumber}. Amount: ${formattedAmount}. Enter classroom: ${EMAIL_CONFIG.appOrigin}${details.courseId ? `/classroom/${details.courseId}` : '/student/courses'}`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Enrollment Confirmed: "${details.courseTitle}". Order #: ${details.orderNumber}. Amount: ${formattedAmount}. Classroom access: ${EMAIL_CONFIG.appOrigin}${details.courseId ? `/classroom/${details.courseId}` : '/student/courses'}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Enrollment Confirmed! You are actively enrolled in "${details.courseTitle}". Receipt #: ${details.orderNumber}. Amount: ${formattedAmount}. Enter classroom: ${EMAIL_CONFIG.appOrigin}${details.courseId ? `/classroom/${details.courseId}` : '/student/courses'}`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -549,18 +665,22 @@ export async function sendLiveLectureReminderEmail(
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Live Lecture Alert: "${details.lectureTitle}" for course "${details.courseTitle}" starts at ${details.scheduledAt}. Join link: ${details.meetingUrl}`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Live Class Alert: "${details.lectureTitle}" starts at ${details.scheduledAt}. Join here: ${details.meetingUrl}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Live Lecture Alert: "${details.lectureTitle}" for course "${details.courseTitle}" starts at ${details.scheduledAt}. Join link: ${details.meetingUrl}`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -622,18 +742,22 @@ export async function sendDoubtResponseEmail(
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, recipientName, subject, html);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: recipientName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Doubt Resolved: Mentor ${details.mentorName} replied to "${details.questionTitle}" in course "${details.courseTitle}". Response excerpt: "${details.answerSnippet.slice(0, 150)}...". Open conversation: ${EMAIL_CONFIG.appOrigin}/student/doubts`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    recipientName,
+    subject,
+    html,
+    `Doubt Answered: Mentor ${details.mentorName} replied to your question "${details.questionTitle}" in course ${details.courseTitle}. View details at: ${EMAIL_CONFIG.appOrigin}/student/doubts`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: recipientName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Doubt Resolved: Mentor ${details.mentorName} replied to "${details.questionTitle}" in course "${details.courseTitle}". Response excerpt: "${details.answerSnippet.slice(0, 150)}...". Open conversation: ${EMAIL_CONFIG.appOrigin}/student/doubts`,
+    }
+  );
 }
 
 /* ==========================================================================
@@ -696,16 +820,20 @@ export async function sendCertificateEmail(
     `
   );
 
-  const brevoSuccess = await sendViaBrevo(toEmail, details.studentName, subject, html);
-  if (brevoSuccess) return true;
-
-  // Fallback to EmailJS
-  return sendViaEmailJs(EMAIL_CONFIG.emailjsTemplateWelcome, {
-    to_name: details.studentName,
-    to_email: toEmail,
-    email: toEmail,
-    company_name: EMAIL_CONFIG.companyName,
-    support_email: EMAIL_CONFIG.supportEmail,
-    message: `Congratulations! Your certificate of completion for "${details.courseTitle}" is ready. Certificate Code: ${details.certificateCode}. Verify & view: ${verifyUrl}`,
-  });
+  return dispatchTieredEmail(
+    toEmail,
+    details.studentName,
+    subject,
+    html,
+    `Congratulations! You completed ${details.courseTitle}. Certificate code: ${details.certificateCode}. View certificate: ${verifyUrl}`,
+    EMAIL_CONFIG.emailjsTemplateWelcome,
+    {
+      to_name: details.studentName,
+      to_email: toEmail,
+      email: toEmail,
+      company_name: EMAIL_CONFIG.companyName,
+      support_email: EMAIL_CONFIG.supportEmail,
+      message: `Congratulations! Your certificate of completion for "${details.courseTitle}" is ready. Certificate Code: ${details.certificateCode}. Verify & view: ${verifyUrl}`,
+    }
+  );
 }
